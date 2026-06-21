@@ -16,6 +16,7 @@ import { DOMMirror } from "~components/DOMMirror";
 import { SpectatorCamera } from "~components/SpectatorCamera";
 import { URLBar } from "~components/URLBar";
 import { ManualResizer } from "~components/ManualResizer";
+import { LogoOverlay } from "~components/LogoOverlay";
 
 
 
@@ -93,6 +94,8 @@ const SpectatorWindow = () => {
             )}
             <div className="h-screen w-screen bg-black flex items-center justify-center">
                 <div className="w-full h-full max-w-[calc(100vh*16/9)] max-h-[calc(100vw*9/16)] relative" ref={canvas_container_ref}>
+                    <LogoOverlay />
+
                     <Canvas gl={{ alpha: false }}>
                         <ManualResizer containerRef={canvas_container_ref} />
 
