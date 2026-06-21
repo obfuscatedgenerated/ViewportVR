@@ -1,7 +1,6 @@
 import { Canvas } from "@react-three/fiber";
+import { createXRStore, XR } from "@react-three/xr";
 import { useEffect, useState } from "react";
-
-
 
 import { Storage } from "@plasmohq/storage";
 
@@ -24,30 +23,37 @@ const storage = new Storage();
 
 export const config = { matches: ["<all_urls>"], all_frames: true };
 
+const xrStore = createXRStore({});
+
 const VREnvironment = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [isSticky, setIsSticky] = useState(false);
 
     const enterVR = async () => {
         try {
-            const session = await navigator.xr?.requestSession("immersive-vr", {
-                optionalFeatures: ["local-floor", "bounded-floor"]
-            });
-
-            // Handle session exit to clean up the sticky flag
-            session.addEventListener("end", async () => {
-                await storage.set("isInVRSession", false);
-                setIsVisible(false);
-            });
+            xrStore.enterVR();
 
             await storage.set("isInVRSession", true);
             setIsVisible(true);
             setIsSticky(false); // Hide the resume button once active
-            console.log("XR Session Started", session);
+            console.log("XR Session Started");
         } catch (e) {
             console.error("Failed to enter VR:", e);
         }
     };
+
+    // Also listen to the store's session state to clean up your extension flags when exiting VR
+    useEffect(() => {
+        // You can subscribe to changes in the XR store state
+        const unsub = xrStore.subscribe((state) => {
+            // If we were visible, but the active session is now null, the user exited VR
+            if (isVisible && !state.session) {
+                storage.set("isInVRSession", false);
+                setIsVisible(false);
+            }
+        });
+        return () => unsub();
+    }, [isVisible]);
 
     useEffect(() => {
         // 1. Determine if we should show the "Resume" prompt
@@ -100,6 +106,7 @@ const VREnvironment = () => {
                 }}
             >
                 <Canvas style={{ pointerEvents: "auto" }}>
+                    <XR store={xrStore}>
                     <ambientLight intensity={0.5} />
                     <pointLight position={[10, 10, 10]} />
                     <mesh>
@@ -107,6 +114,7 @@ const VREnvironment = () => {
                         <meshStandardMaterial color="orange" />
                     </mesh>
                     <DOMMirror />
+                    </XR>
                 </Canvas>
             </div>
         </>
