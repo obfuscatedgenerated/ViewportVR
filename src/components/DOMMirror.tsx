@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import type { Vector3 } from "@react-three/fiber";
 
-export const DOMMirror = () => {
+export const DOMMirror = ({position}: {position: Vector3}) => {
     const videoRef = useRef(document.createElement("video"));
 
     // Create the texture once and memoize it
@@ -13,7 +14,12 @@ export const DOMMirror = () => {
         return new THREE.VideoTexture(video);
     }, []);
 
+    const stream_guard_ref = useRef(false);
+
     useEffect(() => {
+        if (stream_guard_ref.current) return;
+        stream_guard_ref.current = true;
+
         // recieve and send VVR_STREAM_OFFER and VVR_STREAM_CANDIDATE messages to facilitate WebRTC connection for the video stream
         const pc = new RTCPeerConnection();
         const iceCandidateQueue = [];
@@ -78,6 +84,7 @@ export const DOMMirror = () => {
 
         // tell the background script that we are ready to receive the offer
         chrome.runtime.sendMessage({ action: "VVR_START_STREAM" });
+        console.log("Sent VVR_START_STREAM message to background script");
 
         return () => {
             chrome.runtime.onMessage.removeListener(handleMessage);
@@ -86,7 +93,7 @@ export const DOMMirror = () => {
     }, []);
 
     return (
-        <mesh>
+        <mesh position={position}>
             <planeGeometry args={[16, 9]} />
             <meshBasicMaterial map={texture} toneMapped={false} />
         </mesh>
