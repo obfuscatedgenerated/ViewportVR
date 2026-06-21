@@ -1,4 +1,4 @@
-const VR_HOST_URL = "./tabs/spectator.html";
+const VR_HOST_URL = "./tabs/vr_host.html";
 
 // Replace your onInstalled listener with this development-friendly version:
 chrome.contextMenus.removeAll(() => {

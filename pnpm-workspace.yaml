@@ -5,3 +5,7 @@ onlyBuiltDependencies:
   - lmdb
   - msgpackr-extract
   - sharp
+
+patchedDependencies:
+  '@tailwindcss/oxide@4.3.1': patches/@tailwindcss__oxide@4.3.1.patch
+  jiti@2.7.0: patches/jiti@2.7.0.patch
