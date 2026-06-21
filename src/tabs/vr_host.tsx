@@ -2,17 +2,28 @@ import { Canvas } from "@react-three/fiber";
 import { createXRStore, XR } from "@react-three/xr";
 import React, { useCallback, useEffect, useState } from "react";
 
+
+
+
+
+
 import "~shared.css";
 import "./vr_host.css";
 
+
+
 import { DOMMirror } from "~components/DOMMirror";
 import { SpectatorCamera } from "~components/SpectatorCamera";
+
+
+
+
 
 const xr_store = createXRStore({});
 
 const SpectatorWindow = () => {
     const [started, setStarted] = useState(false);
-    const [is_supported, setIsSupported] = useState(false);
+    const [is_supported, setIsSupported] = useState<boolean | null>(false);
 
     const enter_vr = useCallback(() => {
         if (started) return;
@@ -23,14 +34,20 @@ const SpectatorWindow = () => {
 
     useEffect(() => {
         const check_support = async () => {
-            const supported = await xr_store.isSessionSupported("immersive-vr");
+            if (!navigator.xr) {
+                setIsSupported(null);
+                return;
+            }
+
+            const supported =
+                await navigator.xr.isSessionSupported("immersive-vr");
             setIsSupported(supported);
         };
 
         check_support();
 
         const handle_device_change = async () => {
-            const supported = await xr_store.isSessionSupported("immersive-vr");
+            const supported = await navigator.xr?.isSessionSupported("immersive-vr");
             setIsSupported(supported);
         };
 
@@ -43,6 +60,15 @@ const SpectatorWindow = () => {
             );
         };
     }, []);
+
+    if (is_supported === null) {
+        return (
+            <div className="bg-black/80 backdrop-blur-md absolute inset-0 flex flex-col items-center justify-center z-50 text-white gap-8">
+                <h1 className="font-title text-3xl">ViewportVR</h1>
+                <p className="text-lg">WebXR is not supported in this browser.</p>
+            </div>
+        );
+    }
 
     return (
         <>
