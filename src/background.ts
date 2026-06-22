@@ -152,17 +152,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 const handle_click = (msg: any) => {
     chrome.storage.sync.get("settings.use_debug_input", (data) => {
-        const use_debug_input = data["settings.use_debug_input"] || false;
+        const use_debug_input = data["settings.use_debug_input"] === "true" || false;
 
         if (use_debug_input) {
             console.error("not yet implemented!!!!!");
         } else {
             // forward event to the active tab's content script
-            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                if (tabs[0] && tabs[0].id) {
-                    chrome.tabs.sendMessage(tabs[0].id, msg);
-                }
-            });
+            chrome.tabs.sendMessage(interacted_tab_id, msg);
         }
     });
 }

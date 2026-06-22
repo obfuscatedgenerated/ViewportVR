@@ -157,6 +157,8 @@ export const DOMMirror = ({
                     button: 0
                     // TODO: support right click, middle click, drag scrolling
                     // TODO: support holding and dragging mouse (emit mouse move and send up and down sep)
+                    // TODO: thumbstick scroll
+                    // TODO: ripple at click pos
                 }
             });
         },

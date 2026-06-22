@@ -1,6 +1,8 @@
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.action === "VVR_CLICK") {
-        const { x, y, button } = msg.pos;
+        const { x, y } = msg.pos;
+        const button = msg.button || 0;
+        console.log(`Received click at (${x}, ${y}) with button ${button}`);
 
         // find the element at the click position
         const el = document.elementFromPoint(x, y);
