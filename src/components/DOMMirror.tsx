@@ -2,7 +2,13 @@ import type { Vector3 } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
-export const DOMMirror = ({ position, height }: { position: Vector3; height: number }) => {
+export const DOMMirror = ({
+    position,
+    height
+}: {
+    position: Vector3;
+    height: number;
+}) => {
     const videoRef = useRef(document.createElement("video"));
 
     // State 1: The actual tab dimensions (the content)
@@ -61,13 +67,12 @@ export const DOMMirror = ({ position, height }: { position: Vector3; height: num
         texture.repeat.set(repeat_x, repeat_y);
         texture.offset.set(offset_x, offset_y);
         texture.needsUpdate = true;
-
     }, [tabDims, videoDims, texture]);
 
     useEffect(() => {
         const handle_message = async (message: any) => {
             // Keep tab dimensions continuously synced
-            if (message.type === "VVR_DIMENSIONS_UPDATED") {
+            if (message.type === "VVR_DIMENSIONS_UPDATE") {
                 if (message.tab?.width && message.tab?.height) {
                     setTabDims({
                         width: message.tab.width,
@@ -97,6 +102,14 @@ export const DOMMirror = ({ position, height }: { position: Vector3; height: num
                         height: video.videoHeight
                     });
                 };
+
+                video.onresize = () => {
+                    // in case chrome resizes the stream (throttling)
+                    setVideoDims({
+                        width: video.videoWidth,
+                        height: video.videoHeight
+                    });
+                };
             }
         };
 
@@ -107,7 +120,7 @@ export const DOMMirror = ({ position, height }: { position: Vector3; height: num
     }, []);
 
     // 3. Resize the physical plane to exactly match the tab's aspect ratio
-    const planeWidth = (tabDims.width / tabDims.height) * height
+    const planeWidth = (tabDims.width / tabDims.height) * height;
 
     return (
         <mesh position={position}>
