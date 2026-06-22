@@ -2,6 +2,8 @@ const VR_HOST_URL = "./tabs/vr_host.html";
 
 // Replace your onInstalled listener with this development-friendly version:
 chrome.contextMenus.removeAll(() => {
+    // TODO: check if launch allowed in context (not protected page)
+
     chrome.contextMenus.create(
         {
             id: "launch-viewportvr",
@@ -77,6 +79,22 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
         );
 
         dropped = false;
+    } else if (msg.action === "VVR_LAUNCH") {
+        // set interacted tab id to the active one
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs[0] && tabs[0].id) {
+                interacted_tab_id = tabs[0].id;
+            }
+
+            chrome.windows.create({
+                url: VR_HOST_URL,
+                type: "popup",
+                width: 800,
+                height: 600
+            });
+        });
+
+        dropped = false;
     }
 
     if (msg.target === "cs" && sender.url === REAL_SPECTATOR_URL) {
@@ -126,3 +144,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         });
     }
 });
+
+// TODO: end session when source tab closes
+// TODO: tab hopping
+// TODO: user input relay

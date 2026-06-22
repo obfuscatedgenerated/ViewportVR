@@ -42,7 +42,8 @@
             "contextMenus",
             "tabCapture",
             "activeTab",
-            "offscreen"
+            "offscreen",
+            "debugger"
         ]
     }
 }
