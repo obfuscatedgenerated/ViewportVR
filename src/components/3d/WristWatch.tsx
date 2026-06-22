@@ -155,10 +155,10 @@ export const WristWatch = () => {
             >
 
                 <Container
-                    sizeX={0.3}
-                    sizeY={0.2}
                     width={WATCH_UI_WIDTH}
                     height={WATCH_UI_HEIGHT}
+                    // rendered with a target width of 30cm, the aspect is handled by the engine
+                    pixelSize={0.3 / WATCH_UI_HEIGHT}
                     flexDirection="column"
                 >
                     <WatchUI />
