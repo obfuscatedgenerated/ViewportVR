@@ -12,11 +12,12 @@ import "./vr_host.css";
 
 
 
-import { DOMMirror } from "~components/DOMMirror";
-import { SpectatorCamera } from "~components/SpectatorCamera";
-import { URLBar } from "~components/URLBar";
-import { ManualResizer } from "~components/ManualResizer";
-import { LogoOverlay } from "~components/LogoOverlay";
+import { DOMMirror } from "~components/3d/DOMMirror";
+import { SpectatorCameraController } from "~components/3d/SpectatorCameraController";
+import { URLBar } from "~components/3d/URLBar";
+import { CanvasResizer } from "~components/3d/CanvasResizer";
+import { LogoOverlay } from "~components/dom/LogoOverlay";
+import { WristWatch } from "~components/3d/WristWatch";
 
 
 
@@ -97,7 +98,7 @@ const SpectatorWindow = () => {
                     <LogoOverlay />
 
                     <Canvas gl={{ alpha: false }}>
-                        <ManualResizer containerRef={canvas_container_ref} />
+                        <CanvasResizer containerRef={canvas_container_ref} />
 
                         <XR store={xr_store}>
                             <color attach="background" args={["#111111"]} />
@@ -111,7 +112,9 @@ const SpectatorWindow = () => {
                             />
                             <DOMMirror position={[0, 1.5, -4]} height={3} />
 
-                            <SpectatorCamera />
+                            <WristWatch />
+
+                            <SpectatorCameraController />
                         </XR>
                     </Canvas>
                 </div>

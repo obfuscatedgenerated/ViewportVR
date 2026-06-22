@@ -14,7 +14,8 @@ import { useStorage } from "@plasmohq/storage/hook";
 
 
 
-import { ToggleSwitch } from "~components/ToggleSwitch";
+import { ToggleSwitch } from "~components/dom/ToggleSwitch";
+import { Dropdown } from "~components/dom/Dropdown";
 
 
 
@@ -32,6 +33,8 @@ function Popup() {
         "settings.use_debug_input",
         false
     );
+
+    const [watch_hand, setWatchHand] = useStorage("settings.watch_hand", "left");
 
     // nevermind, debugger cant be optional
     // const on_debug_input_change = useCallback(
@@ -93,6 +96,17 @@ function Popup() {
 Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                     enabled={use_debug_input}
                     on_change={setUseDebugInput}
+                />
+
+                <Dropdown
+                    options={[
+                        { label: "Left Hand", value: "left" },
+                        { label: "Right Hand", value: "right" },
+                    ]}
+                    selected={watch_hand}
+                    on_change={setWatchHand}
+                    label="Watch Hand"
+                    tooltip="Which hand to wear the wristwatch on."
                 />
             </div>
         </div>

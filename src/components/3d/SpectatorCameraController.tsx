@@ -2,7 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo } from "react";
 import * as THREE from "three";
 
-export const SpectatorCamera = () => {
+export const SpectatorCameraController = () => {
     const { size } = useThree();
 
     // 1. Create a dedicated, clean camera specifically for the WebRTC stream

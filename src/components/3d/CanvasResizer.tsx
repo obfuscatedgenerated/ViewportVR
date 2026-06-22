@@ -1,7 +1,7 @@
 import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
 
-export const ManualResizer = ({ containerRef }) => {
+export const CanvasResizer = ({ containerRef }) => {
     // We only need 'gl' to force the canvas pixel dimensions
     const { gl } = useThree();
 
