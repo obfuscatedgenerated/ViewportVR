@@ -79,15 +79,22 @@ export const WristWatch = () => {
                         orientation.w
                     );
 
+
+                    // rotate around the X axis to tilt the watch face towards the user
+                    watchGroupRef.current.rotateX(-Math.PI / 3);
+
+                    // then rotate 90 degrees so its on top of the wrist
+                    watchGroupRef.current.rotateZ(watch_hand === "left" ? Math.PI / 2 : -Math.PI / 2);
+
                     // --- REFINED WRIST OFFSETS ---
                     // Assuming standard VR controller orientation:
                     // Y+ is usually "up" along the handle
                     // Z+ is usually pointing "forward" from the palm
                     // X+ is usually to the "right"
-                    watchGroupRef.current.translateZ(0.08); // Move up the arm (less than 0.12 might feel better)
-                    watchGroupRef.current.translateY(0.02); // Lift slightly off the skin
+                    watchGroupRef.current.translateZ(-0.01); // Move up the arm (less than 0.12 might feel better)
+                    watchGroupRef.current.translateY(0.055); // Lift slightly off the skin
                     watchGroupRef.current.translateX(
-                        watch_hand === "left" ? -0.03 : 0.03
+                        watch_hand === "left" ? 0.02 : -0.02
                     ); // Invert for right hand!
                 }
             }
