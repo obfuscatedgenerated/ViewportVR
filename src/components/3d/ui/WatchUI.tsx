@@ -1,12 +1,8 @@
 import { Container, Text } from "@react-three/uikit";
 import { Label, Switch } from "@react-three/uikit-default";
+import { useState } from "react";
 import * as THREE from "three";
 import { configureTextBuilder } from "troika-three-text";
-import { useState } from "react";
-
-
-
-
 
 // its not happy! turn off web workers
 configureTextBuilder({
@@ -31,7 +27,6 @@ export const WatchUI = () => {
 
     return (
         <Container
-
             width={WATCH_UI_WIDTH}
             height={WATCH_UI_HEIGHT}
             flexDirection="column"
@@ -41,12 +36,19 @@ export const WatchUI = () => {
             opacity={0.8}
             borderRadius={16}
             panelMaterialClass={DoubleSidedSolidPanel}>
-            <Container onPointerDown={() => {console.log("hello");setSwitchEnabled(!switchEnabled)}} flexDirection="row" alignItems="center" gap={8}>
+            <Container
+                onPointerDown={() => {
+                    console.log("hello");
+                    setSwitchEnabled(!switchEnabled);
+                }}
+                flexDirection="row"
+                alignItems="center"
+                gap={8}>
                 <Label>
                     <Text>Awesomeness detection</Text>
                 </Label>
 
-                <Switch checked={switchEnabled}  />
+                <Switch checked={switchEnabled} />
             </Container>
         </Container>
     );

@@ -22,14 +22,10 @@ chrome.contextMenus.removeAll(() => {
     );
 });
 
-let interacted_tab_id: number | null = null;
-
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId === "launch-viewportvr") {
-        interacted_tab_id = tab.id || null;
-
         chrome.windows.create({
-            url: VR_HOST_URL,
+            url: `${VR_HOST_URL}?tab=${tab?.id}`,
             type: "popup",
             width: VR_HOST_WIDTH,
             height: VR_HOST_HEIGHT
@@ -38,7 +34,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 // resolve background url to safe ones (converting ../ to actual back steps) for comparison
-const REAL_SPECTATOR_URL = new URL(VR_HOST_URL, location.href).href;
+const REAL_HOST_URL = new URL(VR_HOST_URL, location.href).href;
 
 chrome.runtime.onMessage.addListener((msg, sender) => {
     let dropped = true;
@@ -48,29 +44,27 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
     // TODO: clean up and use switch
     if (msg.action === "VVR_START_STREAM") {
         chrome.tabCapture.getMediaStreamId(
-            { targetTabId: interacted_tab_id },
+            { targetTabId: msg.tab },
             (stream_id) => {
                 if (stream_id) {
-                    chrome.tabs.get(interacted_tab_id!, (tab) => {
+                    chrome.tabs.get(msg.tab, (tab) => {
                         chrome.runtime.sendMessage({
                             type: "VVR_STREAM",
                             stream: stream_id,
-                            tab: {
-                                id: tab.id,
-                            }
+                            tab: tab.id
                         });
 
                         chrome.runtime.sendMessage({
                             type: "VVR_DIMENSIONS_UPDATE",
-                            tab: {
-                                id: tab.id,
-                                width: tab.width,
-                                height: tab.height
-                            }
+                            tab: tab.id,
+                            width: tab.width,
+                            height: tab.height
+
                         });
 
                         chrome.runtime.sendMessage({
                             type: "VVR_URL_UPDATE",
+                            tab: tab.id,
                             url: tab.url
                         });
                     });
@@ -88,15 +82,13 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
         // set interacted tab id to the active one
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0] && tabs[0].id) {
-                interacted_tab_id = tabs[0].id;
+                chrome.windows.create({
+                    url: `${VR_HOST_URL}?tab=${tabs[0].id}`,
+                    type: "popup",
+                    width: VR_HOST_WIDTH,
+                    height: VR_HOST_HEIGHT
+                });
             }
-
-            chrome.windows.create({
-                url: VR_HOST_URL,
-                type: "popup",
-                width: VR_HOST_WIDTH,
-                height: VR_HOST_HEIGHT
-            });
         });
 
         dropped = false;
@@ -105,16 +97,12 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
         dropped = false;
     }
 
-    if (msg.target === "cs" && sender.url === REAL_SPECTATOR_URL) {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            if (tabs[0] && tabs[0].id) {
-                chrome.tabs.sendMessage(tabs[0].id, msg);
-                dropped = false;
-            }
-        });
+    if (msg.target === "cs" && sender.url.startsWith(REAL_HOST_URL)) {
+        chrome.tabs.sendMessage(msg.tab, msg);
+        dropped = false;
     }
 
-    if (msg.target === "vr-host" && sender.url === REAL_SPECTATOR_URL) {
+    if (msg.target === "vr-host" && !sender.url.startsWith(REAL_HOST_URL)) {
         chrome.runtime.sendMessage(msg);
         dropped = false;
     }
@@ -134,11 +122,9 @@ chrome.windows.onBoundsChanged.addListener(async (window) => {
     if (tab && tab.id) {
         chrome.runtime.sendMessage({
             type: "VVR_DIMENSIONS_UPDATE",
-            tab: {
-                id: tab.id,
-                width: tab.width,
-                height: tab.height
-            }
+            tab: tab.id,
+            width: tab.width,
+            height: tab.height
         });
     }
 });
@@ -148,6 +134,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.url) {
         chrome.runtime.sendMessage({
             type: "VVR_URL_UPDATE",
+            tab: tabId,
             url: changeInfo.url
         });
     }
@@ -161,7 +148,7 @@ const handle_click = (msg: any) => {
             console.error("not yet implemented!!!!!");
         } else {
             // forward event to the active tab's content script
-            chrome.tabs.sendMessage(interacted_tab_id, msg);
+            chrome.tabs.sendMessage(msg.tab, msg);
         }
     });
 }
@@ -171,4 +158,3 @@ const handle_click = (msg: any) => {
 // TODO: end session when source tab closes
 // TODO: tab hopping
 // TODO: user input relay
-// TODO: make sure tab is correct one before dispatching updates

@@ -2,9 +2,7 @@ import type { ThreeEvent, Vector3 } from "@react-three/fiber";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
-
-
-
+import { TAB_ID } from "~util/tab_id";
 
 export const DOMMirror = ({
     position,
@@ -13,7 +11,11 @@ export const DOMMirror = ({
 }: {
     position: Vector3;
     height: number;
-    before_click?: (e: ThreeEvent<PointerEvent>, click_x: number, click_y: number) => boolean; // return false to veto the click
+    before_click?: (
+        e: ThreeEvent<PointerEvent>,
+        click_x: number,
+        click_y: number
+    ) => boolean; // return false to veto the click
 }) => {
     const videoRef = useRef(document.createElement("video"));
 
@@ -121,7 +123,7 @@ export const DOMMirror = ({
         };
 
         chrome.runtime.onMessage.addListener(handle_message);
-        chrome.runtime.sendMessage({ action: "VVR_START_STREAM" });
+        chrome.runtime.sendMessage({ action: "VVR_START_STREAM", tab: TAB_ID });
 
         return () => chrome.runtime.onMessage.removeListener(handle_message);
     }, []);
@@ -146,6 +148,7 @@ export const DOMMirror = ({
 
             chrome.runtime.sendMessage({
                 action: "VVR_CLICK",
+                tab: TAB_ID,
                 pos: {
                     x: click_x,
                     y: click_y,
@@ -161,11 +164,7 @@ export const DOMMirror = ({
     );
 
     return (
-        <mesh
-            name="DOMMirror"
-            position={position}
-            onPointerDown={handle_click}
-        >
+        <mesh name="DOMMirror" position={position} onPointerDown={handle_click}>
             <planeGeometry args={[planeWidth, height]} />
             <meshBasicMaterial map={texture} toneMapped={false} />
         </mesh>
