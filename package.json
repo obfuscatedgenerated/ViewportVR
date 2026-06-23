@@ -15,6 +15,7 @@
         "@react-three/drei": "^9.122.0",
         "@react-three/fiber": "^8.18.0",
         "@react-three/uikit": "^1.0.74",
+        "@react-three/uikit-default": "^1.0.74",
         "@react-three/xr": "^6.6.30",
         "@types/three": "^0.184.1",
         "plasmo": "0.90.5",

@@ -34,6 +34,9 @@ importers:
       '@react-three/uikit':
         specifier: ^1.0.74
         version: 1.0.74(@react-three/fiber@8.18.0(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0))(@types/react@18.2.48)(react@18.2.0)(three@0.184.0)(use-sync-external-store@1.6.0(react@18.2.0))
+      '@react-three/uikit-default':
+        specifier: ^1.0.74
+        version: 1.0.74(@react-three/fiber@8.18.0(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0))(@types/react@18.2.48)(react@18.2.0)(three@0.184.0)(use-sync-external-store@1.6.0(react@18.2.0))
       '@react-three/xr':
         specifier: ^6.6.30
         version: 6.6.30(@react-three/fiber@8.18.0(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0))(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0)
@@ -1372,6 +1375,12 @@ packages:
   '@pmndrs/pointer-events@6.6.30':
     resolution: {integrity: sha512-YD2jWdgEqqAWJNOOZ1WZMunUby8jwuQyOMk8zbeqC39R4nkZnGvu1Pa5EMGbV1zd2vZTxXDxYcAVxtQuhVwf3g==}
 
+  '@pmndrs/uikit-default@1.0.74':
+    resolution: {integrity: sha512-4HSSEmhZpI/+KQTAInyhmIPJcvFP3Af8M465kfzOo281DabcuUlPveiPQbbkdSyLh4PtF3sYIY7kYZFyuA+szA==}
+
+  '@pmndrs/uikit-lucide@1.0.74':
+    resolution: {integrity: sha512-tZ/g++iW6KEK3KdB2pRh/WpWgUh0Fs9k+S2SXBhEL5GidhDfBb3+mj/SZR8fe3oo+H3HkDoFIUT+UBz7hVbsCA==}
+
   '@pmndrs/uikit-pub-sub@1.0.74':
     resolution: {integrity: sha512-piiYQX/hjuXzTwBAjGbWqycEZsMFlsCKxoczs6G7M7kPWWmfLuFf9woOXHLtW5x6cnJJ19YrNuaQDtzG3SXj3Q==}
 
@@ -1463,6 +1472,9 @@ packages:
         optional: true
       react-native:
         optional: true
+
+  '@react-three/uikit-default@1.0.74':
+    resolution: {integrity: sha512-aS3V+BgjmcNKxUE2pJuWwRC6mx1AO9DKYH1g+EJS31op/rYlSJKxaEpH9m5STHcDxC5CiLHodNropuTEtceheg==}
 
   '@react-three/uikit@1.0.74':
     resolution: {integrity: sha512-OCprhz7S+Io2CV7iotxLA1vpU9OeJeOy5kxOXZ/G9pmWYo7FfMoy/9BRWUaMR0mhcXbi1IOkyPRF5Ndae6Yywg==}
@@ -5241,6 +5253,20 @@ snapshots:
 
   '@pmndrs/pointer-events@6.6.30': {}
 
+  '@pmndrs/uikit-default@1.0.74(three@0.184.0)':
+    dependencies:
+      '@pmndrs/uikit': 1.0.74(patch_hash=3f272a0ad12160430ec802e91064cab6e8395f5a9ff964ed2be9b36d879d4ae1)(three@0.184.0)
+      '@pmndrs/uikit-lucide': 1.0.74(three@0.184.0)
+      zod: 4.4.3
+    transitivePeerDependencies:
+      - three
+
+  '@pmndrs/uikit-lucide@1.0.74(three@0.184.0)':
+    dependencies:
+      '@pmndrs/uikit': 1.0.74(patch_hash=3f272a0ad12160430ec802e91064cab6e8395f5a9ff964ed2be9b36d879d4ae1)(three@0.184.0)
+    transitivePeerDependencies:
+      - three
+
   '@pmndrs/uikit-pub-sub@1.0.74':
     dependencies:
       '@preact/signals-core': 1.14.3
@@ -5372,6 +5398,18 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
+
+  '@react-three/uikit-default@1.0.74(@react-three/fiber@8.18.0(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0))(@types/react@18.2.48)(react@18.2.0)(three@0.184.0)(use-sync-external-store@1.6.0(react@18.2.0))':
+    dependencies:
+      '@pmndrs/uikit-default': 1.0.74(three@0.184.0)
+      '@react-three/uikit': 1.0.74(@react-three/fiber@8.18.0(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0))(@types/react@18.2.48)(react@18.2.0)(three@0.184.0)(use-sync-external-store@1.6.0(react@18.2.0))
+    transitivePeerDependencies:
+      - '@react-three/fiber'
+      - '@types/react'
+      - immer
+      - react
+      - three
+      - use-sync-external-store
 
   '@react-three/uikit@1.0.74(@react-three/fiber@8.18.0(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0))(@types/react@18.2.48)(react@18.2.0)(three@0.184.0)(use-sync-external-store@1.6.0(react@18.2.0))':
     dependencies:

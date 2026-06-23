@@ -1,6 +1,11 @@
 import { Container, Text } from "@react-three/uikit";
+import { Label, Switch } from "@react-three/uikit-default";
 import * as THREE from "three";
 import { configureTextBuilder } from "troika-three-text";
+
+
+
+
 
 // its not happy! turn off web workers
 configureTextBuilder({
@@ -31,15 +36,13 @@ export const WatchUI = () => {
             backgroundColor="#4db8ff"
             opacity={0.8}
             borderRadius={16}
-            panelMaterialClass={DoubleSidedSolidPanel}
-        >
-            <Text
-                fontSize={24}
-                color="#ffffff"
-                anchorX="center"
-                anchorY="middle">
-                UI goes here!
-            </Text>
+            panelMaterialClass={DoubleSidedSolidPanel}>
+            <Container flexDirection="row" alignItems="center" gap={8}>
+                <Label>
+                    <Text>Awesomeness detection</Text>
+                </Label>
+                <Switch />
+            </Container>
         </Container>
     );
 };
