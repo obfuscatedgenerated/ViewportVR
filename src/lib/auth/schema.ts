@@ -17,10 +17,10 @@ export const DeviceRecordSchema = z.object({
 });
 export type DeviceRecord = z.infer<typeof DeviceRecordSchema>;
 
-export const StaticIdentitySchema_VERSION = 1;
+export const StaticIdentityRecordSchema_VERSION = 1;
 export const StaticIdentityRecordSchema = z.object({
     $schema: z.string().optional(),
-    version: z.number().int().min(1).max(StaticIdentitySchema_VERSION),
+    version: z.number().int().min(1).max(StaticIdentityRecordSchema_VERSION),
     identity: z.string(),
     created_at: z.number(),
     status: z.enum(["active", "suspended"]),

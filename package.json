@@ -7,7 +7,8 @@
     "scripts": {
         "dev": "plasmo dev",
         "build": "plasmo build",
-        "package": "plasmo package"
+        "package": "plasmo package",
+        "build-schema": "tsx scripts/build_json_schema.ts"
     },
     "dependencies": {
         "@plasmohq/messaging": "^0.7.2",
@@ -36,6 +37,7 @@
         "postcss": "^8.5.15",
         "prettier": "3.2.4",
         "tailwindcss": "^4.1.4",
+        "tsx": "^4.22.4",
         "typescript": "5.3.3"
     },
     "manifest": {
