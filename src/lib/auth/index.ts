@@ -1,6 +1,15 @@
 import { Storage } from "@plasmohq/storage";
 
-// TODO: type static record once determined. probably will learn zod for this, basing off JWK standard
+
+
+import {
+    StaticIdentityRecordSchema,
+    type StaticIdentityRecord
+} from "~lib/auth/schema";
+
+
+
+
 
 export const AUTH_METHODS = ["static", "jwt"] as const;
 export type LoginMethod = (typeof AUTH_METHODS)[number];
@@ -53,7 +62,7 @@ export const parse_identity = (username: string): IdentityParseResult => {
 
 interface SuccessfulRecordResolution {
     success: true;
-    record: any | undefined;
+    record: StaticIdentityRecord | undefined;
 }
 
 interface FailedRecordResolution {
@@ -88,6 +97,16 @@ export const resolve_static_record = async (
 
     try {
         const record = await static_record_response.json();
+
+        // validate record against schema
+        const { success, error } = StaticIdentityRecordSchema.safeParse(record);
+        if (!success) {
+            return {
+                success: false,
+                error: `Invalid static auth record: ${error}`
+            };
+        }
+
         return {
             success: true,
             record
@@ -111,7 +130,7 @@ interface SuccessfulIdentityResolution {
     resolved: true;
     allowed: ActionableMethods;
     stored_key?: StoredKey;
-    static_record?: any;
+    static_record?: StaticIdentityRecord;
 }
 
 interface FailedIdentityResolution {

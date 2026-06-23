@@ -58,6 +58,9 @@ importers:
       three:
         specifier: ^0.184.0
         version: 0.184.0
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 4.1.1

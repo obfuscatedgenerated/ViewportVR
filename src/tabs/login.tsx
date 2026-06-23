@@ -12,6 +12,7 @@ import {
     type LoginMethod,
     type StoredKey
 } from "~lib/auth";
+import {type StaticIdentityRecord} from "~lib/auth/schema";
 
 const LandingPage = ({
     username,
@@ -75,7 +76,7 @@ const LandingPage = ({
 interface FormProps {
     username: string;
     stored_key?: StoredKey | null;
-    stored_static_record?: any | null;
+    stored_static_record?: StaticIdentityRecord | null;
 }
 
 const LoginFormStatic = ({ username }: FormProps) => {
@@ -123,7 +124,7 @@ const LoginWindow = () => {
     const debounced_username = useDebounce(username, 500);
 
     const [stored_key, setStoredKey] = useState<StoredKey | null>(null);
-    const [stored_static_record, setStoredStaticRecord] = useState<any | null>(
+    const [stored_static_record, setStoredStaticRecord] = useState<StaticIdentityRecord | null>(
         null
     );
 
