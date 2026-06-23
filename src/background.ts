@@ -1,3 +1,5 @@
+import { check_url_allowed, URL_PATTERNS } from "~util/url_patterns";
+
 const VR_HOST_URL = "./tabs/vr_host.html";
 
 const VR_HOST_WIDTH = 750;
@@ -5,14 +7,12 @@ const VR_HOST_HEIGHT = 450;
 
 // Replace your onInstalled listener with this development-friendly version:
 chrome.contextMenus.removeAll(() => {
-    // TODO: check if launch allowed in context (not protected page)
-
     chrome.contextMenus.create(
         {
             id: "launch-viewportvr",
             title: "Launch ViewportVR",
             contexts: ["all"],
-            documentUrlPatterns: ["<all_urls>"]
+            documentUrlPatterns: URL_PATTERNS
         },
         () => {
             // Catch any errors silently if Chrome complains about duplicates
@@ -24,6 +24,11 @@ chrome.contextMenus.removeAll(() => {
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId === "launch-viewportvr") {
+        if (!check_url_allowed(tab?.url || "")) {
+            console.error("URL not allowed for ViewportVR:", tab?.url);
+            return;
+        }
+
         chrome.windows.create({
             url: `${VR_HOST_URL}?tab=${tab?.id}`,
             type: "popup",
@@ -79,17 +84,24 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
 
         dropped = false;
     } else if (msg.action === "VVR_LAUNCH") {
-        // set interacted tab id to the active one
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            if (tabs[0] && tabs[0].id) {
-                chrome.windows.create({
-                    url: `${VR_HOST_URL}?tab=${tabs[0].id}`,
-                    type: "popup",
-                    width: VR_HOST_WIDTH,
-                    height: VR_HOST_HEIGHT
-                });
+        if (!msg.tab) {
+            console.error("No tab specified for VVR_LAUNCH");
+            return;
+        }
+
+        chrome.tabs.get(msg.tab, (tab) => {
+            if (!check_url_allowed(tab.url || "")) {
+                console.error("URL not allowed for ViewportVR:", tab.url);
+                return;
             }
-        });
+
+            chrome.windows.create({
+                url: `${VR_HOST_URL}?tab=${tab.id}`,
+                type: "popup",
+                width: VR_HOST_WIDTH,
+                height: VR_HOST_HEIGHT
+            });
+       });
 
         dropped = false;
     } else if (msg.action === "VVR_CLICK") {
@@ -97,12 +109,12 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
         dropped = false;
     }
 
-    if (msg.target === "cs" && sender.url.startsWith(REAL_HOST_URL)) {
+    if (msg.target === "cs" && sender.url?.startsWith(REAL_HOST_URL)) {
         chrome.tabs.sendMessage(msg.tab, msg);
         dropped = false;
     }
 
-    if (msg.target === "vr-host" && !sender.url.startsWith(REAL_HOST_URL)) {
+    if (msg.target === "vr-host" && !sender.url?.startsWith(REAL_HOST_URL)) {
         chrome.runtime.sendMessage(msg);
         dropped = false;
     }

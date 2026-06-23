@@ -1,13 +1,28 @@
+
+
+
 import "~shared.css";
 
-import {version} from "~../package.json";
+
+
 import bg from "data-base64:~../assets/popup_bg.webp";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+
 
 import { useStorage } from "@plasmohq/storage/hook";
 
+
+
+import { version } from "~../package.json";
 import { Dropdown } from "~components/dom/Dropdown";
 import { ToggleSwitch } from "~components/dom/ToggleSwitch";
+import { check_url_allowed } from "~util/url_patterns";
+import { useActiveTab } from "~hooks/useActiveTab";
+
+
+
+
 
 const Popup = () => {
     const [active, setActive] = useState(false);
@@ -63,11 +78,34 @@ const Popup = () => {
     //     [setUseDebugInput]
     // );
 
+    const active_tab = useActiveTab();
+
+    const launch_allowed = useMemo(
+        () => {
+            if (!active_tab) return false;
+            return check_url_allowed(active_tab.url);
+        },
+        [active_tab]
+    );
+
+    const launch = useCallback(
+        () => {
+            if (!launch_allowed) {
+                console.warn("Launch not allowed in this context:", active_tab.url);
+                return;
+            }
+
+            chrome.runtime.sendMessage({ action: "VVR_LAUNCH", tab: active_tab.id });
+            window.close();
+        },
+        [launch_allowed]
+    );
+
     return (
         <div className="bg-gray-900 text-white w-70 h-100">
             <img
                 src={bg}
-                className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-500 ease-in-out ${active ? "opacity-100" : "opacity-0"}`}
+                className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-500 ease-in-out ${active && launch_allowed ? "opacity-100" : "opacity-0"}`}
             />
 
             <div className="p-4 w-full h-full flex flex-col items-center justify-center absolute top-0 left-0 gap-4">
@@ -77,11 +115,11 @@ const Popup = () => {
 
                 <button
                     className="mb-4 px-4 py-2 outline outline-white rounded-lg hover:not-disabled:bg-white hover:not-disabled:text-black transition text-xl font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-600"
-                    onClick={() => {
-                        chrome.runtime.sendMessage({ action: "VVR_LAUNCH" });
-                        window.close();
-                    }}>
-                    Launch
+                    onClick={launch}
+                    disabled={!launch_allowed}
+                    title={launch_allowed ? "Launch ViewportVR in a new window" : "ViewportVR is not allowed on this page. Try navigating to a website."}
+                >
+                    {launch_allowed ? "Launch" : "Not allowed"}
                 </button>
 
                 <ToggleSwitch

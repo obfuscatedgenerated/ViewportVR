@@ -1,3 +1,12 @@
+import type { PlasmoCSConfig } from "plasmo";
+
+import { URL_PATTERNS } from "~util/url_patterns";
+
+export const config: PlasmoCSConfig = {
+    matches: URL_PATTERNS,
+    all_frames: true
+};
+
 let debug_clicks = false;
 
 // set initial value from storage
