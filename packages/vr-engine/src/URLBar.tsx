@@ -1,7 +1,7 @@
 import { Text } from "@react-three/drei";
 import type { Vector3 } from "@react-three/fiber";
 import { useEffect, useState } from "react";
-import { configureTextBuilder } from "packages/@types-custom/troika-three-text/troika-three-text";
+import { configureTextBuilder } from "troika-three-text";
 
 import { useTabSession } from "@viewportvr/react";
 

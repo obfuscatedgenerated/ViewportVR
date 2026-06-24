@@ -5,7 +5,7 @@
     "compilerOptions": {
         "paths": {
             "~*": ["./src/*"],
-            "@asset-resolver": ["../../packages/asset-resolver-type/index.d.ts"],
+            "@viewportvr/asset-resolver": ["../../packages/asset-resolver/asset-resolver.d.ts"],
         },
         "baseUrl": ".",
         "composite": false

@@ -1,6 +1,6 @@
 import { CircleUserRound } from "lucide-react";
-import { useAuthSession } from "~lib/auth/context";
-import { Avatar } from "~components/dom/Avatar";
+import { useAuthSession } from "@viewportvr/react";
+import { Avatar } from "./Avatar";
 
 const LOGIN_URL = "./tabs/login.html";
 

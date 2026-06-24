@@ -13,7 +13,7 @@ import "./SchemaForm.css";
 
 
 
-import { ControlledSelect } from "~components/dom/ControlledSelect";
+import { ControlledSelect } from "./ControlledSelect";
 
 
 

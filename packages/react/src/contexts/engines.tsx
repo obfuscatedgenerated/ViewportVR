@@ -1,16 +1,24 @@
-import type { MessageEngine, StorageEngine, StorageKind } from "@viewportvr/core";
+import type {
+    MessageEngine,
+    StorageEngine,
+    StorageKind
+} from "@viewportvr/core";
 import { createContext, useContext } from "react";
-
-
-
-
 
 type StorageEnginesContextType<K extends StorageKind = StorageKind> = {
     [P in K]?: StorageEngine<P>;
 };
-const StorageEnginesContext = createContext<StorageEnginesContextType | null>(null);
+const StorageEnginesContext = createContext<StorageEnginesContextType | null>(
+    null
+);
 
-export const StorageEnginesProvider = ({ children, engines }: { children: React.ReactNode; engines: StorageEnginesContextType }) => {
+export const StorageEnginesProvider = ({
+    children,
+    engines
+}: {
+    children: React.ReactNode;
+    engines: StorageEnginesContextType;
+}) => {
     return (
         <StorageEnginesContext.Provider value={engines}>
             {children}
@@ -20,12 +28,16 @@ export const StorageEnginesProvider = ({ children, engines }: { children: React.
 export const useStorageEngines = (): StorageEnginesContextType => {
     const context = useContext(StorageEnginesContext);
     if (!context) {
-        throw new Error("useStorageEngines must be used within a StorageEnginesProvider");
+        throw new Error(
+            "useStorageEngines must be used within a StorageEnginesProvider"
+        );
     }
     return context;
 };
 
-export const useStorageEngine = <K extends StorageKind>(kind: K): StorageEngine<K> => {
+export const useStorageEngine = <K extends StorageKind>(
+    kind: K
+): StorageEngine<K> => {
     const engines = useStorageEngines();
     const engine = engines[kind];
     if (!engine) {
@@ -33,11 +45,17 @@ export const useStorageEngine = <K extends StorageKind>(kind: K): StorageEngine<
     }
 
     return engine;
-}
+};
 
 const MessageEngineContext = createContext<MessageEngine | null>(null);
 
-export const MessageEngineProvider = ({ children, engine }: { children: React.ReactNode; engine: MessageEngine }) => {
+export const MessageEngineProvider = ({
+    children,
+    engine
+}: {
+    children: React.ReactNode;
+    engine: MessageEngine;
+}) => {
     return (
         <MessageEngineContext.Provider value={engine}>
             {children}
@@ -47,7 +65,9 @@ export const MessageEngineProvider = ({ children, engine }: { children: React.Re
 export const useMessageEngine = (): MessageEngine => {
     const context = useContext(MessageEngineContext);
     if (!context) {
-        throw new Error("useMessageEngine must be used within a MessageEngineProvider");
+        throw new Error(
+            "useMessageEngine must be used within a MessageEngineProvider"
+        );
     }
     return context;
 };

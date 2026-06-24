@@ -5,7 +5,7 @@
     "description": "The hyperspace navigator.",
     "author": "obfuscatedgenerated",
     "scripts": {
-        "dev": "plasmo dev",
+        "dev": "plasmo dev --verbose",
         "build": "plasmo build",
         "package": "plasmo package",
         "typecheck": "tsc --noEmit"

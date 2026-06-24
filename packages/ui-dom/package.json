@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@viewportvr/auth": "workspace:*",
+        "@viewportvr/react": "workspace:*",
         "react": "catalog:",
         "react-dom": "catalog:",
         "zod": "catalog:",

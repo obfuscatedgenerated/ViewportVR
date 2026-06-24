@@ -293,6 +293,9 @@ importers:
       '@viewportvr/auth':
         specifier: workspace:*
         version: link:../auth
+      '@viewportvr/react':
+        specifier: workspace:*
+        version: link:../react
       lucide-react:
         specifier: 'catalog:'
         version: 1.21.0(react@18.2.0)

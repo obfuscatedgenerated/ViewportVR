@@ -1,6 +1,6 @@
 import "~shared.css";
 
-import { AuthSessionProvider } from "@viewportvr/react";
+import { AuthSessionProvider, ContextProviders, StorageEnginesProvider } from "@viewportvr/react";
 import { Dropdown, ProfileButton, ToggleSwitch } from "@viewportvr/ui-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -11,6 +11,7 @@ import { useActiveTab } from "~hooks/useActiveTab";
 import { check_url_allowed } from "~util/url_patterns";
 
 import { get_asset_path } from "@viewportvr/asset-resolver";
+import { ExtensionStorage } from "@viewportvr/platform-extension";
 
 const bg = get_asset_path("bg.webp");
 
@@ -21,6 +22,15 @@ const Popup = () => {
     useEffect(() => {
         setTimeout(() => setActive(true), 100);
     }, []);
+
+    const local_storage = useMemo(() => new ExtensionStorage("local"), []);
+    const sync_storage = useMemo(() => new ExtensionStorage("sync"), []);
+    const session_storage = useMemo(() => new ExtensionStorage("session"), []);
+    const storage_engines = useMemo(() => ({
+        local: local_storage,
+        sync: sync_storage,
+        session: session_storage
+    }), [local_storage, sync_storage, session_storage]);
 
     const [use_debug_input, setUseDebugInput] = useStorage(
         "settings.use_debug_input",
@@ -94,7 +104,14 @@ const Popup = () => {
     }, [launch_allowed, active_tab]);
 
     return (
-        <AuthSessionProvider>
+        <ContextProviders providers={[
+            ({children}) => (
+                <StorageEnginesProvider engines={storage_engines}>
+                    {children}
+                </StorageEnginesProvider>
+            ),
+            AuthSessionProvider
+        ]}>
             <div className="bg-gray-900 text-white w-70 h-100">
                 <img
                     src={bg}
@@ -159,7 +176,7 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                     </span>
                 </div>
             </div>
-        </AuthSessionProvider>
+        </ContextProviders>
     );
 };
 
