@@ -54,6 +54,9 @@ catalogs:
     three:
       specifier: ^0.184.0
       version: 0.184.0
+    troika-three-text:
+      specifier: ^0.52.4
+      version: 0.52.4
     zod:
       specifier: ^4.4.3
       version: 4.4.3
@@ -310,6 +313,9 @@ importers:
       three:
         specifier: 'catalog:'
         version: 0.184.0
+      troika-three-text:
+        specifier: 'catalog:'
+        version: 0.52.4(three@0.184.0)
     devDependencies:
       '@types/react':
         specifier: 'catalog:'
@@ -335,6 +341,9 @@ importers:
       '@react-three/xr':
         specifier: 'catalog:'
         version: 6.6.30(@react-three/fiber@8.18.0(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0))(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0)
+      '@viewportvr/react':
+        specifier: workspace:*
+        version: link:../react
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -344,7 +353,13 @@ importers:
       three:
         specifier: 'catalog:'
         version: 0.184.0
+      troika-three-text:
+        specifier: 'catalog:'
+        version: 0.52.4(three@0.184.0)
     devDependencies:
+      '@types/react':
+        specifier: 'catalog:'
+        version: 18.2.48
       '@types/three':
         specifier: 'catalog:'
         version: 0.184.1

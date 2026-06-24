@@ -8,6 +8,7 @@
         "build": "tsc --build"
     },
     "dependencies": {
+        "@viewportvr/react": "workspace:*",
         "react": "catalog:",
         "react-dom": "catalog:",
         "three": "catalog:",
@@ -15,9 +16,11 @@
         "@react-three/drei": "catalog:",
         "@react-three/xr": "catalog:",
         "@react-three/uikit": "catalog:",
-        "@react-three/uikit-default": "catalog:"
+        "@react-three/uikit-default": "catalog:",
+        "troika-three-text": "catalog:"
     },
     "devDependencies": {
-        "@types/three": "catalog:"
+        "@types/three": "catalog:",
+        "@types/react": "catalog:"
     }
 }
