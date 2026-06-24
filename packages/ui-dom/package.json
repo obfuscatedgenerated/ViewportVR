@@ -5,7 +5,8 @@
     "main": "src/index.tsx",
     "types": "src/index.tsx",
     "scripts": {
-        "build": "tsc --build"
+        "build": "tsc --build",
+        "typecheck": "tsc --noEmit"
     },
     "dependencies": {
         "@viewportvr/auth": "workspace:*",

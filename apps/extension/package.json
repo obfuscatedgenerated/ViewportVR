@@ -8,7 +8,8 @@
         "dev": "plasmo dev",
         "build": "plasmo build",
         "package": "plasmo package",
-        "build-schema": "tsx scripts/build_json_schema.ts"
+        "typecheck": "tsc --noEmit",
+        "build-schema": "tsx ../../scripts/build_json_schema.ts"
     },
     "//": "note the hard coded react versions. plasmo cannot read catalog: react version, so will need to manually sync",
     "dependencies": {

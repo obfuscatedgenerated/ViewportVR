@@ -15,6 +15,7 @@ packages:
   - "apps/*"
   - "packages/*"
   - "packages/@types-custom/*"
+  - "scripts/"
 
 catalog:
    zod: "^4.4.3"

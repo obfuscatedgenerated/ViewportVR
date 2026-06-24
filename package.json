@@ -4,15 +4,16 @@
     "packageManager": "pnpm@10.19.0",
     "scripts": {
         "dev": "turbo run dev",
-        "build": "turbo run build"
+        "build": "turbo run build",
+        "typecheck": "turbo run typecheck --output-logs=errors-only --continue --parallel"
     },
     "devDependencies": {
-        "turbo": "latest",
-        "typescript": "5.9.3",
-        "prettier": "3.2.4",
         "@ianvs/prettier-plugin-sort-imports": "4.1.1",
-        "postcss": "^8.5.15",
         "autoprefixer": "^10.5.0",
-        "tsx": "^4.22.4"
+        "postcss": "^8.5.15",
+        "prettier": "3.2.4",
+        "tsx": "^4.22.4",
+        "turbo": "latest",
+        "typescript": "5.9.3"
     }
 }

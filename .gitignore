@@ -36,3 +36,5 @@ dist/
 *.iml
 .idea/
 .turbo
+
+schemas
