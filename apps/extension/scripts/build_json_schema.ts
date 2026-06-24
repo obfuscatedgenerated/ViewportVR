@@ -3,7 +3,7 @@ import path from "path";
 
 
 
-import { EXPORT_TO_JSON as AUTH_EXPORTS } from "~lib/auth/schema";
+import { EXPORT_TO_JSON as AUTH_EXPORTS } from "@viewportvr/auth/schema";
 import {z} from "zod";
 
 
@@ -41,7 +41,7 @@ for (const schema of EXPORT_TO_JSON) {
     const meta = schema.meta() as unknown as CustomSchemaMeta;
 
     // force the current version to be exact
-    raw_schema.properties.version = {
+    raw_schema.properties!.version = {
         type: "integer",
         const: meta.version
     };

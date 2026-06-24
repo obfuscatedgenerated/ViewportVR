@@ -1,8 +1,11 @@
 import { useMessageEngine, useStorage } from "@viewportvr/react";
 import { ToggleSwitch } from "@viewportvr/ui-dom";
-import bg from "data-base64:~../assets/popup_bg.webp";
 import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH } from "@viewportvr/watch-ui";
 import { Message } from "@viewportvr/core";
+
+import {get_asset_path} from "@asset-resolver";
+
+const bg = get_asset_path("bg.webp");
 
 const ToolGroup = ({
     title,
@@ -93,7 +96,7 @@ const ToolSettingSwitch = ({
     );
 };
 
-const DevTools = () => {
+export const DevToolsPage = () => {
     return (
         <main
             className="text-white w-full h-screen bg-cover bg-center font-sans"
@@ -155,4 +158,4 @@ const DevTools = () => {
 
 // TODO: namespace settings
 
-export default DevTools;
+export * from "./watch";

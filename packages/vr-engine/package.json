@@ -23,6 +23,7 @@
     "devDependencies": {
         "@types/three": "catalog:",
         "@types/react": "catalog:",
-        "@types/troika-three-text": "workspace:*"
+        "@types/troika-three-text": "workspace:*",
+        "@viewportvr/asset-resolver-type": "workspace:*"
     }
 }

@@ -95,8 +95,8 @@ importers:
         specifier: latest
         version: 2.9.18
       typescript:
-        specifier: 5.3.3
-        version: 5.3.3
+        specifier: 5.9.3
+        version: 5.9.3
 
   apps/extension:
     dependencies:
@@ -121,9 +121,15 @@ importers:
       '@viewportvr/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@viewportvr/pages':
+        specifier: workspace:*
+        version: link:../../packages/pages
       '@viewportvr/platform-extension':
         specifier: workspace:*
         version: link:../../packages/platform-extension
+      '@viewportvr/react':
+        specifier: workspace:*
+        version: link:../../packages/react
       '@viewportvr/ui-dom':
         specifier: workspace:*
         version: link:../../packages/ui-dom
@@ -170,6 +176,9 @@ importers:
       '@types/three':
         specifier: 'catalog:'
         version: 0.184.1
+      '@viewportvr/asset-resolver-type':
+        specifier: workspace:*
+        version: link:../../packages/asset-resolver-type
       postcss-preset-mantine:
         specifier: ^1.18.0
         version: 1.18.0(postcss@8.5.15)
@@ -185,6 +194,8 @@ importers:
 
   packages/@types-custom/troika-three-text: {}
 
+  packages/asset-resolver-type: {}
+
   packages/auth:
     dependencies:
       '@viewportvr/core':
@@ -198,6 +209,12 @@ importers:
 
   packages/pages:
     dependencies:
+      '@react-three/fiber':
+        specifier: 'catalog:'
+        version: 8.18.0(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0)
+      '@react-three/uikit':
+        specifier: 'catalog:'
+        version: 1.0.74(@react-three/fiber@8.18.0(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(three@0.184.0))(@types/react@18.2.48)(react@18.2.0)(three@0.184.0)(use-sync-external-store@1.6.0(react@18.2.0))
       '@viewportvr/core':
         specifier: workspace:*
         version: link:../core
@@ -217,6 +234,9 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 18.2.48
+      '@viewportvr/asset-resolver-type':
+        specifier: workspace:*
+        version: link:../asset-resolver-type
 
   packages/platform-browser:
     dependencies:
@@ -335,6 +355,9 @@ importers:
       '@types/troika-three-text':
         specifier: workspace:*
         version: link:../@types-custom/troika-three-text
+      '@viewportvr/asset-resolver-type':
+        specifier: workspace:*
+        version: link:../asset-resolver-type
 
   packages/watch-ui:
     dependencies:
@@ -4211,13 +4234,13 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.3.3:
-    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+  typescript@5.8.2:
+    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.8.2:
-    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -8487,9 +8510,9 @@ snapshots:
 
   typescript@5.2.2: {}
 
-  typescript@5.3.3: {}
-
   typescript@5.8.2: {}
+
+  typescript@5.9.3: {}
 
   undici-types@5.26.5: {}
 

@@ -1,17 +1,18 @@
 import "~shared.css";
 
-import bg from "data-base64:~../assets/popup_bg.webp";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useStorage } from "@plasmohq/storage/hook";
 
 import { version } from "~../package.json";
-import { Dropdown } from "~components/dom/Dropdown";
-import { ProfileButton } from "~components/dom/ProfileButton";
-import { ToggleSwitch } from "~components/dom/ToggleSwitch";
-import { useActiveTab } from "./hooks/useActiveTab";
-import { AuthSessionProvider } from "~lib/auth/context";
+import { Dropdown, ProfileButton, ToggleSwitch } from "@viewportvr/ui-dom";
+import { useActiveTab } from "~hooks/useActiveTab";
+import { AuthSessionProvider } from "@viewportvr/react";
 import { check_url_allowed } from "~util/url_patterns";
+
+import {get_asset_path} from "@asset-resolver";
+
+const bg = get_asset_path("bg.webp");
 
 const Popup = () => {
     const [active, setActive] = useState(false);
@@ -70,11 +71,16 @@ const Popup = () => {
     const active_tab = useActiveTab();
 
     const launch_allowed = useMemo(() => {
-        if (!active_tab) return false;
+        if (!active_tab || !active_tab.url) return false;
         return check_url_allowed(active_tab.url);
     }, [active_tab]);
 
     const launch = useCallback(() => {
+        if (!active_tab) {
+            console.warn("No active tab found.");
+            return;
+        }
+
         if (!launch_allowed) {
             console.warn("Launch not allowed in this context:", active_tab.url);
             return;
@@ -85,7 +91,7 @@ const Popup = () => {
             tab: active_tab.id
         });
         window.close();
-    }, [launch_allowed]);
+    }, [launch_allowed, active_tab]);
 
     return (
         <AuthSessionProvider>

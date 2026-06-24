@@ -1,0 +1,9 @@
+{
+    "name": "@viewportvr/asset-resolver-type",
+    "version": "0.0.0",
+    "private": true,
+    "types": "index.d.ts",
+    "files": [
+        "index.d.ts"
+    ]
+}

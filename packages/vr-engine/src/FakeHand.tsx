@@ -8,12 +8,16 @@ import {
     useXRInputSourceStateContext,
     XRSpace
 } from "@react-three/xr";
+import { useStorage } from "@viewportvr/react";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import left_hand from "url:~./assets/hands/left.glb";
-import right_hand from "url:~./assets/hands/right.glb";
 
-import { useStorage } from "@plasmohq/storage/hook";
+import { get_asset_path } from "@asset-resolver";
+
+const ASSET_PKG = "vr-engine/assets";
+
+const left_hand = get_asset_path("hands/left.glb", ASSET_PKG);
+const right_hand = get_asset_path("hands/right.glb", ASSET_PKG);
 
 const FINGER_NAMES = ["middle", "ring", "pinky"];
 const SEGMENT_NAMES = ["proximal", "intermediate", "distal"];
@@ -40,16 +44,20 @@ export const FakeHand = () => {
     );
 
     // which hand is the watch on?
-    const [watch_hand] = useStorage("settings.watch_hand", "left");
+    const [watch_hand] = useStorage("sync", "settings.watch_hand", "left");
 
     const rayOriginRef = useRef<THREE.Group>(null);
     const rayPointer = useRayPointer(rayOriginRef, state);
     const wasTriggerDownRef = useRef(false);
-    const [debug_ray_hit] = useStorage("settings.debug_ray_hits", false);
+    const [debug_ray_hit] = useStorage(
+        "sync",
+        "settings.debug_ray_hits",
+        false
+    );
 
     const touchOriginRef = useRef<THREE.Group>(null);
     const touchPointer = useTouchPointer(touchOriginRef, state);
-    const [debug_touch] = useStorage("settings.debug_touch", false);
+    const [debug_touch] = useStorage("sync", "settings.debug_touch", false);
 
     // Smoothed curl amount (0 = open, ~1.2 = closed fist). This is the ONLY
     // value we smooth — every bone pose is derived from it each frame, so

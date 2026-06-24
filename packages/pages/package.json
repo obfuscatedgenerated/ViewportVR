@@ -12,9 +12,12 @@
         "@viewportvr/react": "workspace:*",
         "@viewportvr/ui-dom": "workspace:*",
         "@viewportvr/watch-ui": "workspace:*",
-        "react": "catalog:"
+        "react": "catalog:",
+        "@react-three/fiber": "catalog:",
+        "@react-three/uikit": "catalog:"
     },
     "devDependencies": {
-        "@types/react": "catalog:"
+        "@types/react": "catalog:",
+        "@viewportvr/asset-resolver-type": "workspace:*"
     }
 }

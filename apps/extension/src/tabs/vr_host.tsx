@@ -1,21 +1,9 @@
-import { Canvas } from "@react-three/fiber";
-import { createXRStore, PointerEvents, XR } from "@react-three/xr";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import "~shared.css";
 
-import { CanvasResizer } from "../../../../packages/vr-engine/src/CanvasResizer";
-import { DOMMirror } from "../../../../packages/vr-engine/src/DOMMirror";
-import { FakeHand } from "../../../../packages/vr-engine/src/FakeHand";
-import { SpectatorCameraController } from "../../../../packages/vr-engine/src/SpectatorCameraController";
-import { URLBar } from "../../../../packages/vr-engine/src/URLBar";
-import { WristWatch } from "../../../../packages/vr-engine/src/WristWatch";
-import { LogoOverlay } from "~components/dom/LogoOverlay";
-import { TabSessionProvider, useTabSession } from "../../../../packages/react/src/contexts/TabSession";
-
-const xr_store = createXRStore({
-    controller: FakeHand
-});
+import { TabSessionProvider } from "@viewportvr/react";
+import { VRHost, xr_store } from "@viewportvr/vr-engine";
 
 const SpectatorWindow = () => {
     const [started, setStarted] = useState(false);
@@ -45,7 +33,7 @@ const SpectatorWindow = () => {
         const handle_device_change = async () => {
             const supported =
                 await navigator.xr?.isSessionSupported("immersive-vr");
-            setIsSupported(supported);
+            setIsSupported(supported || false);
         };
 
         navigator.xr?.addEventListener("devicechange", handle_device_change);
@@ -82,39 +70,14 @@ const SpectatorWindow = () => {
                             className="px-4 py-2 bg-blue-600 rounded-lg hover:not-disabled:bg-blue-700 transition text-xl font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-600"
                             onClick={enter_vr}
                             disabled={!is_supported}>
-                            {is_supported ? "Enter VR" : "No VR device detected!"}
+                            {is_supported
+                                ? "Enter VR"
+                                : "No VR device detected!"}
                         </button>
                     </div>
                 )}
                 <div className="h-screen w-screen bg-black flex items-center justify-center">
-                    <div
-                        className="w-full h-full max-w-[calc(100vh*16/9)] max-h-[calc(100vw*9/16)] relative"
-                        ref={canvas_container_ref}>
-                        <LogoOverlay />
-
-                        <Canvas gl={{ alpha: false }}>
-                            <CanvasResizer containerRef={canvas_container_ref} />
-
-                            <XR store={xr_store}>
-                                <PointerEvents />
-
-                                <color attach="background" args={["#111111"]} />
-                                <ambientLight intensity={0.5} />
-                                <pointLight position={[10, 10, 10]} />
-
-                                <URLBar
-                                    position={[0, 3.25, -4]}
-                                    height={0.25}
-                                    height_of_dom_mirror={3}
-                                />
-                                <DOMMirror position={[0, 1.5, -4]} height={3} />
-
-                                <WristWatch />
-
-                                <SpectatorCameraController />
-                            </XR>
-                        </Canvas>
-                    </div>
+                    <VRHost />
                 </div>
             </main>
         </TabSessionProvider>

@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { type StorageEngine, type MessageEngine, StorageKind } from "@viewportvr/core";
+import type { StorageEngine, MessageEngine, StorageKind } from "@viewportvr/core";
 
 type StorageEngineContextType = Partial<Record<StorageKind, StorageEngine>>;
 const StorageEnginesContext = createContext<StorageEngineContextType | null>(null);
