@@ -1,9 +1,9 @@
 import type { ActionMessage, EventMessage } from "./message_defs";
 
 export interface MessageChannel<Tx = ActionMessage, Rx = EventMessage> {
-    send(payload: Tx): Promise<Rx>;
+    send(payload: Tx): Promise<void>;
 
-    listen(handler: (payload: Rx) => Promise<Tx> | void): () => void;
+    listen(handler: (payload: Rx) => Promise<void>): () => void;
 
     on_disconnect(handler: () => void): () => void;
 
@@ -16,7 +16,7 @@ export interface MessageEngine {
 
     // returns a function to remove the listener
     listen<Rx = EventMessage>(
-        handler: (event: Rx) => Promise<void> | void
+        handler: (event: Rx) => Promise<void>
     ): () => void;
 
     // long-lived connections

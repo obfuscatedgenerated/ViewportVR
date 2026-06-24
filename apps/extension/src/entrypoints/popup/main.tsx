@@ -1,17 +1,20 @@
-import "~shared.css";
+import "~/shared.css";
 
-import { AuthSessionProvider, ContextProviders, StorageEnginesProvider } from "@viewportvr/react";
+import {
+    ExtensionMessageEngine,
+    ExtensionStorage
+} from "@viewportvr/platform-extension";
+import { useStorageFromEngine } from "@viewportvr/react";
 import { Dropdown, ProfileButton, ToggleSwitch } from "@viewportvr/ui-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import ReactDOM from "react-dom/client";
 
-import { useStorage } from "@plasmohq/storage/hook";
+import { DefaultContextProviders } from "~/contexts/DefaultContextProviders";
+import { useActiveTab } from "~/hooks/useActiveTab";
+import { check_url_allowed } from "~/util/url_patterns";
 
-import { version } from "~../package.json";
-import { useActiveTab } from "~hooks/useActiveTab";
-import { check_url_allowed } from "~util/url_patterns";
-
+import { version } from "../../../package.json";
 import { get_asset_path } from "@viewportvr/asset-resolver";
-import { ExtensionStorage } from "@viewportvr/platform-extension";
 
 const bg = get_asset_path("bg.webp");
 
@@ -26,18 +29,25 @@ const Popup = () => {
     const local_storage = useMemo(() => new ExtensionStorage("local"), []);
     const sync_storage = useMemo(() => new ExtensionStorage("sync"), []);
     const session_storage = useMemo(() => new ExtensionStorage("session"), []);
-    const storage_engines = useMemo(() => ({
-        local: local_storage,
-        sync: sync_storage,
-        session: session_storage
-    }), [local_storage, sync_storage, session_storage]);
+    const storage_engines = useMemo(
+        () => ({
+            local: local_storage,
+            sync: sync_storage,
+            session: session_storage
+        }),
+        [local_storage, sync_storage, session_storage]
+    );
 
-    const [use_debug_input, setUseDebugInput] = useStorage(
+    const messenger = useMemo(() => new ExtensionMessageEngine(), []);
+
+    const [use_debug_input, setUseDebugInput] = useStorageFromEngine(
+        sync_storage,
         "settings.use_debug_input",
         false
     );
 
-    const [watch_hand, setWatchHand] = useStorage(
+    const [watch_hand, setWatchHand] = useStorageFromEngine(
+        sync_storage,
         "settings.watch_hand",
         "left"
     );
@@ -96,7 +106,7 @@ const Popup = () => {
             return;
         }
 
-        chrome.runtime.sendMessage({
+        messenger.send({
             action: "VVR_LAUNCH",
             tab: active_tab.id
         });
@@ -104,14 +114,9 @@ const Popup = () => {
     }, [launch_allowed, active_tab]);
 
     return (
-        <ContextProviders providers={[
-            ({children}) => (
-                <StorageEnginesProvider engines={storage_engines}>
-                    {children}
-                </StorageEnginesProvider>
-            ),
-            AuthSessionProvider
-        ]}>
+        <DefaultContextProviders
+            storage_engines={storage_engines}
+            messenger={messenger}>
             <div className="bg-gray-900 text-white w-70 h-100">
                 <img
                     src={bg}
@@ -169,17 +174,17 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                         <a
                             target="_blank"
                             rel="noreferrer noopener"
-                            href="tabs/devtools.html"
+                            href="/devtools.html"
                             className="underline hover:text-white transition">
                             DevTools
                         </a>
                     </span>
                 </div>
             </div>
-        </ContextProviders>
+        </DefaultContextProviders>
     );
 };
 
 // TODO: check if launch allowed in context (not protected page), dont mark active or interactable if not
 
-export default Popup;
+ReactDOM.createRoot(document.getElementById("root")!).render(<Popup />);

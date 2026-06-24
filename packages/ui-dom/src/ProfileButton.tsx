@@ -1,11 +1,10 @@
 import { CircleUserRound } from "lucide-react";
-import { useAuthSession } from "@viewportvr/react";
+import { useAuthSession, useMessageEngine } from "@viewportvr/react";
 import { Avatar } from "./Avatar";
-
-const LOGIN_URL = "./tabs/login.html";
 
 export const ProfileButton = () => {
     const auth_session = useAuthSession();
+    const messenger = useMessageEngine();
 
     if (auth_session) {
         // TODO: option to log out or open some profile
@@ -17,8 +16,9 @@ export const ProfileButton = () => {
             className="w-10 h-10 rounded-full text-white flex items-center justify-center cursor-pointer"
             title="Open login window"
             onClick={() => {
-                chrome.windows.create({
-                    url: LOGIN_URL,
+                messenger.send({
+                    action: "VVR_CREATE_WINDOW",
+                    intent: "LOGIN",
                     type: "popup",
                     width: 400,
                     height: 600,

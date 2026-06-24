@@ -13,6 +13,7 @@
         "moduleResolution": "node",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "module": "ESNext",
-        "target": "ESNext"
+        "target": "ESNext",
+        "resolveJsonModule": true
     }
 }

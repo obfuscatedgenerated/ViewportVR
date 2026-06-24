@@ -5,7 +5,7 @@ import type {
 } from "@viewportvr/core";
 import { createContext, useContext } from "react";
 
-type StorageEnginesContextType<K extends StorageKind = StorageKind> = {
+export type StorageEnginesContextType<K extends StorageKind = StorageKind> = {
     [P in K]?: StorageEngine<P>;
 };
 const StorageEnginesContext = createContext<StorageEnginesContextType | null>(

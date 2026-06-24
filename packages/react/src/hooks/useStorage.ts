@@ -1,12 +1,23 @@
+import type { StorageEngine, StorageKind } from "@viewportvr/core";
 import { useEffect, useState } from "react";
 
-import type { StorageKind } from "@viewportvr/core";
 import { useStorageEngine } from "../contexts";
 
-export function useStorage<T>(kind: StorageKind, key: string, default_value: T): [T | null, (new_value: T) => Promise<void>] {
+export const useStorage = <T>(
+    kind: StorageKind,
+    key: string,
+    default_value: T
+): [T, (new_value: T) => Promise<void>] => {
     const engine = useStorageEngine(kind);
+    return useStorageFromEngine<T>(engine, key, default_value);
+};
 
-    const [value, setValue] = useState<T | null>(default_value);
+export const useStorageFromEngine = <T>(
+    engine: StorageEngine,
+    key: string,
+    default_value: T
+): [T, (new_value: T) => Promise<void>] => {
+    const [value, setValue] = useState<T>(default_value);
 
     // set initial value from storage if present
     useEffect(() => {
@@ -17,7 +28,13 @@ export function useStorage<T>(kind: StorageKind, key: string, default_value: T):
 
     // watch for changes in storage and update state accordingly
     useEffect(() => {
-        const unwatch = engine.watch<T>(key, setValue);
+        const unwatch = engine.watch<T>(key, (new_value) => {
+            if (new_value === null) {
+                setValue(default_value);
+            } else {
+                setValue(new_value);
+            }
+        });
         return () => unwatch();
     }, [engine, key]);
 
@@ -28,4 +45,4 @@ export function useStorage<T>(kind: StorageKind, key: string, default_value: T):
     };
 
     return [value, setStorageValue] as const;
-}
+};

@@ -9,9 +9,10 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@viewportvr/core": "workspace:*"
+        "@viewportvr/core": "workspace:*",
+        "webextension-polyfill": "^0.12.0"
     },
     "devDependencies": {
-        "@types/chrome": "catalog:"
+        "@types/webextension-polyfill": "^0.12.5"
     }
 }

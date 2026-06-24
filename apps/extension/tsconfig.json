@@ -1,13 +1,16 @@
 {
-    "extends": ["../../tsconfig.base.json", "plasmo/templates/tsconfig.base"],
+    "extends": ["../../tsconfig.base.json", "./.wxt/tsconfig.json"],
     "exclude": ["node_modules"],
-    "include": [".plasmo/index.d.ts", "src/**/*.ts", "src/**/*.tsx"],
+    "include": ["src/**/*", ".wxt/types/**/*.d.ts", "wxt.config.ts"],
     "compilerOptions": {
         "paths": {
-            "~*": ["./src/*"],
-            "@viewportvr/asset-resolver": ["../../packages/asset-resolver/asset-resolver.d.ts"],
+            "~*": ["src/*"],
+            "@viewportvr/asset-resolver": [
+                "../../packages/asset-resolver/asset-resolver.d.ts"
+            ]
         },
         "baseUrl": ".",
-        "composite": false
+        "composite": false,
+        "resolveJsonModule": true
     }
 }

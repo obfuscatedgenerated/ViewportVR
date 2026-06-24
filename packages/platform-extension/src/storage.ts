@@ -1,4 +1,6 @@
+import browser from "webextension-polyfill";
 import type { StorageEngine, StorageKind } from "@viewportvr/core";
+
 
 export class ExtensionStorage<T extends StorageKind> implements StorageEngine {
     readonly kind: T;
@@ -7,70 +9,38 @@ export class ExtensionStorage<T extends StorageKind> implements StorageEngine {
         this.kind = kind;
     }
 
-    get<V>(key: string): Promise<V | null> {
-        return new Promise((resolve, reject) => {
-            try {
-                chrome.storage[this.kind].get(key, (result: unknown) => {
-                    if (chrome.runtime.lastError) {
-                        reject(chrome.runtime.lastError);
-                    } else {
-                        resolve(result as V | null);
-                    }
-                });
-            } catch (error) {
-                reject(error);
-            }
-        });
+    async get<V>(key: string): Promise<V | null> {
+        // browser.storage natively throws on error, no need to manually check lastError!
+        const result = await browser.storage[this.kind].get(key);
+
+        // Note: browser.storage.get() returns an object like { [key]: value }
+        return (result[key] as V) ?? null;
     }
 
-    set<V>(key: string, value: V): Promise<void> {
-        return new Promise((resolve, reject) => {
-            try {
-                chrome.storage[this.kind].set({ [key]: value }, () => {
-                    if (chrome.runtime.lastError) {
-                        reject(chrome.runtime.lastError);
-                    } else {
-                        resolve();
-                    }
-                });
-            } catch (error) {
-                reject(error);
-            }
-        });
+    async set<V>(key: string, value: V): Promise<void> {
+        await browser.storage[this.kind].set({ [key]: value });
     }
 
-    remove(key: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-            try {
-                chrome.storage[this.kind].remove(key, () => {
-                    if (chrome.runtime.lastError) {
-                        reject(chrome.runtime.lastError);
-                    } else {
-                        resolve();
-                    }
-                });
-            } catch (error) {
-                reject(error);
-            }
-        });
+    async remove(key: string): Promise<void> {
+        await browser.storage[this.kind].remove(key);
     }
 
     watch<V>(key: string, callback: (new_value: V | null) => void): () => void {
         const listener = (
-            changes: { [key: string]: chrome.storage.StorageChange },
+            // You can use standard Record types here since the polyfill handles the shape
+            changes: Record<string, { newValue?: any; oldValue?: any }>,
             areaName: string
         ) => {
             if (areaName === this.kind && changes[key]) {
-                callback(changes[key].newValue ?? null);
+                callback((changes[key].newValue as V) ?? null);
             }
         };
 
-        chrome.storage.onChanged.addListener(listener);
+        browser.storage.onChanged.addListener(listener);
 
+        // Return the cleanup function
         return () => {
-            chrome.storage.onChanged.removeListener(listener);
+            browser.storage.onChanged.removeListener(listener);
         };
     }
 }
-
-// TODO: switch to browser namespace (promises)

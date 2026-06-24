@@ -1,6 +1,6 @@
 import type { WindowArguments, WindowArgumentsStrategy } from "@viewportvr/core";
 
-export class BrowserWindowArgumentsStrategy implements WindowArgumentsStrategy<string> {
+export class URLParamsWindowArgumentsStrategy implements WindowArgumentsStrategy<string> {
     retrieve(): string {
         return window.location.search.substring(1);
     }

@@ -1,10 +1,11 @@
 import {SchemaForm} from "@viewportvr/ui-dom";
 import { AuthManifestSchema } from "@viewportvr/auth";
+import ReactDOM from "react-dom/client";
 
 
 const SCHEMAS = {
     "AuthManifest": {schema: AuthManifestSchema, title: "Auth Manifest Generator"}
-}
+} as Record<string, {schema: any, title: string}>;
 
 const params = new URLSearchParams(window.location.search);
 const schema_name = params.get("schema");
@@ -38,7 +39,7 @@ const download_form = (data: any) => {
     format_func(data);
 };
 
-const DevtoolsForm = () => {
+const DevToolsFormUI = () => {
     if (!schema) {
         return <div>No schema found</div>;
     }
@@ -56,4 +57,4 @@ const DevtoolsForm = () => {
     );
 }
 
-export default DevtoolsForm;
+ReactDOM.createRoot(document.getElementById("root")!).render(<DevToolsFormUI />);

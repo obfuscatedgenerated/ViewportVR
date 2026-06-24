@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import ReactDOM from "react-dom/client";
 
-import "~shared.css";
+import "~/shared.css";
 
-import { TabSessionProvider } from "@viewportvr/react";
 import { VRHost, xr_store } from "@viewportvr/vr-engine";
+import { DefaultContextProviders } from "~/contexts/DefaultContextProviders";
 
-const SpectatorWindow = () => {
+const SpectatorUI = () => {
     const [started, setStarted] = useState(false);
     const [is_supported, setIsSupported] = useState<boolean | null>(false);
 
@@ -46,8 +47,6 @@ const SpectatorWindow = () => {
         };
     }, []);
 
-    const canvas_container_ref = useRef<HTMLDivElement>(null);
-
     if (is_supported === null) {
         return (
             <div className="bg-black/80 backdrop-blur-md absolute inset-0 flex flex-col items-center justify-center z-50 text-white gap-8">
@@ -60,7 +59,7 @@ const SpectatorWindow = () => {
     }
 
     return (
-        <TabSessionProvider>
+        <DefaultContextProviders>
             <main className="font-sans">
                 {!started && (
                     <div className="bg-black/80 backdrop-blur-md absolute inset-0 flex flex-col items-center justify-center z-50 text-white gap-8">
@@ -80,8 +79,8 @@ const SpectatorWindow = () => {
                     <VRHost />
                 </div>
             </main>
-        </TabSessionProvider>
+        </DefaultContextProviders>
     );
 };
 
-export default SpectatorWindow;
+ReactDOM.createRoot(document.getElementById("root")!).render(<SpectatorUI />);
