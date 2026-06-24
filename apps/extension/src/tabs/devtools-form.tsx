@@ -1,8 +1,5 @@
-import {SchemaForm} from "~components/dom/SchemaForm";
-import { AuthManifestSchema } from "~lib/auth/schema";
-
-
-
+import {SchemaForm} from "@viewportvr/ui-dom";
+import { AuthManifestSchema } from "@viewportvr/auth";
 
 
 const SCHEMAS = {
@@ -29,7 +26,7 @@ const download_json = (data: any) => {
 
 const FORMATS = {
     json: download_json
-};
+} as Record<string, (data: any) => void>;
 
 const download_form = (data: any) => {
     console.log("Downloading form data", data);

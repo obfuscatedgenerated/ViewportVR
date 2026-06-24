@@ -2,7 +2,7 @@ import { type StorageEngine } from "@viewportvr/core";
 
 
 
-import type { Identity, StoredKey } from "./index";
+import type { Identity, StoredKey } from "./core";
 import { DeviceRecordSchema, StaticIdentityRecordSchema, type DeviceRecord, type StaticIdentityRecord } from "./schema";
 
 

@@ -16,6 +16,7 @@
         "@viewportvr/vr-engine": "workspace:*",
         "@viewportvr/platform-extension": "workspace:*",
         "@viewportvr/watch-ui": "workspace:*",
+        "@viewportvr/auth": "workspace:*",
         "@plasmohq/messaging": "^0.7.2",
         "@plasmohq/storage": "^1.15.0",
         "@react-three/xr": "catalog:",
