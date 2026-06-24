@@ -1,7 +1,7 @@
 import type { ThreeEvent, Vector3 } from "@react-three/fiber";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { useTabSession } from "~contexts/TabSession";
+import { useTabSession, useMessageEngine } from "@viewportvr/react";
 
 export const DOMMirror = ({
     position,
@@ -16,10 +16,12 @@ export const DOMMirror = ({
         click_y: number
     ) => boolean; // return false to veto the click
 }) => {
+    const messenger = useMessageEngine();
+
     const videoRef = useRef(document.createElement("video"));
 
     const session = useTabSession();
-    const tabDims = session.dimensions;
+    const tabDims = session.dimensions || { width: 0, height: 0 };
 
     // State 2: The oversized square stream (the envelope)
     const [videoDims, setVideoDims] = useState({ width: 0, height: 0 });
@@ -112,11 +114,11 @@ export const DOMMirror = ({
             }
         };
 
-        chrome.runtime.onMessage.addListener(handle_message);
-        chrome.runtime.sendMessage({ action: "VVR_START_STREAM", tab: session.id });
+        messenger.listen(handle_message);
+        messenger.send({ action: "VVR_START_STREAM", tab: session.id });
 
-        return () => chrome.runtime.onMessage.removeListener(handle_message);
-    }, []);
+        return () => messenger.unlisten(handle_message);
+    }, [messenger, session.id]);
 
     // 3. Resize the physical plane to exactly match the tab's aspect ratio
     const planeWidth = (tabDims.width / tabDims.height) * height;
@@ -136,7 +138,7 @@ export const DOMMirror = ({
                 return;
             }
 
-            chrome.runtime.sendMessage({
+            messenger.send({
                 action: "VVR_CLICK",
                 tab: session.id,
                 pos: {
@@ -150,7 +152,7 @@ export const DOMMirror = ({
                 }
             });
         },
-        [tabDims, texture]
+        [tabDims, texture, messenger, session.id, before_click]
     );
 
     return (

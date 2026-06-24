@@ -1,25 +1,35 @@
 export interface MessageChannel<Tx = any, Rx = any> {
-    postMessage(msg: Tx): void;
+    send(payload: Tx): Promise<Rx>;
 
-    onMessage(handler: (msg: Rx) => void): () => void;
+    listen(handler: (payload: Rx) => Promise<Tx> | void): () => void;
 
-    onDisconnect(handler: () => void): () => void;
+    unlisten(handler: (payload: Rx) => Promise<Tx> | void): void;
+
+    on_disconnect(handler: () => void): () => void;
+    remove_disconnect_listener(handler: () => void): void;
 
     disconnect(): void;
 }
 
 export interface MessageEngine {
     // one off messages
-    send<Req, Res>(target: string, payload: Req): Promise<Res>;
+    send<Req, Res>(payload: Req): Promise<Res>;
+
+    // returns a function to remove the listener (or pass original handler to unlisten)
     listen<Req, Res>(
-        action: string,
         handler: (payload: Req) => Promise<Res> | void
     ): () => void;
 
+    unlisten<Req, Res>(handler: (payload: Req) => Promise<Res> | void): void;
+
     // long-lived connections
-    connect<Tx, Rx>(channelName: string): MessageChannel<Tx, Rx>;
-    onConnect<Tx, Rx>(
-        channelName: string,
+    connect<Tx, Rx>(channel_name: string): MessageChannel<Tx, Rx>;
+
+    // returns a function to remove the listener (or pass original handler to remove_channel_listener)
+    on_connect<Tx, Rx>(
+        channel_name: string,
         handler: (channel: MessageChannel<Rx, Tx>) => void
     ): () => void;
+
+    remove_channel_listener<Tx, Rx>(channel_name: string, handler: (channel: MessageChannel<Rx, Tx>) => void): void;
 }

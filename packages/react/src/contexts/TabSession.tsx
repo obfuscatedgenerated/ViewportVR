@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useMessageEngine } from "./engines";
 
 const params = new URLSearchParams(window.location.search);
 const TAB_ID = params.get("tab") ? parseInt(params.get("tab")!) : null;
@@ -19,6 +20,8 @@ export const TabSessionProvider = ({
 }: {
     children: React.ReactNode;
 }) => {
+    const messenger = useMessageEngine();
+
     const [url, setUrl] = useState<string | null>(null);
     const [dimensions, setDimensions] = useState<{
         width: number;
@@ -46,8 +49,8 @@ export const TabSessionProvider = ({
             }
         };
 
-        chrome.runtime.onMessage.addListener(handle_message);
-        return () => chrome.runtime.onMessage.removeListener(handle_message);
+        messenger.listen(handle_message);
+        return () => messenger.unlisten(handle_message);
     });
 
     return (

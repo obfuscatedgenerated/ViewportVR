@@ -9,7 +9,7 @@ import { version } from "~../package.json";
 import { Dropdown } from "~components/dom/Dropdown";
 import { ProfileButton } from "~components/dom/ProfileButton";
 import { ToggleSwitch } from "~components/dom/ToggleSwitch";
-import { useActiveTab } from "~hooks/useActiveTab";
+import { useActiveTab } from "./hooks/useActiveTab";
 import { AuthSessionProvider } from "~lib/auth/context";
 import { check_url_allowed } from "~util/url_patterns";
 

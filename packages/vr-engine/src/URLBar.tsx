@@ -3,7 +3,7 @@ import type { Vector3 } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import { configureTextBuilder } from "troika-three-text";
 
-import { useTabSession } from "~contexts/TabSession";
+import { useTabSession } from "@viewportvr/react";
 
 // its not happy! turn off web workers
 configureTextBuilder({

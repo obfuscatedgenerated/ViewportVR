@@ -30,6 +30,7 @@ dist/
 .plasmo
 
 # typescript
+/**/*.tsbuildinfo
 .tsbuildinfo
 
 *.iml

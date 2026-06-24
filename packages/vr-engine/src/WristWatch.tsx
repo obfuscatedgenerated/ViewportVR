@@ -3,13 +3,13 @@ import { Container } from "@react-three/uikit";
 import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
-import { useStorage } from "@plasmohq/storage/hook";
+import { useStorage } from "@viewportvr/react";
 
 import {
     WatchUI,
     WATCH_UI_HEIGHT,
     WATCH_UI_WIDTH
-} from "~components/3d/ui/WatchUI";
+} from "@viewportvr/watch-ui";
 
 const OPEN_THRESHOLD = 0.85; // Harder to open
 const CLOSE_THRESHOLD = 0.7; // Easier to keep open
@@ -31,7 +31,7 @@ export const WristWatch = () => {
         []
     );
 
-    const [watch_hand] = useStorage("settings.watch_hand", "left");
+    const [watch_hand] = useStorage("sync", "settings.watch_hand", "left");
 
     // Notice we grab `xrFrame` from the useFrame callback!
     useFrame((state, delta, xrFrame) => {

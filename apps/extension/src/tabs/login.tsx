@@ -7,7 +7,7 @@ import { Storage } from "@plasmohq/storage";
 
 
 import { LoadingSpinner } from "~components/dom/LoadingSpinner";
-import { useDebounce } from "~hooks/useDebounce";
+import { useDebounce } from "../../../../packages/react/src/hooks/useDebounce";
 import { parse_identity, resolve_identity, store_auth_session, type ActionableMethods, type Identity, type IdentityResolutionData, type LoginAction, type LoginMethod, type StoredKey } from "~lib/auth";
 import { StaticIdentityRecordSchema, type StaticIdentityRecord } from "~lib/auth/schema";
 import { check_static_credentials, signup_static } from "~lib/auth/static";

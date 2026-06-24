@@ -2,10 +2,10 @@
     "name": "@viewportvr/ui-dom",
     "version": "0.0.1",
     "private": true,
-    "main": "./src/index.tsx",
-    "types": "./src/index.tsx",
+    "main": "src/index.ts",
+    "types": "src/index.ts",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc --build"
     },
     "dependencies": {
         "@viewportvr/auth": "workspace:*",
@@ -17,6 +17,10 @@
         "@autoform/react": "^4.0.0",
         "@autoform/zod": "^5.0.0",
         "@mantine/core": "^7.17.8",
-        "@mantine/dates": "^7.17.8"
+        "@mantine/dates": "^7.17.8",
+        "react-hook-form": "^7.80.0"
+    },
+    "devDependencies": {
+        "@types/react": "catalog:"
     }
 }

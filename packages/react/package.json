@@ -1,15 +1,18 @@
 {
-    "name": "@viewportvr/hooks",
+    "name": "@viewportvr/react",
     "version": "0.0.1",
     "private": true,
-    "main": "./src/index.ts",
-    "types": "./src/index.ts",
+    "main": "src/index.ts",
+    "types": "src/index.ts",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc --build"
     },
     "dependencies": {
         "@viewportvr/core": "workspace:*",
         "@viewportvr/auth": "workspace:*",
         "react": "catalog:"
+    },
+    "devDependencies": {
+        "@types/react": "catalog:"
     }
 }

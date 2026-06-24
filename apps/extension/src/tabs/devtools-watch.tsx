@@ -8,7 +8,7 @@ import {
     WATCH_UI_WIDTH,
     WatchUI
 } from "~components/3d/ui/WatchUI";
-import { MockTabSessionProvider } from "~contexts/TabSession";
+import { MockTabSessionProvider } from "../../../../packages/react/src/contexts/TabSession";
 
 const DevToolsWatchUI = () => {
     return (

@@ -1,0 +1,17 @@
+{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "declaration": true,
+        "declarationMap": true,
+        "composite": true,
+        "paths": {
+            "@viewportvr/core": ["../core/src/index.ts"],
+            "@viewportvr/auth": ["../auth/src/index.ts"],
+            "@viewportvr/react": ["../react/src/index.ts"],
+            "@viewportvr/ui-dom": ["../ui-dom/src/index.ts"],
+            "@viewportvr/watch-ui": ["../watch-ui/src/index.tsx"],
+            "@viewportvr/vr-engine": ["../vr-engine/src/index.ts"],
+            "@viewportvr/pages": ["../pages/src/index.ts"]
+        }
+    }
+}

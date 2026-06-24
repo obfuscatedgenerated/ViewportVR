@@ -4,14 +4,14 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import "~shared.css";
 
-import { CanvasResizer } from "~components/3d/CanvasResizer";
-import { DOMMirror } from "~components/3d/DOMMirror";
-import { FakeHand } from "~components/3d/FakeHand";
-import { SpectatorCameraController } from "~components/3d/SpectatorCameraController";
-import { URLBar } from "~components/3d/URLBar";
-import { WristWatch } from "~components/3d/WristWatch";
+import { CanvasResizer } from "../../../../packages/vr-engine/src/CanvasResizer";
+import { DOMMirror } from "../../../../packages/vr-engine/src/DOMMirror";
+import { FakeHand } from "../../../../packages/vr-engine/src/FakeHand";
+import { SpectatorCameraController } from "../../../../packages/vr-engine/src/SpectatorCameraController";
+import { URLBar } from "../../../../packages/vr-engine/src/URLBar";
+import { WristWatch } from "../../../../packages/vr-engine/src/WristWatch";
 import { LogoOverlay } from "~components/dom/LogoOverlay";
-import { TabSessionProvider, useTabSession } from "~contexts/TabSession";
+import { TabSessionProvider, useTabSession } from "../../../../packages/react/src/contexts/TabSession";
 
 const xr_store = createXRStore({
     controller: FakeHand

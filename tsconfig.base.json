@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
+
         /* Base Engine Settings */
         "target": "ES2022",
         "module": "ESNext",
@@ -17,6 +19,8 @@
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+
+        "noImplicitAny": true,
     }
 }
