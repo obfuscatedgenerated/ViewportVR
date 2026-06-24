@@ -1,9 +1,7 @@
 import { Storage } from "@plasmohq/storage";
 
-import { AuthManifestSchema, StaticIdentityRecordSchema, type AuthManifest, type StaticIdentityRecord } from "~lib/auth/schema";
+import { AuthManifestSchema, StaticIdentityRecordSchema, type AuthManifest, type StaticIdentityRecord, AUTH_METHODS } from "~lib/auth/schema";
 
-
-export const AUTH_METHODS = ["static", "jwt"] as const;
 export type LoginMethod = (typeof AUTH_METHODS)[number];
 
 export type LoginAction = "login" | "signup";
@@ -118,11 +116,15 @@ export interface StoredKey {
 
 export type ActionableMethods = Partial<Record<LoginMethod, LoginAction[]>>;
 
-interface SuccessfulIdentityResolution {
-    resolved: true;
+export interface IdentityResolutionData {
     allowed: ActionableMethods;
+    auth_manifest?: AuthManifest;
     stored_key?: StoredKey;
     static_record?: StaticIdentityRecord;
+}
+
+interface SuccessfulIdentityResolution extends IdentityResolutionData {
+    resolved: true;
 }
 
 interface FailedIdentityResolution {
@@ -190,7 +192,8 @@ export const resolve_identity = async (
         };
     }
 
-    const { methods } = manifest_data as AuthManifest;
+    const auth_manifest = manifest_data as AuthManifest;
+    const { methods } = auth_manifest;
 
     // if only one method is supported, select it automatically
     if (methods.length === 1) {
@@ -201,6 +204,7 @@ export const resolve_identity = async (
             if (static_record.success && static_record.record) {
                 return {
                     resolved: true,
+                    auth_manifest,
                     allowed: {
                         static: ["login"]
                     },
@@ -213,6 +217,7 @@ export const resolve_identity = async (
                 // doesnt exist so only offer signup
                 return {
                     resolved: true,
+                    auth_manifest,
                     allowed: {
                         static: ["signup"]
                     }
@@ -229,6 +234,7 @@ export const resolve_identity = async (
             // jwt doesnt distinguish login and signup
             return {
                 resolved: true,
+                auth_manifest,
                 allowed: {
                     jwt: ["login"]
                 }
@@ -241,6 +247,7 @@ export const resolve_identity = async (
         if (static_record.success && static_record.record) {
             return {
                 resolved: true,
+                auth_manifest,
                 allowed: {
                     static: ["login"]
                 },
@@ -253,6 +260,7 @@ export const resolve_identity = async (
             // doesnt exist, offer static signup or jwt login/signup (same thing)
             return {
                 resolved: true,
+                auth_manifest,
                 allowed: {
                     static: ["signup"],
                     jwt: ["login"]

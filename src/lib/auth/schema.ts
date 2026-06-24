@@ -2,10 +2,9 @@ import { z } from "zod";
 
 
 
-import { AUTH_METHODS } from "~lib/auth";
 
 
-
+export const AUTH_METHODS = ["static", "jwt"] as const;
 
 
 export const JWK_EC_Schema = z.object({
@@ -30,48 +29,92 @@ export const StaticIdentityRecordSchema = z.object({
     $schema: z
         .string()
         .optional()
-        .default("https://vvr.ollieg.codes/schemas/StaticIdentityRecord_v1.json"),
+        .default(`https://vvr.ollieg.codes/schemas/StaticIdentityRecord_v${StaticIdentityRecordSchema_VERSION}.json`),
     version: z.number().int().min(1).max(StaticIdentityRecordSchema_VERSION),
     identity: z.string(),
     created_at: z.number(),
     status: z.enum(["active", "suspended"]),
     devices: z.array(DeviceRecordSchema)
+}).meta({
+    name: "StaticIdentityRecord",
+    version: StaticIdentityRecordSchema_VERSION,
+    title: "ViewportVR - Static Identity Record",
+    description: "A static identity record for ViewportVR to authenticate users on a static site, under the .well-known/vvr/auth/* path."
 });
 export type StaticIdentityRecord = z.infer<typeof StaticIdentityRecordSchema>;
 
 
 export const AuthManifestSchema_VERSION = 1;
-export const AuthManifestSchema = z.object({
-    $schema: z.string().optional().default("https://vvr.ollieg.codes/schemas/AuthManifest_v1.json"),
-    version: z.number().int().min(1).max(AuthManifestSchema_VERSION),
+export const AuthManifestSchema = z
+    .object({
+        $schema: z
+            .string()
+            .optional()
+            .default(
+                `https://vvr.ollieg.codes/schemas/AuthManifest_v${AuthManifestSchema_VERSION}.json`
+            ),
+        version: z.number().int().min(1).max(AuthManifestSchema_VERSION),
 
-    methods: z.array(z.enum(AUTH_METHODS)).min(1)
-        .describe("Supported authentication methods"),
+        methods: z
+            .array(z.enum(AUTH_METHODS))
+            .min(1)
+            .describe("Supported authentication methods"),
 
-    host_name: z.string().optional()
-        .describe("Host friendly name"),
+        host_name: z.string().optional().describe("Host friendly name"),
 
-    host_description: z.string().optional()
-        .describe("Host description"),
+        host_description: z.string().optional().describe("Host description"),
 
-    host_icon: z.url().optional()
-        .describe("Host icon URL"),
-});
-export type AuthManifest = z.infer<typeof AuthManifestSchema>;
+        host_icon: z.url().optional().describe("Host icon URL"),
 
-export const EXPORT_TO_JSON = [
-    {
-        schema: StaticIdentityRecordSchema,
-        name: "StaticIdentityRecord",
-        version: StaticIdentityRecordSchema_VERSION,
-        title: "ViewportVR - Static Identity Record",
-        description: "A static identity record for ViewportVR to authenticate users on a static site, under the .well-known/vvr/auth/* path."
-    },
-    {
-        schema: AuthManifestSchema,
+        open_for_registration: z.boolean().optional().default(true)
+            .describe("Open for registration?"),
+
+        static_submit_hint: z
+            .string()
+            .optional()
+            .describe(
+                "[STATIC ONLY] Describe how users can submit their static identity record to the host, e.g. 'Email your static identity record to...', 'open a GitHub PR at ...', 'upload at ...' etc."
+            )
+    })
+    .superRefine((data, ctx) => {
+        // static submit hint should not be provided if static auth is not supported
+        if (!data.methods.includes("static") && data.static_submit_hint) {
+            ctx.addIssue({
+                code: "custom",
+                message:
+                    "static_submit_hint should not be provided if static auth is not supported"
+            });
+        }
+    })
+    .meta({
         name: "AuthManifest",
         version: AuthManifestSchema_VERSION,
         title: "ViewportVR - Auth Manifest",
-        description: "An auth manifest for ViewportVR to describe the authentication methods supported by a site, as well as friendly display properties, under the .well-known/vvr/auth-manifest.json path."
-    }
+        description:
+            "An auth manifest for ViewportVR to describe the authentication methods supported by a site, as well as friendly display properties, under the .well-known/vvr/auth-manifest.json path.",
+
+        // enforce that if static_submit_hint given then must be static method available
+        json_schema_extra: {
+            if: {
+                required: ["static_submit_hint"]
+            },
+            then: {
+                properties: {
+                    methods: {
+                        contains: { const: "static" }
+                    }
+                },
+                errorMessage: {
+                    properties: {
+                        methods: "static_submit_hint should not be provided if static auth is not supported"
+                    }
+                }
+            }
+        }
+    });
+export type AuthManifest = z.infer<typeof AuthManifestSchema>;
+
+export const EXPORT_TO_JSON = [
+    StaticIdentityRecordSchema,
+    AuthManifestSchema
 ];

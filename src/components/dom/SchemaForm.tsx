@@ -1,23 +1,43 @@
 import { AutoForm } from "@autoform/mantine";
-import { ZodProvider } from "@autoform/zod";
+import { fieldConfig, ZodProvider } from "@autoform/zod";
 import { MantineProvider } from "@mantine/core";
 import { useCallback, useMemo } from "react";
 import { z } from "zod";
 
+
+
+
+
+
 import "./SchemaForm.css";
+
+
+
 import { ControlledSelect } from "~components/dom/ControlledSelect";
 
-const SchemaForm = ({
+
+
+
+
+export const SchemaForm = ({
     schema,
     title = "Schema Form",
     onSubmit,
+    defaultValues = {},
+    defaultConstValues = {},
+    extraHiddenFields = [],
+    visibleConstFields = []
 }: {
     schema: z.ZodObject;
     title?: string;
     onSubmit: (data: any) => void;
+    defaultValues?: Record<string, any>;
+    defaultConstValues?: Record<string, any>;
+    extraHiddenFields?: string[];
+    visibleConstFields?: string[];
 }) => {
     const const_fields = useMemo(() => {
-        const fields: Record<string, any> = {};
+        const fields: Record<string, any> = { ...defaultConstValues };
         Object.entries(schema.shape).forEach(([key, value]) => {
             if (value instanceof z.ZodLiteral) {
                 fields[key] = value.value;
@@ -38,21 +58,31 @@ const SchemaForm = ({
         });
 
         return fields;
-    }, [schema]);
+    }, [schema, defaultConstValues]);
 
-    // hide const fields from the schema
-    const filtered_schema = useMemo(
-        () => {
-            const new_schema = schema.clone();
+    // use fieldConfig to mark const fields as hidden
+    const filtered_schema = useMemo(() => {
+        const current_shape = schema.shape;
+        const modified_fields = {};
 
-            for (const field of Object.keys(const_fields)) {
-                delete new_schema.shape[field];
+        const hidden = [
+            ...Object.keys(const_fields).filter((key) => !visibleConstFields.includes(key)),
+            ...extraHiddenFields
+        ];
+
+        hidden.forEach((key) => {
+            if (current_shape[key]) {
+                modified_fields[key] = current_shape[key].check(
+                    fieldConfig({
+                        fieldWrapper: () => null
+                    })
+                );
             }
+        });
 
-            return new_schema;
-        },
-        [schema, const_fields]
-    );
+        return schema.safeExtend(modified_fields);
+    }, [schema, const_fields, extraHiddenFields, visibleConstFields]);
+// TODO: allow defining longer string field which sets inputProps size and inputSize
 
     const schema_provider = useMemo(() => new ZodProvider(filtered_schema), [filtered_schema]);
 
@@ -73,14 +103,14 @@ const SchemaForm = ({
                 <AutoForm
                     schema={schema_provider}
                     onSubmit={handle_submit}
-                    defaultValues={const_fields}
+                    defaultValues={{ ...defaultValues, ...const_fields }}
                     withSubmit
                     formComponents={{
                         select: ControlledSelect,
+                        hidden: () => null,
                     }}
                 />
             </main>
         </MantineProvider>
     );
 };
-export default SchemaForm

@@ -1,4 +1,4 @@
-import SchemaForm from "~components/dom/SchemaForm";
+import {SchemaForm} from "~components/dom/SchemaForm";
 import { AuthManifestSchema } from "~lib/auth/schema";
 
 
@@ -32,6 +32,7 @@ const FORMATS = {
 };
 
 const download_form = (data: any) => {
+    console.log("Downloading form data", data);
     const format_func = FORMATS[output_format];
     if (!format_func) {
         console.error(`Unknown format: ${output_format}`);
