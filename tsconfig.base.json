@@ -1,26 +1,17 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
-
-        /* Base Engine Settings */
-        "target": "ES2022",
-        "module": "ESNext",
-        "lib": ["DOM", "DOM.Iterable", "ES2022"],
-
-        /* Modern Module Resolution */
-        "moduleResolution": "Bundler",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-
-        /* React 18 Support */
-        "jsx": "react-jsx",
-
-        /* Strictness & Safety */
         "strict": true,
+        "strictNullChecks": true,
         "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "noUnusedLocals": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-
-        "noImplicitAny": true,
+        "sourceMap": true,
+        "jsx": "react-jsx",
+        "moduleResolution": "node",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "module": "ESNext",
+        "target": "ESNext",
     }
 }
