@@ -3,7 +3,7 @@ import { ToggleSwitch } from "@viewportvr/ui-dom";
 import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH } from "@viewportvr/watch-ui";
 import { Message } from "@viewportvr/core";
 
-import {get_asset_path} from "@asset-resolver";
+import {get_asset_path} from "@viewportvr/asset-resolver";
 
 const bg = get_asset_path("bg.webp");
 

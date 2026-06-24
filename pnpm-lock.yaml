@@ -176,9 +176,9 @@ importers:
       '@types/three':
         specifier: 'catalog:'
         version: 0.184.1
-      '@viewportvr/asset-resolver-type':
+      '@viewportvr/asset-resolver':
         specifier: workspace:*
-        version: link:../../packages/asset-resolver-type
+        version: link:../../packages/asset-resolver
       postcss-preset-mantine:
         specifier: ^1.18.0
         version: 1.18.0(postcss@8.5.15)
@@ -194,7 +194,7 @@ importers:
 
   packages/@types-custom/troika-three-text: {}
 
-  packages/asset-resolver-type: {}
+  packages/asset-resolver: {}
 
   packages/auth:
     dependencies:
@@ -234,9 +234,9 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 18.2.48
-      '@viewportvr/asset-resolver-type':
+      '@viewportvr/asset-resolver':
         specifier: workspace:*
-        version: link:../asset-resolver-type
+        version: link:../asset-resolver
 
   packages/platform-browser:
     dependencies:
@@ -355,9 +355,9 @@ importers:
       '@types/troika-three-text':
         specifier: workspace:*
         version: link:../@types-custom/troika-three-text
-      '@viewportvr/asset-resolver-type':
+      '@viewportvr/asset-resolver':
         specifier: workspace:*
-        version: link:../asset-resolver-type
+        version: link:../asset-resolver
 
   packages/watch-ui:
     dependencies:

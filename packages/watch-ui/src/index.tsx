@@ -2,7 +2,7 @@ import { Container, Text } from "@react-three/uikit";
 import { Label, Switch } from "@react-three/uikit-default";
 import { useState } from "react";
 import * as THREE from "three";
-import { configureTextBuilder } from "troika-three-text";
+import { configureTextBuilder } from "packages/@types-custom/troika-three-text/troika-three-text";
 import { useTabSession } from "@viewportvr/react";
 
 // its not happy! turn off web workers

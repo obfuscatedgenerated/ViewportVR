@@ -2,9 +2,9 @@
     "name": "@types/troika-three-text",
     "version": "0.52.4",
     "private": true,
-    "types": "index.d.ts",
+    "types": "troika-three-text.d.ts",
     "files": [
-        "index.d.ts"
+        "troika-three-text.d.ts"
     ],
     "scripts": {}
 }

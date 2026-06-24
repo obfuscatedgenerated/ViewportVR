@@ -1,4 +1,7 @@
 {
     "extends": "../../../tsconfig.base.json",
-    "include": ["index.d.ts"]
+    "include": ["troika-three-text.d.ts"],
+    "compilerOptions": {
+        "types": []
+    }
 }

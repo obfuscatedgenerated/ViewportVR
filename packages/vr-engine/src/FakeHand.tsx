@@ -1,18 +1,10 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import {
-    PointerCursorModel,
-    PointerRayModel,
-    useRayPointer,
-    useTouchPointer,
-    useXRInputSourceStateContext,
-    XRSpace
-} from "@react-three/xr";
+import { PointerCursorModel, PointerRayModel, useRayPointer, useTouchPointer, useXRInputSourceStateContext, XRSpace } from "@react-three/xr";
+import { get_asset_path } from "@viewportvr/asset-resolver";
 import { useStorage } from "@viewportvr/react";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-
-import { get_asset_path } from "@asset-resolver";
 
 const ASSET_PKG = "vr-engine/assets";
 

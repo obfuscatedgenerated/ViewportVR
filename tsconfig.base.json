@@ -8,7 +8,7 @@
         "noUnusedLocals": true,
         "skipLibCheck": true,
         "sourceMap": true,
-        "composite": true,
+       // "composite": true, // its a pita, and turborepo does it already
         "jsx": "react-jsx",
         "moduleResolution": "node",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],

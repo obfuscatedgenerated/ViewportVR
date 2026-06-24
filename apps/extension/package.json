@@ -8,8 +8,7 @@
         "dev": "plasmo dev",
         "build": "plasmo build",
         "package": "plasmo package",
-        "typecheck": "tsc --noEmit",
-        "build-schema": "tsx ../../scripts/build_json_schema.ts"
+        "typecheck": "tsc --noEmit"
     },
     "//": "note the hard coded react versions. plasmo cannot read catalog: react version, so will need to manually sync",
     "dependencies": {
@@ -44,10 +43,10 @@
         "postcss-preset-mantine": "^1.18.0",
         "postcss-simple-vars": "^7.0.1",
         "tailwind-preset-mantine": "^4.1.0",
-        "@viewportvr/asset-resolver-type": "workspace:*"
+        "@viewportvr/asset-resolver": "workspace:*"
     },
     "alias": {
-        "@asset-resolver": "./src/shims/asset-resolver.ts"
+        "@viewportvr/asset-resolver": "./src/shims/asset-resolver.ts"
     },
     "manifest": {
         "host_permissions": [

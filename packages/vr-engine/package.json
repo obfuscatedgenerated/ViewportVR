@@ -25,6 +25,6 @@
         "@types/three": "catalog:",
         "@types/react": "catalog:",
         "@types/troika-three-text": "workspace:*",
-        "@viewportvr/asset-resolver-type": "workspace:*"
+        "@viewportvr/asset-resolver": "workspace:*"
     }
 }

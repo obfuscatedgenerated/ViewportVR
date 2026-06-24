@@ -1,0 +1,10 @@
+{
+    "name": "@viewportvr/asset-resolver",
+    "version": "0.0.0",
+    "private": true,
+    "types": "asset-resolver.d.ts",
+    "files": [
+        "asset-resolver.d.ts"
+    ],
+    "scripts": {}
+}
