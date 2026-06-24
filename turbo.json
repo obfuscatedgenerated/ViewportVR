@@ -10,8 +10,8 @@
             "persistent": true
         },
         "typecheck": {
-            "dependsOn": ["^typecheck"],
-            "outputs": []
+            "dependsOn": [],
+            "cache": true
         }
     }
 }
