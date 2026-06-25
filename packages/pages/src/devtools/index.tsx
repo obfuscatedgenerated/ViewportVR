@@ -1,9 +1,12 @@
+import { Message, WindowIntent } from "@viewportvr/core";
 import { useMessageEngine, useStorage } from "@viewportvr/react";
 import { ToggleSwitch } from "@viewportvr/ui-dom";
 import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH } from "@viewportvr/watch-ui";
-import { Message } from "@viewportvr/core";
 
-import {get_asset_path} from "@viewportvr/asset-resolver";
+
+
+import { get_asset_path } from "@viewportvr/asset-resolver";
+
 
 const bg = get_asset_path("bg.webp");
 
@@ -68,7 +71,7 @@ const ToolWindowButton = ({
     height
 }: {
     label: string;
-    intent: string;
+    intent: WindowIntent;
     args?: Record<string, any>;
     width: number;
     height: number;

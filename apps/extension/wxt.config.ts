@@ -1,10 +1,11 @@
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "wxt";
 
-
+import tailwindcss from "@tailwindcss/vite";
 
 import pkg from "./package.json" with { type: "json" };
 
+// TODO: postcss plugin still used for mantine. seems to work but it shouldnt. might be build cache
 
 const INCLUDE_IWER = process.env.USE_IWER === "true" || process.env.USE_IWER === "1";
 const ENVIRONMENT = process.env.NODE_ENV || "development";
@@ -45,6 +46,7 @@ const LOG_COMPILATION = process.env.LOG_COMPILATION === "true" || process.env.LO
 export default defineConfig({
     vite: () => ({
         plugins: [
+            tailwindcss(),
             LOG_COMPILATION ? {
                 name: "comp-log",
                 enforce: "pre",

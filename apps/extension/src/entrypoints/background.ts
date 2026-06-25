@@ -13,8 +13,8 @@ export default defineBackground(() => {
     const WINDOW_INTENTS = {
         LOGIN: "/login.html",
         DEVTOOLS: "/devtools.html",
-        DEVTOOLS_FORM: "/devtools/form.html",
-        DEVTOOLS_WATCH_UI: "/devtools/watch.html"
+        DEVTOOLS_FORM: "/devtools-form.html",
+        DEVTOOLS_WATCH_UI: "/devtools-watch.html"
     } as Record<WindowIntent, string>;
 
     const get_window_url = (intent: WindowIntent, args?: Record<string, any>) => {
