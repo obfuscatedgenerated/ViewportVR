@@ -1,49 +1,99 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useMemo } from "react";
-import {PerspectiveCamera} from "three";
+import { useMemo, type RefObject } from "react";
+import {
+    PerspectiveCamera,
+    type Vector3,
+    type Quaternion,
+    type WebGLRenderer,
+    type WebXRArrayCamera,
+    type Object3D
+} from "three";
+import { Eye } from "./types";
 
-export const SpectatorCameraController = () => {
+
+// TODO: params kinda redundant (having current, as well as being able to mod in place) but will keep as is for consistency for now
+interface CameraControllerTransformParams {
+    spec_camera: PerspectiveCamera,
+    headset_cameras: WebXRArrayCamera,
+    gl: WebGLRenderer,
+    current: {
+        position: Vector3,
+        quaternion: Quaternion
+    }
+}
+
+export type CameraControllerTransform = ({spec_camera, gl, current}: CameraControllerTransformParams) => {
+    new_position: Vector3,
+    new_quaternion: Quaternion
+}
+
+export const frame_transforms: Record<string, (...args: any[]) => CameraControllerTransform> = {
+    first_person: (preferred_eye: Eye = Eye.Left) => ({headset_cameras}) => {
+        const eye_camera = headset_cameras.cameras[preferred_eye] || headset_cameras;
+        return {
+            new_position: eye_camera.position.clone(),
+            new_quaternion: eye_camera.quaternion.clone()
+        }
+    },
+
+    third_person: ({position_ref, quarternion_ref}: {position_ref: RefObject<Vector3>, quarternion_ref: RefObject<Quaternion>}) => ({current}) => {
+        const new_position = position_ref.current ? position_ref.current.clone() : current.position;
+        const new_quaternion = quarternion_ref.current ? quarternion_ref.current.clone() : current.quaternion;
+        return {
+            new_position,
+            new_quaternion
+        }
+    },
+
+    third_person_from_object: (object: Object3D) => () => {
+        const new_position = object.position.clone();
+        const new_quaternion = object.quaternion.clone();
+        return {
+            new_position,
+            new_quaternion
+        }
+    }
+}
+
+export const SpectatorCameraController = ({frame_transform}: {frame_transform: CameraControllerTransform}) => {
     const { size } = useThree();
 
-    // 1. Create a dedicated, clean camera specifically for the WebRTC stream
-    const specCam = useMemo(() => {
-        // Standard 75 FOV, normal 16:9 aspect ratio
-        return new PerspectiveCamera(
-            75,
-            size.width / size.height,
-            0.1,
-            1000
-        );
+    const spec_camera = useMemo(() => {
+        return new PerspectiveCamera(75, size.width / size.height, 0.1, 1000);
     }, [size.width, size.height]);
 
     useFrame(({ gl, scene, camera }) => {
         if (gl.xr.isPresenting) {
-            // 1. Let WebXR render to the VR headset using the default pipeline
             gl.render(scene, camera);
 
-            // 2. Grab the headset's left eye
-            const xrCamera = gl.xr.getCamera();
-            const leftEye = xrCamera.cameras[0] || xrCamera;
+            const headset_camera = gl.xr.getCamera();
+            const { new_position, new_quaternion } = frame_transform({
+                spec_camera,
+                headset_cameras: headset_camera,
+                gl,
+                current: {
+                    position: spec_camera.position.clone(),
+                    quaternion: spec_camera.quaternion.clone()
+                }
+            });
 
-            // 3. THE FIX: ONLY copy position and rotation.
-            // Do NOT copy the projection matrix to avoid the stereoscopic distortion!
-            specCam.position.copy(leftEye.position);
-            specCam.quaternion.copy(leftEye.quaternion);
+            spec_camera.position.copy(new_position);
+            spec_camera.quaternion.copy(new_quaternion);
 
-            // 4. Temporarily disable VR and unbind the headset buffer
-            const currentXrEnabled = gl.xr.enabled;
-            const currentRenderTarget = gl.getRenderTarget();
+            const xr_state = gl.xr.enabled;
+            const render_target = gl.getRenderTarget();
 
             gl.xr.enabled = false;
             gl.setRenderTarget(null);
             gl.clear();
 
-            // 5. Paint the HTML canvas using our clean, single-lens camera!
-            gl.render(scene, specCam);
+            // push the new frame to the render
+            gl.render(scene, spec_camera);
 
-            // 6. Restore VR state
-            gl.setRenderTarget(currentRenderTarget);
-            gl.xr.enabled = currentXrEnabled;
+            // restore old render target and xr state to continue rendering the headset view
+            // TODO: is this actually necessary? could be more performant without
+            gl.setRenderTarget(render_target);
+            gl.xr.enabled = xr_state;
         } else {
             gl.render(scene, camera);
         }
