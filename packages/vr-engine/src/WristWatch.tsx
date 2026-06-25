@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { Container } from "@react-three/uikit";
 import { useMemo, useRef, useState } from "react";
-import * as THREE from "three";
+import {  Quaternion, Vector3, MathUtils, Group } from "three";
 
 import { useStorage } from "@viewportvr/react";
 
@@ -15,18 +15,18 @@ const OPEN_THRESHOLD = 0.85; // Harder to open
 const CLOSE_THRESHOLD = 0.7; // Easier to keep open
 
 export const WristWatch = () => {
-    const watchGroupRef = useRef<THREE.Group>(null);
-    const uiGroupRef = useRef<THREE.Group>(null);
+    const watchGroupRef = useRef<Group>(null);
+    const uiGroupRef = useRef<Group>(null);
 
     const [isOpen, setIsOpen] = useState(false);
 
     const math = useMemo(
         () => ({
-            camPos: new THREE.Vector3(),
-            watchPos: new THREE.Vector3(),
-            watchQuat: new THREE.Quaternion(),
-            watchUp: new THREE.Vector3(),
-            dirToCam: new THREE.Vector3()
+            camPos: new Vector3(),
+            watchPos: new Vector3(),
+            watchQuat: new Quaternion(),
+            watchUp: new Vector3(),
+            dirToCam: new Vector3()
         }),
         []
     );
@@ -125,7 +125,7 @@ export const WristWatch = () => {
         // 4. ANIMATE THE EXPANDING UI
         const targetScale = isOpen ? 1 : 0;
         const currentScale = uiGroupRef.current.scale.x;
-        const newScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.15);
+        const newScale = MathUtils.lerp(currentScale, targetScale, 0.15);
 
         uiGroupRef.current.scale.set(newScale, newScale, newScale);
     });

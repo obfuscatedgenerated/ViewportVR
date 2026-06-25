@@ -1,14 +1,29 @@
+import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from "wxt";
 
 import pkg from "./package.json" with { type: "json" };
 
-
 export default defineConfig({
+    vite: () => ({
+        plugins: [
+            visualizer((outputOptions) => {
+                const build_name = outputOptions.name
+                    ? outputOptions.name.replace(/[^a-z0-9]/gi, "-").toLowerCase()
+                    : "extension";
+
+                return {
+                    filename: `stats/${build_name}.html`,
+                    open: false
+                };
+            })
+        ]
+    }),
+
     srcDir: "src",
     imports: {
         // @ts-ignore stop importing their slop into packages without my consent
         disabled: true,
-        exclude: [/packages\//],
+        exclude: [/packages\//]
     },
 
     manifest: {

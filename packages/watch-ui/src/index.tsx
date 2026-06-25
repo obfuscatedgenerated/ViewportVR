@@ -1,9 +1,9 @@
 import { Container, Text } from "@react-three/uikit";
 import { Label, Switch } from "@react-three/uikit-default";
 import { useState } from "react";
-import * as THREE from "three";
 import { configureTextBuilder } from "troika-three-text";
 import { useTabSession } from "@viewportvr/react";
+import { MeshBasicMaterial, DoubleSide } from "three";
 
 // its not happy! turn off web workers
 configureTextBuilder({
@@ -13,10 +13,10 @@ configureTextBuilder({
 export const WATCH_UI_WIDTH = 900;
 export const WATCH_UI_HEIGHT = 600;
 
-class DoubleSidedSolidPanel extends THREE.MeshBasicMaterial {
+class DoubleSidedSolidPanel extends MeshBasicMaterial {
     constructor() {
         super({
-            side: THREE.DoubleSide,
+            side: DoubleSide,
             transparent: true,
             depthWrite: false
         });

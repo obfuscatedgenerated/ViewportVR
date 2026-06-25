@@ -10,7 +10,7 @@ import {
 } from "@react-three/xr";
 import { useStorage } from "@viewportvr/react";
 import { useEffect, useMemo, useRef } from "react";
-import * as THREE from "three";
+import { Mesh, Object3D, Quaternion, Vector3, Raycaster, ArrowHelper, SphereGeometry, MeshBasicMaterial, Group } from "three";
 
 import { get_asset_path } from "@viewportvr/asset-resolver";
 
@@ -21,14 +21,14 @@ const right_hand = get_asset_path("hands/right.glb", ASSET_PKG);
 
 const FINGER_NAMES = ["middle", "ring", "pinky"];
 const SEGMENT_NAMES = ["proximal", "intermediate", "distal"];
-const X_AXIS = new THREE.Vector3(1, 0, 0);
-const Z_AXIS = new THREE.Vector3(0, 0, 1);
+const X_AXIS = new Vector3(1, 0, 0);
+const Z_AXIS = new Vector3(0, 0, 1);
 
 type ChainLink = {
-    bone: THREE.Object3D;
-    bindQuat: THREE.Quaternion;
-    bindQuatInverse: THREE.Quaternion;
-    bindPos: THREE.Vector3;
+    bone: Object3D;
+    bindQuat: Quaternion;
+    bindQuatInverse: Quaternion;
+    bindPos: Vector3;
 };
 
 // TODO: disable ray when touch has a hit
@@ -46,7 +46,7 @@ export const FakeHand = () => {
     // which hand is the watch on?
     const [watch_hand] = useStorage("sync", "settings.watch_hand", "left");
 
-    const rayOriginRef = useRef<THREE.Group>(null);
+    const rayOriginRef = useRef<Group>(null);
     const rayPointer = useRayPointer(rayOriginRef, state);
     const wasTriggerDownRef = useRef(false);
     const [debug_ray_hit] = useStorage(
@@ -55,7 +55,7 @@ export const FakeHand = () => {
         false
     );
 
-    const touchOriginRef = useRef<THREE.Group>(null);
+    const touchOriginRef = useRef<Group>(null);
     useTouchPointer(touchOriginRef, state);
     const [debug_touch] = useStorage("sync", "settings.debug_touch", false);
 
@@ -125,25 +125,25 @@ export const FakeHand = () => {
 
     const math = useMemo(
         () => ({
-            raycaster: new THREE.Raycaster(),
-            fwdVector: new THREE.Vector3(0, 0, -1),
-            rayPos: new THREE.Vector3(),
-            rayDir: new THREE.Vector3(),
-            watchPos: new THREE.Vector3(),
-            rayQuat: new THREE.Quaternion(),
+            raycaster: new Raycaster(),
+            fwdVector: new Vector3(0, 0, -1),
+            rayPos: new Vector3(),
+            rayDir: new Vector3(),
+            watchPos: new Vector3(),
+            rayQuat: new Quaternion(),
             // FK scratch space — reused every frame instead of allocated,
-            // which also fixes the per-frame `new THREE.Vector3()` /
-            // `new THREE.Quaternion()` allocations the old code did inside
+            // which also fixes the per-frame `new Vector3()` /
+            // `new Quaternion()` allocations the old code did inside
             // useFrame (extra GC churn you don't want on a VR frame budget).
-            delta: new THREE.Quaternion(),
-            localDeltaWorld: new THREE.Quaternion(),
-            cumulative: new THREE.Quaternion(),
-            offset: new THREE.Vector3(),
-            thumbGoal: new THREE.Quaternion(),
+            delta: new Quaternion(),
+            localDeltaWorld: new Quaternion(),
+            cumulative: new Quaternion(),
+            offset: new Vector3(),
+            thumbGoal: new Quaternion(),
             touchDebugArrow: debug_touch
-                ? new THREE.ArrowHelper(
-                      new THREE.Vector3(0, 0, -1), // Default forward
-                      new THREE.Vector3(),
+                ? new ArrowHelper(
+                      new Vector3(0, 0, -1), // Default forward
+                      new Vector3(),
                       0.05,
                       0x00ff00 // Green
                   )
@@ -197,7 +197,7 @@ export const FakeHand = () => {
                 touchOriginRef.current.updateMatrixWorld(true);
 
                 if (debug_touch && math.touchDebugArrow) {
-                    const touchDir = new THREE.Vector3(0, 0, -1)
+                    const touchDir = new Vector3(0, 0, -1)
                         .applyQuaternion(touchOriginRef.current.quaternion)
                         .normalize();
 
@@ -276,7 +276,7 @@ export const FakeHand = () => {
                 const mirrorMesh = rootState.scene.getObjectByName("DOMMirror");
                 const watchMesh = rootState.scene.getObjectByName("WatchUI");
 
-                const interactables: THREE.Object3D[] = [];
+                const interactables: Object3D[] = [];
                 if (mirrorMesh) interactables.push(mirrorMesh);
                 if (watchMesh) interactables.push(watchMesh);
 
@@ -290,11 +290,11 @@ export const FakeHand = () => {
 
                         if (debug_ray_hit) {
                             const hit = hits[0];
-                            const geometry = new THREE.SphereGeometry(0.005);
-                            const material = new THREE.MeshBasicMaterial({
+                            const geometry = new SphereGeometry(0.005);
+                            const material = new MeshBasicMaterial({
                                 color: 0xff0000
                             });
-                            const dot = new THREE.Mesh(geometry, material);
+                            const dot = new Mesh(geometry, material);
                             dot.position.copy(hit.point);
                             rootState.scene.add(dot);
                             setTimeout(() => rootState.scene.remove(dot), 100);

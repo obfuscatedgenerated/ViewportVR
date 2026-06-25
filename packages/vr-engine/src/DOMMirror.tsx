@@ -1,7 +1,7 @@
 import type { ThreeEvent, Vector3 } from "@react-three/fiber";
+import { useMessageEngine, useTabSession } from "@viewportvr/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import * as THREE from "three";
-import { useTabSession, useMessageEngine } from "@viewportvr/react";
+import { VideoTexture } from "three";
 
 export const DOMMirror = ({
     position,
@@ -32,7 +32,7 @@ export const DOMMirror = ({
         video.muted = true;
         video.playsInline = true;
         // Leave matrixAutoUpdate as true so ThreeJS applies our repeat/offset changes
-        return new THREE.VideoTexture(video);
+        return new VideoTexture(video);
     }, []);
 
     // --- THIS IS THE CORRECTED LETTERBOX MATH ---

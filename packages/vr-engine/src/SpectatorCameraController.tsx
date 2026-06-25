@@ -1,6 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo } from "react";
-import * as THREE from "three";
+import {PerspectiveCamera} from "three";
 
 export const SpectatorCameraController = () => {
     const { size } = useThree();
@@ -8,7 +8,7 @@ export const SpectatorCameraController = () => {
     // 1. Create a dedicated, clean camera specifically for the WebRTC stream
     const specCam = useMemo(() => {
         // Standard 75 FOV, normal 16:9 aspect ratio
-        return new THREE.PerspectiveCamera(
+        return new PerspectiveCamera(
             75,
             size.width / size.height,
             0.1,
