@@ -1,13 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo, type RefObject } from "react";
-import {
-    PerspectiveCamera,
-    type Vector3,
-    type Quaternion,
-    type WebGLRenderer,
-    type WebXRArrayCamera,
-    type Object3D
-} from "three";
+import { PerspectiveCamera, Vector3, type Object3D, type Quaternion, type WebGLRenderer, type WebXRArrayCamera } from "three";
+
 import { Eye } from "./types";
 
 
@@ -63,40 +57,40 @@ export const SpectatorCameraController = ({frame_transform}: {frame_transform: C
     }, [size.width, size.height]);
 
     useFrame(({ gl, scene, camera }) => {
-        if (gl.xr.isPresenting) {
-            gl.render(scene, camera);
+        gl.render(scene, camera);
 
-            const headset_camera = gl.xr.getCamera();
-            const { new_position, new_quaternion } = frame_transform({
-                spec_camera,
-                headset_cameras: headset_camera,
-                gl,
-                current: {
-                    position: spec_camera.position.clone(),
-                    quaternion: spec_camera.quaternion.clone()
-                }
-            });
-
-            spec_camera.position.copy(new_position);
-            spec_camera.quaternion.copy(new_quaternion);
-
-            const xr_state = gl.xr.enabled;
-            const render_target = gl.getRenderTarget();
-
-            gl.xr.enabled = false;
-            gl.setRenderTarget(null);
-            gl.clear();
-
-            // push the new frame to the render
-            gl.render(scene, spec_camera);
-
-            // restore old render target and xr state to continue rendering the headset view
-            // TODO: is this actually necessary? could be more performant without
-            gl.setRenderTarget(render_target);
-            gl.xr.enabled = xr_state;
-        } else {
-            gl.render(scene, camera);
+        if (!gl.xr.isPresenting) {
+            return;
         }
+
+        const headset_camera = gl.xr.getCamera();
+        const { new_position, new_quaternion } = frame_transform({
+            spec_camera,
+            headset_cameras: headset_camera,
+            gl,
+            current: {
+                position: spec_camera.position.clone(),
+                quaternion: spec_camera.quaternion.clone()
+            }
+        });
+
+        spec_camera.position.copy(new_position);
+        spec_camera.quaternion.copy(new_quaternion);
+
+        const xr_state = gl.xr.enabled;
+        const render_target = gl.getRenderTarget();
+
+        gl.xr.enabled = false;
+        gl.setRenderTarget(null);
+        gl.clear();
+
+        // push the new frame to the render
+        gl.render(scene, spec_camera);
+
+        // restore old render target and xr state to continue rendering the headset view
+        // TODO: is this actually necessary? could be more performant without
+        gl.setRenderTarget(render_target);
+        gl.xr.enabled = xr_state;
     }, 1);
 
     return null;

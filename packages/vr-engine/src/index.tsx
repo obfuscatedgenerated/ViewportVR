@@ -3,16 +3,16 @@ import { createXRStore, PointerEvents, XR } from "@react-three/xr";
 import { TabSessionProvider } from "@viewportvr/react";
 import { useRef } from "react";
 
-
-
 import { CanvasResizer } from "./CanvasResizer";
 import { DOMMirror } from "./DOMMirror";
 import { FakeHand } from "./FakeHand";
 import { LogoOverlay } from "./LogoOverlay";
-import { frame_transforms, SpectatorCameraController } from "./SpectatorCameraController";
+import {
+    frame_transforms,
+    SpectatorCameraController
+} from "./SpectatorCameraController";
 import { URLBar } from "./URLBar";
 import { WristWatch } from "./WristWatch";
-
 
 export const xr_store = createXRStore({
     controller: FakeHand
@@ -47,7 +47,9 @@ export const VRHost = () => {
 
                         <WristWatch />
 
-                        <SpectatorCameraController frame_transform={frame_transforms.first_person()} />
+                        <SpectatorCameraController
+                            frame_transform={frame_transforms.first_person()}
+                        />
                     </XR>
                 </Canvas>
             </div>
