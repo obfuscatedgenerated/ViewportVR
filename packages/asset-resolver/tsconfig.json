@@ -4,6 +4,6 @@
         "asset-resolver.d.ts"
     ],
     "compilerOptions": {
-        "types": []
+        "types": [],
     }
 }
