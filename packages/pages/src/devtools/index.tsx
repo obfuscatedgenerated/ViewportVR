@@ -3,14 +3,9 @@ import { useMessageEngine, useStorage } from "@viewportvr/react";
 import { ToggleSwitch } from "@viewportvr/ui-dom";
 import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH } from "@viewportvr/watch-ui";
 
-
-
 import { get_asset_path } from "@viewportvr/asset-resolver";
 
-
-const bg = get_asset_path("bg.webp");
-
-// TODO: style broken. need to load tailwind ourself maybe? might be wroth moving tw css to a package if its shared
+const bg = get_asset_path(import.meta.url, "bg.webp");
 
 const ToolGroup = ({
     title,
@@ -79,7 +74,14 @@ const ToolWindowButton = ({
     const messenger = useMessageEngine();
 
     const handle_click = () => {
-        messenger.send({ action: "VVR_CREATE_WINDOW", intent, args, type: "popup", width, height });
+        messenger.send({
+            action: "VVR_CREATE_WINDOW",
+            intent,
+            args,
+            type: "popup",
+            width,
+            height
+        });
     };
 
     return <ToolButton label={label} on_click={handle_click} />;
@@ -97,7 +99,11 @@ const ToolSettingSwitch = ({
     const [enabled, setEnabled] = useStorage("sync", setting_key, default_val);
 
     return (
-        <ToggleSwitch enabled={enabled || false} on_change={setEnabled} label={label} />
+        <ToggleSwitch
+            enabled={enabled || false}
+            on_change={setEnabled}
+            label={label}
+        />
     );
 };
 
