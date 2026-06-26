@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useMessageEngine } from "./engines";
 import { useWindowArguments } from "./windowing";
+import { Message } from "@viewportvr/core/dist";
 
 export interface TabSessionContextValue {
     id: number;
@@ -24,7 +25,8 @@ export const TabSessionProvider = ({
         throw new Error("TabSessionProvider must be used within a window with a tab argument");
     }
 
-    const { tab } = window_data;
+    const { tab: tab_str } = window_data;
+    const tab = parseInt(tab_str, 10);
 
     const messenger = useMessageEngine();
 
@@ -36,7 +38,7 @@ export const TabSessionProvider = ({
 
     // listen for tab close
     useEffect(() => {
-        const handle_message = (msg: any) => {
+        const handle_message = async (msg: Message) => {
             // TODO: switch
             if (msg.type === "VVR_TAB_CLOSED" && msg.tab === tab) {
                 // just close for now as tab hopping isnt yet implemented

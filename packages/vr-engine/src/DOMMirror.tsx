@@ -3,6 +3,10 @@ import { useMessageEngine, useTabSession } from "@viewportvr/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { VideoTexture } from "three";
 
+
+
+
+
 export const DOMMirror = ({
     position,
     height,
@@ -21,7 +25,7 @@ export const DOMMirror = ({
     const videoRef = useRef(document.createElement("video"));
 
     const session = useTabSession();
-    const tabDims = session.dimensions || { width: 0, height: 0 };
+    const tabDims = session.dimensions || { width: 1, height: 1 };
 
     // State 2: The oversized square stream (the envelope)
     const [videoDims, setVideoDims] = useState({ width: 0, height: 0 });
@@ -79,10 +83,12 @@ export const DOMMirror = ({
         texture.needsUpdate = true;
     }, [tabDims, videoDims, texture]);
 
+    const stream_ref = useRef<MediaStream | null>(null);
+
     useEffect(() => {
         const handle_message = async (message: any) => {
             if (message.type === "VVR_STREAM") {
-                const stream = await navigator.mediaDevices.getUserMedia({
+                stream_ref.current = await navigator.mediaDevices.getUserMedia({
                     video: {
                         // @ts-expect-error this is special to chrome extension apis, not standard web
                         mandatory: {
@@ -93,7 +99,7 @@ export const DOMMirror = ({
                 });
 
                 const video = videoRef.current;
-                video.srcObject = stream;
+                video.srcObject = stream_ref.current;
 
                 video.onloadedmetadata = () => {
                     video.play();
@@ -116,9 +122,14 @@ export const DOMMirror = ({
 
         const unlisten = messenger.listen(handle_message);
         messenger.send({ action: "VVR_START_STREAM", tab: session.id });
+// TODO: chrome independent stream handling (abstraction)
+        return () => {
+            if (stream_ref.current) {
+                stream_ref.current.getTracks().forEach((track) => track.stop());
+            }
 
-        // TODO: send stop stream message just for cleanliness
-        return () => unlisten();
+            unlisten();
+        }
     }, [messenger, session.id]);
 
     // 3. Resize the physical plane to exactly match the tab's aspect ratio

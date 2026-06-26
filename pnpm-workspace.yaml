@@ -4,24 +4,27 @@ packages:
   - packages/@types-custom/*
   - scripts/
 
+overrides:
+  three: ^0.185.0
+
 catalog:
-  '@react-three/drei': ^9.122.0
-  '@react-three/fiber': ^8.18.0
+  '@react-three/drei': ^10.7.7
+  '@react-three/fiber': ^9.6.1
   '@react-three/uikit': ^1.0.74
   '@react-three/uikit-default': ^1.0.74
   '@react-three/xr': ^6.6.30
   '@tailwindcss/vite': ^4.3.1
   '@types/node': 20.11.5
-  '@types/react': 18.2.48
-  '@types/react-dom': 18.2.18
-  '@types/three': ^0.184.1
+  '@types/react': 19.2.3
+  '@types/react-dom': 19.2.3
+  '@types/three': ^0.185.0
   '@wxt-dev/auto-icons': ^1.1.1
   lucide-react: ^1.21.0
-  react: 18.2.0
-  react-dom: 18.2.0
-  tailwind-preset-mantine: 4.1.0
+  react: 19.2.7
+  react-dom: 19.2.7
+  tailwind-preset-mantine: ^4.1.0
   tailwindcss: ^4.1.4
-  three: ^0.184.0
+  three: ^0.185.0
   troika-three-text: ^0.52.4
   wxt: ^0.20.27
   zod: ^4.4.3

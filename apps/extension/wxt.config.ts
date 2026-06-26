@@ -118,7 +118,7 @@ export default defineConfig({
         ],
         content_security_policy: {
             extension_pages:
-                "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+                "script-src 'self' http://localhost:8097 'wasm-unsafe-eval'; object-src 'self';"
         }
     },
 

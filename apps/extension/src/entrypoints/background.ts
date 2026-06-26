@@ -102,7 +102,7 @@ export default defineBackground(() => {
                     } else {
                         console.error(
                             "Failed to capture tab:",
-                            chrome.runtime.lastError
+                            JSON.stringify(chrome.runtime.lastError)
                         );
                     }
                 }

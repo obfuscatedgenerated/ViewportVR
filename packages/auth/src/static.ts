@@ -1,5 +1,7 @@
 import { type StorageEngine } from "@viewportvr/core";
 import { long } from "@wordlist/english-eff/long";
+import { short1 } from "@wordlist/english-eff/short1"
+import { short2 } from "@wordlist/english-eff/short2";
 import { RandomWords } from "@wordlist/random";
 
 
@@ -98,6 +100,8 @@ const ARGON2_PARAMS = {
     parallelism: 1,
     type: 2
 };
+
+//TODO: hkdf
 
 export const encrypt_private_key = async (private_key: JsonWebKey, password: string, algorithm: PasswordDerivAlgorithmName = "argon2"): Promise<EncryptedPrivateKey> => {
     switch (algorithm) {
