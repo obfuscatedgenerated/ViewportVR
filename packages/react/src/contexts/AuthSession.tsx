@@ -6,13 +6,15 @@ import type { AuthSession } from "@viewportvr/auth/core";
 
 const AuthSessionContext = createContext<AuthSession | null>(null);
 
+// TODO: offer a function to sign data (and not the key itself ideally, but then again it could be accessed, need to limit what games see at some point)
+
 export const AuthSessionProvider = ({
     children
 }: {
     children: React.ReactNode;
 }) => {
     const [auth_session] = useStorage<AuthSession | null>(
-        "local",
+        "session",
         "auth_session",
         null
     );

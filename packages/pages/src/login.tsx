@@ -266,6 +266,7 @@ const SignupFormStaticManual = ({ username, resolved_identity }: FormProps) => {
         URL.revokeObjectURL(url);
 
         setPassphrase(password);
+        setGenerating(false);
     }, [username, resolved_identity, local_storage, identity]);
 
     if (generating) {

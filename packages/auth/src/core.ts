@@ -256,5 +256,7 @@ export const store_auth_session = async (
     return session as AuthSession;
 }
 
+// TODO: could put this auth state in local, then offer to log back into same account
+
 // TODO: force impls to expose a fixed interface (e.g. signup, try_login etc)
 // TODO: force lowercase names? any other restrictions? and dont forget to normalise the host part to lowercase as well

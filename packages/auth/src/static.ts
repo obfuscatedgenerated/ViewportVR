@@ -101,8 +101,6 @@ const ARGON2_PARAMS = {
     type: 2
 };
 
-//TODO: hkdf
-
 export const encrypt_private_key = async (private_key: JsonWebKey, password: string, algorithm: PasswordDerivAlgorithmName = "argon2"): Promise<EncryptedPrivateKey> => {
     switch (algorithm) {
         case "argon2":
