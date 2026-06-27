@@ -1,22 +1,17 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
-import { CapsuleGeometry, DepthTexture, Mesh, MeshBasicMaterial, OrthographicCamera, PerspectiveCamera, Plane, PlaneGeometry, ShaderMaterial, Vector3, WebGLRenderTarget } from "three";
+import { CapsuleGeometry, DepthTexture, Mesh, MeshBasicMaterial, OrthographicCamera, PerspectiveCamera, Plane, PlaneGeometry, Quaternion, Scene, ShaderMaterial, Vector2, Vector3, WebGLRenderTarget } from "three";
 
 
 
-import {
-    CameraControllerTransform,
-    frame_transforms
-} from "./SpectatorCameraController";
+import { CameraControllerTransform, frame_transforms } from "./SpectatorCameraController";
+import { Layer } from "./types";
+
 
 export interface MixedRealityCameraControllerProps {
     first_person_transform?: CameraControllerTransform;
     third_person_transform?: CameraControllerTransform;
 }
-
-const PLAYER_CAPSULE_LAYER_TP = 1;
-
-const PRESENTATION_LAYER_RP = 2;
 
 const fragment_depth_to_alpha = `uniform sampler2D tDepth;
 varying vec2 vUv;
@@ -30,14 +25,21 @@ void main() {
     gl_FragColor = vec4(vec3(0.0), alpha); 
 }`;
 
+const vertex_passthrough = `
+varying vec2 vUv;
+void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}`;
+
 export const MixedRealityCameraController = ({
     first_person_transform = frame_transforms.first_person(),
     third_person_transform = frame_transforms.third_person({
-        position_ref: { current: [0, 0, 0] as unknown as Vector3 },
-        quaternion_ref: { current: [0, 0, 0, 1] as unknown as Vector3 }
+        position_ref: { current: new Vector3(2, 0.75, 2) },
+        quaternion_ref: { current: new Quaternion(0, 0, 0, 1) }
     })
 }: MixedRealityCameraControllerProps) => {
-    const { size, gl } = useThree();
+    const { scene, size } = useThree();
 
     const first_person_camera = useMemo(() => {
         return new PerspectiveCamera(75, size.width / size.height, 0.1, 1000);
@@ -47,21 +49,15 @@ export const MixedRealityCameraController = ({
         return new PerspectiveCamera(75, size.width / size.height, 0.1, 1000);
     }, [size.width, size.height]);
 
-    const plane_render_camera = useMemo(() => {
-        return new OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+    const compositor_camera = useMemo(() => {
+        const cam = new OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+        cam.position.z = 1; // quad at z=0 is now at depth 1, within [0.1, 10]
+        return cam;
     }, []);
+
 
     const clipping_plane = useMemo(() => {
         return new Plane(new Vector3(0, 0, -1), 0.1);
-    }, []);
-
-    // enable local clipping
-    useEffect(() => {
-        const old_setting = gl.localClippingEnabled;
-        gl.localClippingEnabled = true;
-        return () => {
-            gl.localClippingEnabled = old_setting;
-        };
     }, []);
 
     const player_capsule_geometry = useMemo(() => {
@@ -80,35 +76,72 @@ export const MixedRealityCameraController = ({
         return new Mesh(player_capsule_geometry, player_capsule_material);
     }, [player_capsule_geometry, player_capsule_material]);
 
+    useEffect(() => {
+        scene.add(player_capsule_mesh);
+        player_capsule_mesh.layers.set(Layer.MR_PlayerCapsule);
+
+        return () => {
+            scene.remove(player_capsule_mesh);
+        };
+    }, [scene, player_capsule_mesh]);
+
+    const foreground_render_target = useMemo(() => {
+        const rt = new WebGLRenderTarget(1, 1);
+        rt.depthTexture = new DepthTexture(1, 1);
+        return rt;
+    }, []);
+    useEffect(() => {
+        foreground_render_target.setSize(size.width, size.height);
+    }, [foreground_render_target, size.width, size.height]);
+
+    const blit_material = useMemo(
+        () => new MeshBasicMaterial({ map: null, depthTest: false }),
+        []
+    );
+
     const alpha_mask_material = useMemo(() => {
         return new ShaderMaterial({
-            fragmentShader: fragment_depth_to_alpha
+            fragmentShader: fragment_depth_to_alpha,
+            vertexShader: vertex_passthrough,
+            uniforms: {
+                tDepth: { value: null }
+            },
+            transparent: true,
+            depthTest: false,
+            depthWrite: false
         });
     }, []);
 
-    const presentation_render_plane = useMemo(() => {
-        const plane_geometry = new PlaneGeometry(2, 2);
-        return new Mesh(plane_geometry, alpha_mask_material);
-    }, [alpha_mask_material]);
-
-    // assign layers
     useEffect(() => {
-        third_person_camera.add(player_capsule_mesh);
-        player_capsule_mesh.layers.set(PLAYER_CAPSULE_LAYER_TP);
+        blit_material.map = foreground_render_target.texture;
+        blit_material.needsUpdate = true;
+        alpha_mask_material.uniforms.tDepth.value = foreground_render_target.depthTexture;
+        alpha_mask_material.needsUpdate = true;
+    }, []);
 
-        return () => {
-            third_person_camera.remove(player_capsule_mesh);
-        };
-    }, [third_person_camera, player_capsule_mesh]);
+    const compositor_scene = useMemo(() => new Scene(), []);
+    const compositor_quad = useMemo<Mesh>(() => new Mesh(new PlaneGeometry(2, 2), blit_material), [blit_material]);
 
     useEffect(() => {
-        plane_render_camera.add(presentation_render_plane);
-        presentation_render_plane.layers.set(PRESENTATION_LAYER_RP);
+        compositor_scene.add(compositor_quad);
 
         return () => {
-            plane_render_camera.remove(presentation_render_plane);
+            compositor_scene.remove(compositor_quad);
+            compositor_quad.geometry.dispose();
         };
-    }, [plane_render_camera, presentation_render_plane]);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            foreground_render_target.dispose();
+            player_capsule_geometry.dispose();
+            player_capsule_material.dispose();
+            blit_material.dispose();
+            alpha_mask_material.dispose();
+        };
+    }, []);
+
+    const render_size = useMemo(() => new Vector2(), []);
 
     useFrame(({ gl, scene, camera }) => {
         gl.render(scene, camera);
@@ -116,6 +149,10 @@ export const MixedRealityCameraController = ({
         if (!gl.xr.isPresenting) {
             return;
         }
+
+        gl.getDrawingBufferSize(render_size);
+        const draw_width = render_size.x / gl.getPixelRatio();
+        const draw_height = render_size.y / gl.getPixelRatio();
 
         const headset_camera = gl.xr.getCamera();
         const {
@@ -152,97 +189,94 @@ export const MixedRealityCameraController = ({
 
         const xr_state = gl.xr.enabled;
         const render_target = gl.getRenderTarget();
-
         gl.xr.enabled = false;
-
-        // composite into 4 tile (unity style) MR output
-        // TL: foreground
-        // TR: alpha mask
-        // BL: third person camera feed
-        // BR: first person camera feed
-
-        // use scissor test to render each quadrant, starting with TR as it's ready
-        gl.setRenderTarget(null);
-        gl.clear();
-
-        // render first person camera normally
-        gl.setScissorTest(true);
-        gl.setScissor(0, 0, size.width / 2, size.height / 2);
-        gl.render(scene, first_person_camera);
-
-        // render clean third person feed to BL quadrant
-        third_person_camera.layers.disable(PLAYER_CAPSULE_LAYER_TP);
-
-        gl.setScissor(0, size.height / 2, size.width / 2, size.height / 2);
-        gl.render(scene, third_person_camera);
-
-        // compute what's in front of the player from third person camera (depth buffer)
 
         // set clipping plane, facing camera at position of vr headset
         const camera_forward = new Vector3(0, 0, -1).applyQuaternion(
             third_person_quaternion
         );
         clipping_plane.normal.copy(camera_forward).negate();
-        clipping_plane.constant = -(
-            third_person_position.dot(clipping_plane.normal) +
-            third_person_camera.near
-        );
-
-        // clip from plane, excluding objects marked mr_foreground
-        gl.clippingPlanes = [clipping_plane];
-        scene.traverse((object) => {
-            if (
-                object.userData.mr_foreground &&
-                object instanceof Mesh &&
-                object.material
-            ) {
-                object.material.clippingPlanes = [clipping_plane];
-            }
-        });
+        clipping_plane.constant = camera_forward.dot(first_person_position);
 
         // place player capsule at headset position, to occlude the player from the third person camera
-        player_capsule_mesh.position.copy(first_person_position);
+        player_capsule_mesh.position
+            .copy(first_person_position)
+            .addScaledVector(new Vector3(0, 1, 0), -0.7);
         player_capsule_mesh.quaternion.copy(first_person_quaternion);
-        third_person_camera.layers.enable(PLAYER_CAPSULE_LAYER_TP);
+        third_person_camera.layers.enable(Layer.MR_PlayerCapsule);
 
-        // capture the foreground colour and depth
+        // prepare to render foreground (with depth)
         gl.setScissorTest(false);
-        const foreground = new WebGLRenderTarget(size.width, size.height);
-        const foreground_depth = new DepthTexture(size.width, size.height);
-        foreground.depthTexture = foreground_depth;
-        gl.setRenderTarget(foreground);
+        gl.setViewport(0, 0, size.width, size.height);
+        gl.setRenderTarget(foreground_render_target);
         gl.clear();
+
+        // clip background at plane and render first pass
+        gl.clippingPlanes = [clipping_plane];
         gl.render(scene, third_person_camera);
 
-        // compute alpha mask from captured depth texture using the fragment shader
-        alpha_mask_material.uniforms = {
-            tDepth: { value: foreground_depth }
+        // enable force foreground layer and render second pass over the first
+        gl.clippingPlanes = [];
+        third_person_camera.layers.set(Layer.MR_ForceForeground);
+
+        // clear only depth between the passes
+        const prev_autoclear = gl.autoClear;
+        gl.autoClear = false;
+        gl.clear(false, true, false);
+        gl.render(scene, third_person_camera);
+        gl.autoClear = prev_autoclear;
+
+        third_person_camera.layers.set(Layer.Default);
+        gl.setRenderTarget(null);
+
+        // composite into 4 tile (unity style) MR output
+        // TL: foreground
+        // TR: alpha mask
+        // BL: third person camera feed (TODO: exclude player model when implemented)
+        // BR: first person camera feed
+
+        // use scissor and viewport to render each quadrant
+        const draw_quadrant = (
+            target_scene: Scene,
+            cam: PerspectiveCamera | OrthographicCamera,
+            x: number,
+            y: number
+        ) => {
+            gl.setViewport(x, y, draw_width / 2, draw_height / 2);
+            gl.setScissor(x, y, draw_width / 2, draw_height / 2);
+            gl.setScissorTest(true);
+            gl.render(target_scene, cam);
         };
 
-        // TR: alpha mask
-        gl.setScissorTest(true);
-        gl.setScissor(
-            size.width / 2,
-            size.height / 2,
-            size.width / 2,
-            size.height / 2
-        );
-        gl.setRenderTarget(null);
-        gl.render(scene, third_person_camera);
+        gl.setScissorTest(false);
+        gl.setViewport(0, 0, draw_width, draw_height);
+        gl.clear();
 
         // TL: foreground
-        // TODO: store to colour render target rather than re-rendering
-        gl.setScissor(0, size.height / 2, size.width / 2, size.height / 2);
-        gl.render(scene, third_person_camera);
+        compositor_quad.material = blit_material;
+        draw_quadrant(compositor_scene, compositor_camera, 0, draw_height / 2);
+
+        // TR: alpha mask
+        compositor_quad.material = alpha_mask_material;
+        draw_quadrant(
+            compositor_scene,
+            compositor_camera,
+            draw_width / 2,
+            draw_height / 2
+        );
+
+        // BL: third person camera feed
+        draw_quadrant(scene, third_person_camera, 0, 0);
+
+        // BR: first person camera feed
+        draw_quadrant(scene, first_person_camera, draw_width / 2, 0);
 
         // restore xr rendering state
-        gl.clippingPlanes = [];
         gl.setScissorTest(false);
+        gl.setViewport(0, 0, draw_width, draw_height);
         gl.setRenderTarget(render_target);
         gl.xr.enabled = xr_state;
     }, 1);
 
     return null;
 };
-
-// TODO: needs fixes

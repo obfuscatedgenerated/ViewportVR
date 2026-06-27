@@ -175,8 +175,8 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
 
                             <WristWatch />
 
-                            <SpectatorCameraController />
-                            {/*<MixedRealityCameraController />*/}
+                            {/*<SpectatorCameraController />*/}
+                            <MixedRealityCameraController />
                         </ErrorBoundary>
                     </XR>
                 </Canvas>
