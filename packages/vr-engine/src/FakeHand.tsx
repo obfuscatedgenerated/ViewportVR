@@ -430,3 +430,5 @@ export const FakeHand = () => {
         </LayerGroup>
     );
 };
+
+// TODO: claude helped, but rewrite this later
