@@ -3,7 +3,7 @@ import { Container } from "@react-three/uikit";
 import { useMemo, useRef, useState } from "react";
 import {  Quaternion, Vector3, MathUtils, Group } from "three";
 
-import { useStorage } from "@viewportvr/react";
+import { useSetting } from "@viewportvr/react";
 
 import {
     WatchUI,
@@ -31,7 +31,7 @@ export const WristWatch = () => {
         []
     );
 
-    const [watch_hand] = useStorage("sync", "settings.watch_hand", "left");
+    const [watch_hand] = useSetting("watch_hand");
 
     // Notice we grab `xrFrame` from the useFrame callback!
     useFrame((state, delta, xrFrame) => {

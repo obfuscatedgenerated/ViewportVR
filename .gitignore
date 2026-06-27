@@ -37,7 +37,9 @@ dist/
 .tsbuildinfo
 
 *.iml
-.idea/
+.idea/*
+!.idea/viewport-vr.iml
+
 .turbo
 
 schemas

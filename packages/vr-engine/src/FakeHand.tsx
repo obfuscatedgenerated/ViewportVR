@@ -1,7 +1,7 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { PointerCursorModel, PointerRayModel, useRayPointer, useTouchPointer, useXRInputSourceStateContext, XRSpace } from "@react-three/xr";
-import { useStorage } from "@viewportvr/react";
+import { useSetting } from "@viewportvr/react";
 import { useEffect, useMemo, useRef } from "react";
 import { ArrowHelper, Group, Mesh, MeshBasicMaterial, Object3D, Quaternion, Raycaster, SphereGeometry, Vector3 } from "three";
 import {LayerGroup} from "./LayerGroup";
@@ -36,20 +36,16 @@ export const FakeHand = () => {
     );
 
     // which hand is the watch on?
-    const [watch_hand] = useStorage("sync", "settings.watch_hand", "left");
+    const [watch_hand] = useSetting("watch_hand");
 
     const rayOriginRef = useRef<Group>(null);
     const rayPointer = useRayPointer(rayOriginRef, state);
     const wasTriggerDownRef = useRef(false);
-    const [debug_ray_hit] = useStorage(
-        "sync",
-        "settings.debug_ray_hits",
-        false
-    );
+    const [debug_ray_hit] = useSetting("debug_ray_hits");
 
     const touchOriginRef = useRef<Group>(null);
     useTouchPointer(touchOriginRef, state);
-    const [debug_touch] = useStorage("sync", "settings.debug_touch", false);
+    const [debug_touch] = useSetting("debug_touch");
 
     // Smoothed curl amount (0 = open, ~1.2 = closed fist). This is the ONLY
     // value we smooth — every bone pose is derived from it each frame, so

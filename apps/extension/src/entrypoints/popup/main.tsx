@@ -4,7 +4,7 @@ import {
     ExtensionMessageEngine,
     ExtensionStorage
 } from "@viewportvr/platform-extension";
-import { useStorageFromEngine } from "@viewportvr/react";
+import { useSettingWithEngines } from "@viewportvr/react";
 import { Dropdown, ProfileButton, ToggleSwitch } from "@viewportvr/ui-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
@@ -15,7 +15,10 @@ import { check_url_allowed } from "~/util/url_patterns";
 
 import { version } from "../../../package.json";
 
-const bg = new URL("../../../node_modules/@viewportvr/assets/bg.webp", import.meta.url).href;
+const bg = new URL(
+    "../../../node_modules/@viewportvr/assets/bg.webp",
+    import.meta.url
+).href;
 
 const Popup = () => {
     const [active, setActive] = useState(false);
@@ -39,16 +42,13 @@ const Popup = () => {
 
     const messenger = useMemo(() => new ExtensionMessageEngine(), []);
 
-    const [use_debug_input, setUseDebugInput] = useStorageFromEngine(
-        sync_storage,
-        "settings.use_debug_input",
-        false
+    const [use_debug_input, setUseDebugInput] = useSettingWithEngines(
+        "use_debug_input",
+        storage_engines
     );
-
-    const [watch_hand, setWatchHand] = useStorageFromEngine(
-        sync_storage,
-        "settings.watch_hand",
-        "left"
+    const [watch_hand, setWatchHand] = useSettingWithEngines(
+        "watch_hand",
+        storage_engines
     );
 
     // nevermind, debugger cant be optional

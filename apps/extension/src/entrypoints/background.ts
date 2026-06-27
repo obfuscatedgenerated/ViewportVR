@@ -1,10 +1,15 @@
+import { ExtensionStorage } from "@viewportvr/platform-extension";
+import type { WindowIntent } from "@viewportvr/types";
+import { handle_web_sdk } from "@viewportvr/web-sdk-handlers";
 import { defineBackground } from "#imports";
 
-import type { WindowIntent } from "@viewportvr/types";
+
 
 import { check_url_allowed, URL_PATTERNS } from "~/util/url_patterns";
-import { handle_web_sdk } from "@viewportvr/web-sdk-handlers";
-import { ExtensionStorage } from "@viewportvr/platform-extension";
+
+
+
+
 
 export default defineBackground(() => {
     const VR_HOST_URL = "./vr_host.html";
@@ -16,7 +21,7 @@ export default defineBackground(() => {
         local: new ExtensionStorage("local"),
         session: new ExtensionStorage("session"),
         sync: new ExtensionStorage("sync")
-    }
+    };
 
     const WINDOW_INTENTS = {
         LOGIN: "/login.html",
@@ -25,7 +30,10 @@ export default defineBackground(() => {
         DEVTOOLS_WATCH_UI: "/devtools-watch.html"
     } as Record<WindowIntent, string>;
 
-    const get_window_url = (intent: WindowIntent, args?: Record<string, any>) => {
+    const get_window_url = (
+        intent: WindowIntent,
+        args?: Record<string, any>
+    ) => {
         const base_url = WINDOW_INTENTS[intent];
         if (!base_url) {
             console.error("Unknown window intent:", intent);
@@ -76,6 +84,8 @@ export default defineBackground(() => {
     // resolve background url to safe ones (converting ../ to actual back steps) for comparison
     const REAL_HOST_URL = new URL(VR_HOST_URL, location.href).href;
 
+    // TODO: move to core settings fetcher and message engine for consistency
+
     chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         let dropped = true;
         console.table([msg, sender.url]);
@@ -85,11 +95,18 @@ export default defineBackground(() => {
             handle_web_sdk({
                 message: msg,
                 storage: storage_engines
-            }).then(sendResponse).catch((error) => {
-                // TODO: handle errors in web-sdk to prevent freeze
-                console.error("Error handling SDK message:", msg, "Error:", error);
-                sendResponse({ error: error.message || "Unknown error" });
-            });
+            })
+                .then(sendResponse)
+                .catch((error) => {
+                    // TODO: handle errors in web-sdk to prevent freeze
+                    console.error(
+                        "Error handling SDK message:",
+                        msg,
+                        "Error:",
+                        error
+                    );
+                    sendResponse({ error: error.message || "Unknown error" });
+                });
             dropped = false;
 
             // tell cs to wait for the response!

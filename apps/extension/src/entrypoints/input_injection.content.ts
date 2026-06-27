@@ -8,6 +8,7 @@ export default defineContentScript({
     main() {
         let debug_clicks = false;
 
+        // TODO: move to core settings fetcher for consistency
         // set initial value from storage
         chrome.storage.sync.get("settings.debug_clicks", (data) => {
             debug_clicks = data["settings.debug_clicks"] || false;

@@ -1,5 +1,5 @@
-import type { Message, WindowIntent } from "@viewportvr/types";
-import { useMessageEngine, useStorage } from "@viewportvr/react";
+import { useMessageEngine, useSetting } from "@viewportvr/react";
+import type { Message, SettingKeyReturning, WindowIntent } from "@viewportvr/types";
 import { ToggleSwitch } from "@viewportvr/ui-dom";
 import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH } from "@viewportvr/watch-ui";
 
@@ -87,18 +87,16 @@ const ToolWindowButton = ({
 
 const ToolSettingSwitch = ({
     label,
-    setting_key,
-    default_val
+    setting_key
 }: {
     label: string;
-    setting_key: string;
-    default_val?: boolean;
+    setting_key: SettingKeyReturning<boolean>
 }) => {
-    const [enabled, setEnabled] = useStorage("sync", setting_key, default_val);
+    const [enabled, setEnabled] = useSetting(setting_key);
 
     return (
         <ToggleSwitch
-            enabled={enabled || false}
+            enabled={enabled}
             on_change={setEnabled}
             label={label}
         />
@@ -142,21 +140,18 @@ export const DevToolsPage = () => {
                     <ToolGroup title="Input Interception">
                         <ToolSettingSwitch
                             label="Debug click points"
-                            setting_key="settings.debug_clicks"
-                            default_val={false}
+                            setting_key="debug_clicks"
                         />
                     </ToolGroup>
 
                     <ToolGroup title="Raycasts (VR)">
                         <ToolSettingSwitch
                             label="Show touch rays"
-                            setting_key="settings.debug_touch"
-                            default_val={false}
+                            setting_key="debug_touch"
                         />
                         <ToolSettingSwitch
                             label="Show controller ray hits"
-                            setting_key="settings.debug_ray_hits"
-                            default_val={false}
+                            setting_key="debug_ray_hits"
                         />
                     </ToolGroup>
                 </div>
@@ -165,4 +160,3 @@ export const DevToolsPage = () => {
     );
 };
 
-// TODO: namespace settings

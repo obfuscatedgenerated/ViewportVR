@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/packages/auth" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/core" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/pages" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/platform-extension" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/react" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/ui-dom" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/vr-engine" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/watch-ui" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/platform-browser" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/schema-form" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/web-sdk" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/types" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/web-sdk-handlers" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
