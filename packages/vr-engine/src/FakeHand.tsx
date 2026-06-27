@@ -4,6 +4,9 @@ import { PointerCursorModel, PointerRayModel, useRayPointer, useTouchPointer, us
 import { useStorage } from "@viewportvr/react";
 import { useEffect, useMemo, useRef } from "react";
 import { ArrowHelper, Group, Mesh, MeshBasicMaterial, Object3D, Quaternion, Raycaster, SphereGeometry, Vector3 } from "three";
+import {LayerGroup} from "./LayerGroup";
+
+import {Layer} from "./layers";
 
 const left_hand = new URL("../assets/hands/left.glb", import.meta.url).href;
 const right_hand = new URL("../assets/hands/right.glb", import.meta.url).href;
@@ -410,7 +413,7 @@ export const FakeHand = () => {
     });
 
     return (
-        <>
+        <LayerGroup layers={[Layer.PlayerModel_TorsoAndHands]}>
             <group rotation={[Math.PI / 2, 0, 0]} pointerEvents="none">
                 <primitive object={handScene} />
             </group>
@@ -428,6 +431,6 @@ export const FakeHand = () => {
 
             <PointerRayModel pointer={rayPointer} />
             <PointerCursorModel pointer={rayPointer} />
-        </>
+        </LayerGroup>
     );
 };

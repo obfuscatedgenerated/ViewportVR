@@ -19,6 +19,7 @@ import {
 } from "./SpectatorCameraController";
 import { URLBar } from "./URLBar";
 import { WristWatch } from "./WristWatch";
+import {CameraSetup} from "./CameraSetup";
 
 configureTextBuilder({
     useWorker: false
@@ -153,8 +154,10 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
 
                 <Canvas
                     gl={make_xr_compatible_renderer}
-                    onCreated={handle_created}>
-                    <CanvasResizer containerRef={canvas_container_ref} />
+                    onCreated={handle_created}
+                >
+                    <CameraSetup />
+                    <CanvasResizer containerRef={canvas_container_ref}/>
 
                     <XR store={xr_store}>
                         <ErrorBoundary

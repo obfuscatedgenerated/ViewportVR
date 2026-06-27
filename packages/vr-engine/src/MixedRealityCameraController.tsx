@@ -2,10 +2,9 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import { CapsuleGeometry, DepthTexture, Mesh, MeshBasicMaterial, OrthographicCamera, PerspectiveCamera, Plane, PlaneGeometry, Quaternion, Scene, ShaderMaterial, Vector2, Vector3, WebGLRenderTarget } from "three";
 
-
-
 import { CameraControllerTransform, frame_transforms } from "./SpectatorCameraController";
-import { Layer } from "./types";
+
+import {Layer} from "./layers";
 
 
 export interface MixedRealityCameraControllerProps {
@@ -42,12 +41,26 @@ export const MixedRealityCameraController = ({
     const { scene, size } = useThree();
 
     const first_person_camera = useMemo(() => {
-        return new PerspectiveCamera(75, size.width / size.height, 0.1, 1000);
-    }, [size.width, size.height]);
+        return new PerspectiveCamera(75, 16 / 9, 0.1, 1000);
+    }, []);
 
     const third_person_camera = useMemo(() => {
-        return new PerspectiveCamera(75, size.width / size.height, 0.1, 1000);
-    }, [size.width, size.height]);
+        return new PerspectiveCamera(75, 16 / 9, 0.1, 1000);
+    }, []);
+
+    // update aspects when size changes (dont destroy cameras on resize!)
+    useEffect(() => {
+        first_person_camera.aspect = size.width / size.height;
+        first_person_camera.updateProjectionMatrix();
+
+        third_person_camera.aspect = size.width / size.height;
+        third_person_camera.updateProjectionMatrix();
+    }, [size.width, size.height, first_person_camera, third_person_camera]);
+
+    // opt into player model hands on first person camera, but no player model on third person camera (as their real world camera feed will be used instead)
+    useEffect(() => {
+        first_person_camera.layers.enable(Layer.PlayerModel_TorsoAndHands);
+    }, [first_person_camera]);
 
     const compositor_camera = useMemo(() => {
         const cam = new OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
@@ -155,37 +168,21 @@ export const MixedRealityCameraController = ({
         const draw_height = render_size.y / gl.getPixelRatio();
 
         const headset_camera = gl.xr.getCamera();
-        const {
-            new_position: first_person_position,
-            new_quaternion: first_person_quaternion
-        } = first_person_transform({
+        first_person_transform({
             spec_camera: first_person_camera,
             headset_cameras: headset_camera,
             gl,
-            current: {
-                position: first_person_camera.position.clone(),
-                quaternion: first_person_camera.quaternion.clone()
-            }
         });
 
-        const {
-            new_position: third_person_position,
-            new_quaternion: third_person_quaternion
-        } = third_person_transform({
+        third_person_transform({
             spec_camera: third_person_camera,
             headset_cameras: headset_camera,
             gl,
-            current: {
-                position: third_person_camera.position.clone(),
-                quaternion: third_person_camera.quaternion.clone()
-            }
         });
 
-        first_person_camera.position.copy(first_person_position);
-        first_person_camera.quaternion.copy(first_person_quaternion);
-
-        third_person_camera.position.copy(third_person_position);
-        third_person_camera.quaternion.copy(third_person_quaternion);
+        const first_person_position = first_person_camera.position.clone();
+        const first_person_quaternion = first_person_camera.quaternion.clone();
+        const third_person_quaternion = third_person_camera.quaternion.clone();
 
         const xr_state = gl.xr.enabled;
         const render_target = gl.getRenderTarget();
@@ -232,7 +229,7 @@ export const MixedRealityCameraController = ({
         // composite into 4 tile (unity style) MR output
         // TL: foreground
         // TR: alpha mask
-        // BL: third person camera feed (TODO: exclude player model when implemented)
+        // BL: third person camera feed
         // BR: first person camera feed
 
         // use scissor and viewport to render each quadrant
