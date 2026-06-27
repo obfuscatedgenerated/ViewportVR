@@ -26,7 +26,7 @@ type ChainLink = {
 // TODO: disable ray when touch has a hit
 // TODO: prevent double touch when passing through watch
 
-export const FakeHand = () => {
+export const AvatarHand = () => {
     // which hand is this?
     const state = useXRInputSourceStateContext("controller");
     const handedness = state.inputSource.handedness; // "left" or "right"

@@ -15,18 +15,19 @@ import { configureTextBuilder } from "troika-three-text";
 import { CameraSetup } from "./CameraSetup";
 import { CanvasResizer } from "./CanvasResizer";
 import { DOMMirror } from "./DOMMirror";
-import { FakeHand } from "./FakeHand";
+import { AvatarHand } from "./AvatarHand";
 import { LogoOverlay } from "./LogoOverlay";
 import { SpectatorCamera } from "./SpectatorCamera";
 import { URLBar } from "./URLBar";
 import { WristWatch } from "./WristWatch";
+import {AvatarHead} from "./AvatarHead";
 
 configureTextBuilder({
     useWorker: false
 });
 
 export const xr_store = createXRStore({
-    controller: FakeHand,
+    controller: AvatarHand,
     offerSession: false
 });
 
@@ -176,6 +177,7 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
                             />
                             <DOMMirror position={[0, 1.5, -4]} height={3} />
 
+                            <AvatarHead />
                             <WristWatch />
 
                             <SpectatorCamera />

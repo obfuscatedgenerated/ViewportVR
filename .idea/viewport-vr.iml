@@ -15,6 +15,21 @@
       <sourceFolder url="file://$MODULE_DIR$/packages/web-sdk" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/packages/types" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/packages/web-sdk-handlers" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/apps/extension/.output" />
+      <excludeFolder url="file://$MODULE_DIR$/apps/extension/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/auth/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/core/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/pages/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/platform-browser/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/platform-extension/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/react/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/schema-form/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/types/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/ui-dom/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/vr-engine/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/watch-ui/.turbo" />
+      <excludePattern pattern="*.tsbuildinfo" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
