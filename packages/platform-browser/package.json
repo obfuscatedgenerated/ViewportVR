@@ -9,6 +9,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@viewportvr/core": "workspace:*"
+        "@viewportvr/core": "workspace:*",
+        "@viewportvr/types": "workspace:*"
     }
 }

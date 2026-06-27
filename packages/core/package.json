@@ -8,5 +8,7 @@
         "build": "tsc --build",
         "typecheck": "tsc --noEmit"
     },
-    "dependencies": {}
+    "dependencies": {
+        "@viewportvr/types": "workspace:*"
+    }
 }

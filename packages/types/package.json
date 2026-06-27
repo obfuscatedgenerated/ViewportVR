@@ -1,5 +1,5 @@
 {
-    "name": "@viewportvr/web-sdk",
+    "name": "@viewportvr/types",
     "version": "0.0.1",
     "private": true,
     "main": "src/index.ts",
@@ -8,9 +8,5 @@
         "build": "tsc --build",
         "typecheck": "tsc --noEmit"
     },
-    "dependencies": {
-        "@viewportvr/auth": "workspace:*",
-        "@viewportvr/types": "workspace:*"
-    },
-    "devDependencies": {}
+    "dependencies": {}
 }

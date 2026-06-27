@@ -11,6 +11,7 @@
     "dependencies": {
         "@viewportvr/core": "workspace:*",
         "@viewportvr/auth": "workspace:*",
+        "@viewportvr/types": "workspace:*",
         "react": "catalog:"
     },
     "devDependencies": {

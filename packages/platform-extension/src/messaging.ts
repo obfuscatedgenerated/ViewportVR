@@ -2,8 +2,8 @@ import browser from "webextension-polyfill";
 import type { MessageEngine, MessageChannel } from "@viewportvr/core";
 
 export class ExtensionMessageEngine implements MessageEngine {
-    async send<Tx>(action: Tx): Promise<void> {
-        await browser.runtime.sendMessage(action);
+    async send<Tx, Rx>(action: Tx): Promise<Rx> {
+        return browser.runtime.sendMessage(action);
     }
 
     listen<Rx>(handler: (event: Rx) => Promise<void> | void): () => void {

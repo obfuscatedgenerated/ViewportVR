@@ -1,14 +1,22 @@
 import { defineBackground } from "#imports";
 
-import type { WindowIntent } from "@viewportvr/core";
+import type { WindowIntent } from "@viewportvr/types";
 
 import { check_url_allowed, URL_PATTERNS } from "~/util/url_patterns";
+import { handle_web_sdk } from "@viewportvr/web-sdk-handlers";
+import { ExtensionStorage } from "@viewportvr/platform-extension";
 
 export default defineBackground(() => {
     const VR_HOST_URL = "./vr_host.html";
 
     const VR_HOST_WIDTH = 750;
     const VR_HOST_HEIGHT = 450;
+
+    const storage_engines = {
+        local: new ExtensionStorage("local"),
+        session: new ExtensionStorage("session"),
+        sync: new ExtensionStorage("sync")
+    }
 
     const WINDOW_INTENTS = {
         LOGIN: "/login.html",
@@ -68,9 +76,25 @@ export default defineBackground(() => {
     // resolve background url to safe ones (converting ../ to actual back steps) for comparison
     const REAL_HOST_URL = new URL(VR_HOST_URL, location.href).href;
 
-    chrome.runtime.onMessage.addListener((msg, sender) => {
+    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         let dropped = true;
         console.table([msg, sender.url]);
+
+        // handle web sdk messages (which expect direct replies for correlation)
+        if (msg.action && msg.action.startsWith("VVRSDK_")) {
+            handle_web_sdk({
+                message: msg,
+                storage: storage_engines
+            }).then(sendResponse).catch((error) => {
+                // TODO: handle errors in web-sdk to prevent freeze
+                console.error("Error handling SDK message:", msg, "Error:", error);
+                sendResponse({ error: error.message || "Unknown error" });
+            });
+            dropped = false;
+
+            // tell cs to wait for the response!
+            return true;
+        }
 
         // handle messages meant directly for the background script
         // TODO: clean up and use switch

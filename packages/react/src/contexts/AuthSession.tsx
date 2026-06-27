@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 import { useStorage } from "../hooks";
 
-import type { AuthSession } from "@viewportvr/auth/core";
+import type { AuthSession } from "@viewportvr/auth";
 
 const AuthSessionContext = createContext<AuthSession | null>(null);
 

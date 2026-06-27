@@ -1,0 +1,147 @@
+import type { Identity, PrivateAuthInfo, PublicAuthInfo } from "./auth";
+import type { WindowArguments, WindowIntent } from "./windowing";
+
+
+interface BaseMessage {
+
+}
+
+
+interface BaseActionMessage extends BaseMessage {
+    action: string;
+}
+
+interface BaseWebSDKActionMessage extends BaseActionMessage {
+    action: `VVRSDK_${string}`;
+}
+
+interface BaseEventMessage extends BaseMessage {
+    type: string;
+}
+
+interface BaseReplyMessage extends BaseMessage {
+    for: string;
+}
+
+interface BaseWebSDKReplyMessage extends BaseReplyMessage {
+    for: `VVRSDK_${string}`;
+}
+
+
+interface StartStreamAction extends BaseActionMessage {
+    action: "VVR_START_STREAM";
+    tab: number; // TODO: subscription based routing, what the hell is a tab (says a non-browser)!
+}
+
+interface LaunchAction extends BaseActionMessage {
+    action: "VVR_LAUNCH";
+    tab: number; // TODO sbr
+}
+
+interface ClickAction extends BaseActionMessage {
+    action: "VVR_CLICK";
+    pos: { x: number; y: number };
+    button?: 0 | 1 | 2;
+}
+
+interface CreateWindowAction extends BaseActionMessage {
+    action: "VVR_CREATE_WINDOW";
+    intent: WindowIntent;
+    args?: WindowArguments;
+    type?: "popup" | "normal";
+    width?: number;
+    height?: number;
+}
+
+interface WebSDKAuthQueryAction extends BaseWebSDKActionMessage {
+    action: "VVRSDK_AUTH_QUERY";
+    identity: Identity;
+}
+
+// TODO: should zod be used or is it overkill for simple message data like this
+
+interface WebSDKAuthWhoAmIAction extends BaseWebSDKActionMessage {
+    action: "VVRSDK_AUTH_WHOAMI";
+}
+
+export type WebSDKActionMessage =
+    WebSDKAuthQueryAction
+    | WebSDKAuthWhoAmIAction;
+
+export type ActionMessage =
+    StartStreamAction |
+    LaunchAction |
+    ClickAction |
+    CreateWindowAction |
+    WebSDKActionMessage;
+
+
+interface StreamEvent extends BaseEventMessage {
+    type: "VVR_STREAM";
+    stream: number;
+    tab: number; // TODO sbr
+}
+
+interface DimensionsUpdateEvent extends BaseEventMessage {
+    type: "VVR_DIMENSIONS_UPDATE";
+    tab: number; // TODO sbr
+    width: number;
+    height: number;
+}
+
+interface URLUpdateEvent extends BaseEventMessage {
+    type: "VVR_URL_UPDATE";
+    tab: number; // TODO sbr
+    url: string;
+}
+
+interface TabClosedEvent extends BaseEventMessage { // TODO: rename to sessionclosed
+    type: "VVR_TAB_CLOSED";
+    tab: number; // TODO sbr
+}
+
+export type EventMessage =
+    StreamEvent |
+    DimensionsUpdateEvent |
+    URLUpdateEvent |
+    TabClosedEvent;
+
+interface WebSDKAuthQueryReplyMessage extends BaseWebSDKReplyMessage {
+    for: "VVRSDK_AUTH_QUERY";
+    info: PublicAuthInfo | null;
+}
+
+interface WebSDKAuthWhoAmIReplyMessage extends BaseWebSDKReplyMessage {
+    for: "VVRSDK_AUTH_WHOAMI";
+    info: PrivateAuthInfo | null;
+}
+
+export type WebSDKReplyMessage =
+    WebSDKAuthQueryReplyMessage
+    | WebSDKAuthWhoAmIReplyMessage;
+
+export type ReplyMessage =
+    WebSDKReplyMessage;
+
+export type Message = ActionMessage | EventMessage | ReplyMessage;
+export type WebSDKMessage = WebSDKActionMessage | WebSDKReplyMessage;
+
+export type WithCorrelation<T extends WebSDKMessage> = T & { correlation_id: string };
+export type MaybeWithCorrelation<T extends WebSDKMessage> = T & {
+    correlation_id?: string;
+};
+
+type SelectFromUnion<T, K extends string, V> = Extract<T, { [P in K]: V }>;
+export type NamedAction<T extends string, M extends ActionMessage = ActionMessage> = SelectFromUnion<M, "action", T>;
+export type NamedEvent<T extends string, M extends EventMessage = EventMessage> = SelectFromUnion<M, "type", T>;
+export type NamedReply<T extends string, M extends ReplyMessage = ReplyMessage> = SelectFromUnion<M, "for", T>;
+
+export type ActionName = ActionMessage["action"];
+export type EventType = EventMessage["type"];
+export type ReplyFor = ReplyMessage["for"];
+export type WebSDKActionName = WebSDKActionMessage["action"];
+export type WebSDKReplyFor = WebSDKReplyMessage["for"];
+export type WebSDKMessageName = WebSDKActionName | WebSDKReplyFor;
+export type MessageName = ActionName | EventType | ReplyFor | WebSDKMessageName;
+
+// TODO: message targeting? will it still exist and how will it work with sbr?

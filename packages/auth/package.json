@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@viewportvr/core": "workspace:*",
+        "@viewportvr/types": "workspace:*",
         "@wordlist/english-eff": "^1.0.1",
         "@wordlist/random": "^5.0.0",
         "argon2-browser": "^1.18.0",

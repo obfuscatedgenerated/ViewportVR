@@ -1,4 +1,4 @@
-import { Message, WindowIntent } from "@viewportvr/core";
+import type { Message, WindowIntent } from "@viewportvr/types";
 import { useMessageEngine, useStorage } from "@viewportvr/react";
 import { ToggleSwitch } from "@viewportvr/ui-dom";
 import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH } from "@viewportvr/watch-ui";

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useMessageEngine } from "./engines";
 import { useWindowArguments } from "./windowing";
-import { Message } from "@viewportvr/core/dist";
+import type { Message } from "@viewportvr/types";
 
 export interface TabSessionContextValue {
     id: number;

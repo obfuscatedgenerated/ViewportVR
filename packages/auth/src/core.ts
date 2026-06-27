@@ -1,4 +1,5 @@
-import { type StorageEngine } from "@viewportvr/core";
+import type { StorageEngine } from "@viewportvr/core";
+import type { Identity } from "@viewportvr/types";
 
 import {
     AUTH_METHODS,
@@ -11,11 +12,6 @@ import { resolve_static_record } from "./static";
 export type LoginMethod = (typeof AUTH_METHODS)[number];
 
 export type LoginAction = "login" | "signup";
-
-export interface Identity {
-    name: string;
-    host: string;
-}
 
 interface SuccessfulIdentityParse {
     success: true;
@@ -254,6 +250,13 @@ export const store_auth_session = async (
 
     await storage.set("auth_session", to_commit);
     return session as AuthSession;
+}
+
+export const read_auth_session = async (
+    storage: StorageEngine<"session">
+): Promise<AuthSession | null> => {
+    const session = await storage.get<AuthSession>("auth_session");
+    return session || null;
 }
 
 // TODO: could put this auth state in local, then offer to log back into same account

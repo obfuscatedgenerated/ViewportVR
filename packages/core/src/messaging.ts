@@ -1,4 +1,4 @@
-import type { ActionMessage, EventMessage } from "./message_defs";
+import type { ActionMessage, EventMessage, ReplyMessage } from "@viewportvr/types";
 
 export interface MessageChannel<Tx = ActionMessage, Rx = EventMessage> {
     send(payload: Tx): Promise<void>;
@@ -12,7 +12,7 @@ export interface MessageChannel<Tx = ActionMessage, Rx = EventMessage> {
 
 export interface MessageEngine {
     // one off messages
-    send<Tx = ActionMessage>(action: Tx): Promise<void>;
+    send<Tx = ActionMessage, Rx = void | ReplyMessage>(action: Tx): Promise<Rx>;
 
     // returns a function to remove the listener
     listen<Rx = EventMessage>(

@@ -14,7 +14,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@viewportvr/core": "workspace:*",
+        "@viewportvr/types": "workspace:*",
         "@viewportvr/react": "workspace:*",
         "@viewportvr/ui-dom": "workspace:*",
         "@viewportvr/schema-form": "workspace:*",

@@ -13,6 +13,7 @@
     "dependencies": {
         "@viewportvr/auth": "workspace:*",
         "@viewportvr/core": "workspace:*",
+        "@viewportvr/types": "workspace:*",
         "@viewportvr/pages": "workspace:*",
         "@viewportvr/platform-browser": "workspace:*",
         "@viewportvr/platform-extension": "workspace:*",
@@ -22,6 +23,7 @@
         "@viewportvr/watch-ui": "workspace:*",
         "@viewportvr/assets": "workspace:*",
         "@viewportvr/web-sdk": "workspace:*",
+        "@viewportvr/web-sdk-handlers": "workspace:*",
         "lucide-react": "catalog:",
         "react": "catalog:",
         "react-dom": "catalog:",
