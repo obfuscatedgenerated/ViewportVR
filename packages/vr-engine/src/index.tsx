@@ -4,22 +4,22 @@ import type { DefaultGLProps } from "@react-three/fiber/dist/declarations/src/co
 import { createXRStore, PointerEvents, XR } from "@react-three/xr";
 import { TabSessionProvider } from "@viewportvr/react";
 import { memo, useCallback, useEffect, useRef } from "react";
-import { ErrorBoundary, type FallbackProps, getErrorMessage } from "react-error-boundary";
+import {
+    ErrorBoundary,
+    getErrorMessage,
+    type FallbackProps
+} from "react-error-boundary";
 import { WebGLRenderer } from "three";
 import { configureTextBuilder } from "troika-three-text";
 
+import { CameraSetup } from "./CameraSetup";
 import { CanvasResizer } from "./CanvasResizer";
 import { DOMMirror } from "./DOMMirror";
 import { FakeHand } from "./FakeHand";
 import { LogoOverlay } from "./LogoOverlay";
-import { MixedRealityCameraController } from "./MixedRealityCameraController";
-import {
-    frame_transforms,
-    SpectatorCameraController
-} from "./SpectatorCameraController";
+import { SpectatorCamera } from "./SpectatorCamera";
 import { URLBar } from "./URLBar";
 import { WristWatch } from "./WristWatch";
-import {CameraSetup} from "./CameraSetup";
 
 configureTextBuilder({
     useWorker: false
@@ -104,11 +104,12 @@ const VRErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => (
 const FlatErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center z-50 text-white gap-8">
         <h1 className="text-3xl font-bold">Game Error</h1>
-        <p className="text-lg text-red-400">{getErrorMessage(error) || "An unexpected error occurred."}</p>
+        <p className="text-lg text-red-400">
+            {getErrorMessage(error) || "An unexpected error occurred."}
+        </p>
         <button
             onClick={resetErrorBoundary}
-            className="px-6 py-3 bg-red-600 rounded hover:bg-red-700 transition cursor-pointer"
-        >
+            className="px-6 py-3 bg-red-600 rounded hover:bg-red-700 transition cursor-pointer">
             Restart Session
         </button>
     </div>
@@ -154,10 +155,9 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
 
                 <Canvas
                     gl={make_xr_compatible_renderer}
-                    onCreated={handle_created}
-                >
+                    onCreated={handle_created}>
                     <CameraSetup />
-                    <CanvasResizer containerRef={canvas_container_ref}/>
+                    <CanvasResizer containerRef={canvas_container_ref} />
 
                     <XR store={xr_store}>
                         <ErrorBoundary
@@ -178,8 +178,7 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
 
                             <WristWatch />
 
-                            {/*<SpectatorCameraController />*/}
-                            <MixedRealityCameraController />
+                            <SpectatorCamera />
                         </ErrorBoundary>
                     </XR>
                 </Canvas>
@@ -189,7 +188,9 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
 });
 
 export const VRHost = ({ on_xr_ready }: { on_xr_ready: () => void }) => (
-    <ErrorBoundary FallbackComponent={FlatErrorFallback} onReset={() => window.location.reload()}>
+    <ErrorBoundary
+        FallbackComponent={FlatErrorFallback}
+        onReset={() => window.location.reload()}>
         <VRHostInternal on_xr_ready={on_xr_ready} />
     </ErrorBoundary>
 );

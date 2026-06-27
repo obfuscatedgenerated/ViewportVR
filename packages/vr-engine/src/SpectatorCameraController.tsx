@@ -2,8 +2,10 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, type RefObject } from "react";
 import { PerspectiveCamera, Vector3, type Object3D, type Quaternion, type WebGLRenderer, type WebXRArrayCamera } from "three";
 
+
+
+import { Layer } from "./layers";
 import { Eye } from "./types";
-import {Layer} from "./layers";
 
 
 // TODO: params kinda redundant (having current, as well as being able to mod in place) but will keep as is for consistency for now
@@ -21,6 +23,7 @@ export interface CameraControllerConfiguration {
     layers: Layer[];
 }
 
+// TODO: this loses type safety as key is string!
 export const frame_transforms: Record<string, (...args: any[]) => CameraControllerTransform> = {
     first_person: (preferred_eye: Eye = Eye.Left) => ({headset_cameras, spec_camera}) => {
         const eye_camera = headset_cameras.cameras[preferred_eye] || headset_cameras;
@@ -29,22 +32,29 @@ export const frame_transforms: Record<string, (...args: any[]) => CameraControll
     },
 
     third_person: ({position_ref, quaternion_ref}: {position_ref: RefObject<Vector3>, quaternion_ref: RefObject<Quaternion>}) => ({spec_camera}) => {
-        const new_position = position_ref.current ? position_ref.current.clone() : spec_camera.position;
-        const new_quaternion = quaternion_ref.current ? quaternion_ref.current.clone() : spec_camera.quaternion;
-        spec_camera.position.copy(new_position);
-        spec_camera.quaternion.copy(new_quaternion);
+        if (!position_ref.current || !quaternion_ref.current) {
+            return;
+        }
+
+        spec_camera.position.copy(position_ref.current);
+        spec_camera.quaternion.copy(quaternion_ref.current);
     },
 
-    third_person_from_object: (object: Object3D) => ({spec_camera}) => {
-        spec_camera.position.copy(object.getWorldPosition(spec_camera.position));
-        spec_camera.quaternion.copy(object.getWorldQuaternion(spec_camera.quaternion));
+    third_person_from_object: (object_ref: RefObject<Object3D>) => ({spec_camera}) => {
+        if (!object_ref.current) {
+            return;
+        }
+
+        // copy the world position and quaternion of the object to the spectator camera
+        object_ref.current.getWorldPosition(spec_camera.position);
+        object_ref.current.getWorldQuaternion(spec_camera.quaternion);
     }
-}
+} as const;
 
 export const camera_controller_configs: Record<string, (...args: any[]) => CameraControllerConfiguration> = {
     first_person: (preferred_eye: Eye = Eye.Left) => ({
         frame_transform: frame_transforms.first_person(preferred_eye),
-        layers: [Layer.Default, Layer.PlayerModel_TorsoAndHands]
+        layers: [Layer.Default, Layer.PlayerModel_TorsoAndHands, Layer.ThirdPerson_ForceHide]
     }),
 
     third_person: ({position_ref, quaternion_ref}: {position_ref: RefObject<Vector3>, quaternion_ref: RefObject<Quaternion>}) => ({
@@ -52,11 +62,11 @@ export const camera_controller_configs: Record<string, (...args: any[]) => Camer
         layers: [Layer.Default, Layer.PlayerModel_TorsoAndHands, Layer.PlayerModel_Head]
     }),
 
-    third_person_from_object: (object: Object3D) => ({
-        frame_transform: frame_transforms.third_person_from_object(object),
+    third_person_from_object: (object_ref: RefObject<Object3D>) => ({
+        frame_transform: frame_transforms.third_person_from_object(object_ref),
         layers: [Layer.Default, Layer.PlayerModel_TorsoAndHands, Layer.PlayerModel_Head]
     })
-}
+} as const;
 
 export const SpectatorCameraController = ({config = camera_controller_configs.first_person()}: {config?: CameraControllerConfiguration}) => {
     const { size } = useThree();

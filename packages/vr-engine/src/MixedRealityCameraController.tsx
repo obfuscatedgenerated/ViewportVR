@@ -60,6 +60,7 @@ export const MixedRealityCameraController = ({
     // opt into player model hands on first person camera, but no player model on third person camera (as their real world camera feed will be used instead)
     useEffect(() => {
         first_person_camera.layers.enable(Layer.PlayerModel_TorsoAndHands);
+        first_person_camera.layers.enable(Layer.ThirdPerson_ForceHide);
     }, [first_person_camera]);
 
     const compositor_camera = useMemo(() => {

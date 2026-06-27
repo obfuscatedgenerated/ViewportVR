@@ -1,19 +1,27 @@
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useImperativeHandle, useLayoutEffect, useMemo, useRef } from "react";
 import type { Group } from "three";
 
 
-import {compute_layer_mask, Layer} from "./layers";
 
-interface LayerGroupProps {
+import { compute_layer_mask, Layer } from "./layers";
+
+
+interface LayerGroupProps extends Omit<React.ComponentPropsWithoutRef<"group">, "layers"> {
     layers: Layer[];
     children: React.ReactNode;
+    ref?: React.Ref<Group | null>;
 }
 
 export const LayerGroup = ({
     layers,
-    children
+    children,
+    ref = null,
+    ...group_props
 }: LayerGroupProps) => {
     const group_ref = useRef<Group>(null);
+
+    // forward group_ref to group_props.ref
+    useImperativeHandle(ref, () => group_ref.current!, []);
 
     const layers_hash = layers.join(",");
     const layer_mask = useMemo(() => compute_layer_mask(layers), [layers_hash]);
@@ -42,5 +50,5 @@ export const LayerGroup = ({
         }
     }, [layer_mask, children]);
 
-    return <group ref={group_ref}>{children}</group>;
+    return <group ref={group_ref} {...group_props}>{children}</group>;
 };

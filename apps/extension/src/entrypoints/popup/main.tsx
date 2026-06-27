@@ -50,6 +50,12 @@ const Popup = () => {
         "watch_hand",
         storage_engines
     );
+    const [spectator_view, setSpectatorView] = useSettingWithEngines(
+        "spectator_view",
+        storage_engines
+    );
+
+    // TODO: options page
 
     // nevermind, debugger cant be optional
     // const on_debug_input_change = useCallback(
@@ -158,6 +164,19 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                         on_change={setWatchHand}
                         label="Watch hand"
                         tooltip="Which hand to wear the wristwatch on."
+                    />
+
+                    <Dropdown
+                        options={[
+                            { label: "First Person", value: "first_person" },
+                            { label: "Third Person", value: "third_person" },
+                            { label: "Mixed Reality", value: "mixed_reality" }
+                        ]}
+                        selected={spectator_view}
+                        //@ts-expect-error
+                        on_change={setSpectatorView}
+                        label="Spectator View"
+                        tooltip="How the spectator view is displayed."
                     />
 
                     <span className="text-xs text-gray-400 absolute bottom-4">
