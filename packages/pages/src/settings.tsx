@@ -9,7 +9,7 @@ const SettingSubtree = ({index, tree, is_root = false}: {index: string, tree: Se
     const subtree = useMemo(() => tree.subtrees[index], [index, tree]);
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start justify-start">
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 items-start justify-stretch h-full ${is_root ? "": "border border-white/20 p-4 rounded-md bg-black/20 backdrop-blur-md"}`}>
             {subtree.settings && subtree.settings.length > 0 && (
                 <div className="flex flex-col gap-4">
                     {subtree.settings.map(setting => (
@@ -20,7 +20,7 @@ const SettingSubtree = ({index, tree, is_root = false}: {index: string, tree: Se
 
             {subtree.subtrees && Object.keys(subtree.subtrees).length > 0 && (
                 Object.keys(subtree.subtrees).map(subtab => (
-                    <div key={subtab} className="flex flex-col gap-2">
+                    <div key={subtab} className="flex flex-col gap-2 h-full">
                         <h3 className="text-lg font-semibold text-white mb-2">{subtab}</h3>
 
                         <SettingSubtree index={subtab} tree={subtree} />
@@ -75,7 +75,7 @@ export const SettingsPage = () => {
                 </div>
 
                 <div className="text-white bg-black/20 p-4 rounded-b-md backdrop-blur-md border border-white/20">
-                    <SettingSubtree index={tab} tree={tree} />
+                    <SettingSubtree index={tab} tree={tree} is_root />
                 </div>
             </div>
         </main>
