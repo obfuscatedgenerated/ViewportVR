@@ -1,27 +1,27 @@
-import { Text } from "@react-three/drei";
+import { MeshReflectorMaterial, Text } from "@react-three/drei";
 import { Canvas, RootState } from "@react-three/fiber";
 import type { DefaultGLProps } from "@react-three/fiber/dist/declarations/src/core/renderer";
 import { createXRStore, PointerEvents, XR } from "@react-three/xr";
 import { TabSessionProvider } from "@viewportvr/react";
 import { memo, useCallback, useEffect, useRef } from "react";
-import {
-    ErrorBoundary,
-    getErrorMessage,
-    type FallbackProps
-} from "react-error-boundary";
+import { ErrorBoundary, getErrorMessage, type FallbackProps } from "react-error-boundary";
 import { WebGLRenderer } from "three";
 import { configureTextBuilder } from "troika-three-text";
 
-import { CameraSetup } from "../render/CameraSetup";
-import { CanvasResizer } from "../render/CanvasResizer";
+
+
 import { DOMMirror } from "../browser/DOMMirror";
-import { AvatarHand } from "../player/AvatarHand";
+import { URLBar } from "../browser/URLBar";
 import { LogoOverlay } from "../misc/LogoOverlay";
 import { SpectatorCamera } from "../misc/SpectatorCamera";
-import { URLBar } from "../browser/URLBar";
-import { WristWatch } from "../player/WristWatch";
-import {AvatarHead} from "../player/AvatarHead";
+import { AvatarHand } from "../player/AvatarHand";
+import { AvatarHead } from "../player/AvatarHead";
 import { AvatarTorso } from "../player/AvatarTorso";
+import { WristWatch } from "../player/WristWatch";
+import { CameraSetup } from "../render/CameraSetup";
+import { CanvasResizer } from "../render/CanvasResizer";
+import { ReflectiveMirror } from "../misc/ReflectiveMirror";
+
 
 configureTextBuilder({
     useWorker: false
@@ -180,6 +180,8 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
 
                             <AvatarHead />
                             <AvatarTorso />
+
+                            <ReflectiveMirror width={0.75} height={1.25} position={[2, 1, 0]} rotation={[0, -Math.PI/2, 0]} />
 
                             <WristWatch />
 
