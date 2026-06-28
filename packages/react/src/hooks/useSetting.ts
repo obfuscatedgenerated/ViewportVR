@@ -4,7 +4,7 @@ import {
     update_setting,
     watch_setting
 } from "@viewportvr/core";
-import { SettingKey, settings } from "@viewportvr/types";
+import { SettingKey, settings_def } from "@viewportvr/types";
 import { useCallback, useEffect, useState } from "react";
 
 import { useStorageEngines } from "../contexts";
@@ -13,8 +13,8 @@ export const useSettingWithEngines = <K extends SettingKey>(
     key: K,
     storage: { sync?: StorageEngine<"sync">; local?: StorageEngine<"local"> }
 ) => {
-    const [value, setValue] = useState<(typeof settings)[K]["default_value"]>(
-        settings[key].default_value
+    const [value, setValue] = useState<(typeof settings_def)[K]["default_value"]>(
+        settings_def[key].default_value
     );
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export const useSettingWithEngines = <K extends SettingKey>(
     }, [key, storage]);
 
     const update_value = useCallback(
-        (new_value: (typeof settings)[K]["default_value"]) => {
+        (new_value: (typeof settings_def)[K]["default_value"]) => {
             update_setting(key, new_value, storage);
             setValue(new_value);
         },

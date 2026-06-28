@@ -3,51 +3,53 @@ import { useEffect, useState } from "react";
 interface SmartSliderProps {
     label?: string;
     value: number;
-    onChange: (value: number) => void;
-    sliderMin: number;
-    sliderMax: number;
-    rawMin: number;
-    rawMax: number;
+    on_change: (value: number) => void;
+    slider_min?: number;
+    slider_max?: number;
+    min: number;
+    max: number;
     step?: number; // how fine the input steps (e.g., 1, 0.1, 0.01, 0.001)
-    precision?: number; // hard rounding limit under the hood (e.g., 2 decimal places)
+    precision_dp?: number; // hard rounding limit under the hood (e.g., 2 decimal places)
     unit?: string;
     disabled?: boolean;
 }
 
 export const SmartSlider = ({
-    label = "Control",
+    label = "",
     value,
-    onChange,
-    sliderMin,
-    sliderMax,
-    rawMin,
-    rawMax,
+    on_change,
+    min,
+    max,
+    slider_min = min,
+    slider_max = max,
     step = 1,
-    precision = 2,
+    precision_dp = 2,
     unit = "",
     disabled = false
 }: SmartSliderProps) => {
-    const [input, setInput] = useState(value.toFixed(precision));
+    const [input, setInput] = useState(value.toFixed(precision_dp));
 
     useEffect(() => {
-        if (document.activeElement !== document.getElementById(`input-${label}`)) {
-            setInput(value.toFixed(precision));
+        if (
+            document.activeElement !== document.getElementById(`input-${label}`)
+        ) {
+            setInput(value.toFixed(precision_dp));
         }
-    }, [value, precision, label]);
+    }, [value, precision_dp, label]);
 
-    const handle_slider_change = (e) => {
+    const handle_slider_change = (e: React.ChangeEvent<HTMLInputElement>) => {
         const num_val = parseFloat(e.target.value);
-        onChange(num_val);
-        setInput(num_val.toFixed(precision));
+        on_change(num_val);
+        setInput(num_val.toFixed(precision_dp));
     };
 
-    const handle_text_change = (e) => {
+    const handle_text_change = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
         setInput(val);
 
         const num_val = parseFloat(val);
         if (!isNaN(num_val)) {
-            onChange(Math.max(rawMin, Math.min(rawMax, num_val)));
+            on_change(Math.max(min, Math.min(max, num_val)));
         }
     };
 
@@ -55,24 +57,25 @@ export const SmartSlider = ({
         let num_val = parseFloat(input);
         if (isNaN(num_val)) num_val = value;
 
-        const final_val = Math.max(rawMin, Math.min(rawMax, num_val));
-        onChange(final_val);
-        setInput(final_val.toFixed(precision));
+        const final_val = Math.max(min, Math.min(max, num_val));
+        on_change(final_val);
+        setInput(final_val.toFixed(precision_dp));
     };
 
     return (
-        <div className={`flex items-start justify-between w-full max-w-sm py-2 ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
-            <label className="text-xs text-white select-none whitespace-nowrap mr-4">
+        <div
+            className={`flex items-start justify-between w-full max-w-sm py-2 ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
+            <label className="text-xs select-none whitespace-nowrap mr-4">
                 {label}
             </label>
 
             <div className="flex flex-wrap items-center justify-end gap-4 mt-2">
                 <input
                     type="range"
-                    min={sliderMin}
-                    max={sliderMax}
+                    min={slider_min}
+                    max={slider_max}
                     step={step}
-                    value={Math.max(sliderMin, Math.min(sliderMax, value))}
+                    value={Math.max(slider_min, Math.min(slider_max, value))}
                     onChange={handle_slider_change}
                     className="w-full max-w-50 h-1 bg-slate-600 rounded-full appearance-none cursor-pointer accent-white focus:outline-none"
                     disabled={disabled}
@@ -89,9 +92,11 @@ export const SmartSlider = ({
                         className="w-12 bg-transparent text-right text-sm text-white focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         disabled={disabled}
                     />
-                    <span className="text-sm text-white ml-1 select-none">{unit}</span>
+                    <span className="text-sm text-white ml-1 select-none">
+                        {unit}
+                    </span>
                 </div>
             </div>
         </div>
     );
-}
+};

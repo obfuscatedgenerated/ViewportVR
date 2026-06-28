@@ -5,6 +5,7 @@
     "exports": {
         ".": "./src/index.tsx",
         "./login": "./src/login.tsx",
+        "./settings": "./src/settings.tsx",
         "./devtools": "./src/devtools/index.tsx",
         "./devtools/watch": "./src/devtools/watch.tsx",
         "./devtools/form": "./src/devtools/form.tsx"

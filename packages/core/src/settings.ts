@@ -1,4 +1,4 @@
-import { Setting, SettingKey, settings } from "@viewportvr/types";
+import { SeparateUIDefinition, Setting, SettingKey, settings_def, SettingsTree, UISubdefinition } from "@viewportvr/types";
 
 
 
@@ -25,8 +25,8 @@ const get_storage_engine = (setting: Setting<any>, storage: SettingsStorageEngin
     }
 }
 
-export const get_setting = async <K extends SettingKey>(key: K, storage: SettingsStorageEngines): Promise<typeof settings[K]["default_value"]> => {
-    const setting = settings[key];
+export const get_setting = async <K extends SettingKey>(key: K, storage: SettingsStorageEngines): Promise<typeof settings_def[K]["default_value"]> => {
+    const setting = settings_def[key];
     const engine = get_storage_engine(setting, storage);
 
     return await engine.get<typeof setting.default_value>(`settings.${key}`) ?? setting.default_value;
@@ -34,10 +34,10 @@ export const get_setting = async <K extends SettingKey>(key: K, storage: Setting
 
 export const update_setting = async <K extends SettingKey>(
     key: K,
-    value: (typeof settings)[K]["default_value"],
+    value: (typeof settings_def)[K]["default_value"],
     storage: SettingsStorageEngines
 ): Promise<void> => {
-    const setting = settings[key];
+    const setting = settings_def[key];
     const engine = get_storage_engine(setting, storage);
 
     await engine.set<typeof setting.default_value>(`settings.${key}`, value);
@@ -45,10 +45,10 @@ export const update_setting = async <K extends SettingKey>(
 
 export const watch_setting = <K extends SettingKey>(
     key: K,
-    callback: (new_value: (typeof settings)[K]["default_value"]) => void,
+    callback: (new_value: (typeof settings_def)[K]["default_value"]) => void,
     storage: SettingsStorageEngines
 ): (() => void) => {
-    const setting = settings[key];
+    const setting = settings_def[key];
     const engine = get_storage_engine(setting, storage);
 
     return engine.watch<typeof setting.default_value>(
@@ -61,6 +61,47 @@ export const watch_setting = <K extends SettingKey>(
             }
         }
     );
+};
+
+// builds a settings tree nested by breadcrumbs for the specified platform (or omitted if missing) TODO: does this belong in types?
+export const build_breadcrumb_settings_tree = (
+    settings_obj: Record<string, Setting<any>>,
+    platform: "flat" | "watch"
+): SettingsTree => {
+    const result: SettingsTree = { subtrees: {}, settings: [] };
+
+    for (const [key, setting] of Object.entries(settings_obj)) {
+        const ui_def = setting.ui;
+        if (!ui_def) continue;
+
+        let subdef: UISubdefinition<any> | undefined;
+
+        if ("common" in ui_def) {
+            subdef = ui_def.common;
+        } else {
+            subdef = (ui_def as SeparateUIDefinition<any>)[platform];
+        }
+
+        if (!subdef) continue;
+
+        const breadcrumbs = subdef.breadcrumbs ?? [];
+        let current_level = result;
+
+        for (const crumb of breadcrumbs) {
+            // if the subtree for this breadcrumb doesn't exist, create it
+            if (!current_level.subtrees[crumb]) {
+                current_level.subtrees[crumb] = { subtrees: {}, settings: [] };
+            }
+
+            // traverse down
+            current_level = current_level.subtrees[crumb];
+        }
+
+        // add to current level's settings
+        current_level.settings.push(setting);
+    }
+
+    return result;
 };
 
 // TODO: option to override default

@@ -1,6 +1,6 @@
 import { useMessageEngine, useSetting } from "@viewportvr/react";
 import type { Message, SettingKeyReturning, WindowIntent } from "@viewportvr/types";
-import { ToggleSwitch } from "@viewportvr/ui-dom";
+import { ToggleSwitch } from "@viewportvr/ui-dom/settings";
 import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH } from "@viewportvr/watch-ui";
 
 const bg = new URL("../../node_modules/@viewportvr/assets/bg.webp", import.meta.url).href;
@@ -96,7 +96,7 @@ const ToolSettingSwitch = ({
 
     return (
         <ToggleSwitch
-            enabled={enabled}
+            value={enabled}
             on_change={setEnabled}
             label={label}
         />

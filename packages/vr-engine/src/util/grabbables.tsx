@@ -1,11 +1,7 @@
-import { useFrame, useThree } from "@react-three/fiber";
-import { Handle, HandleTarget } from "@react-three/handle";
-import { useXRInputSourceEvent, useXRInputSourceState, useXRInputSourceStates } from "@react-three/xr";
+import { useFrame } from "@react-three/fiber";
+import {useXRInputSourceState} from "@react-three/xr";
 import { ComponentProps, RefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { BackSide, Group, Matrix4, Mesh, MeshBasicMaterial, Object3D, Vector3 } from "three";
-
-
-
 
 
 export const useOutlineEffect = (
@@ -188,6 +184,7 @@ export const useGrabbable = (
 
 // TODO: accept props to allow scaling, position/rotation lock etc
 // TODO: sticky (press another button to release) and non sticky (releases when grip lost) grabbables
+// TODO: should actually snap to the hand by default at least, with option to allow the sort of berhaviour we want from the camera (the only current grabbable)
 export const Grabbable = (props: ComponentProps<"group">) => {
     const {ref, children, ...rest} = props;
 

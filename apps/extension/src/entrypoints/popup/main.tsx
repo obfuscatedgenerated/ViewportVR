@@ -5,7 +5,8 @@ import {
     ExtensionStorage
 } from "@viewportvr/platform-extension";
 import { useSettingWithEngines } from "@viewportvr/react";
-import { Dropdown, ProfileButton, SmartSlider, ToggleSwitch } from "@viewportvr/ui-dom";
+import {ProfileButton} from "@viewportvr/ui-dom";
+import { Dropdown, SmartSlider, ToggleSwitch } from "@viewportvr/ui-dom/settings";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 
@@ -156,7 +157,7 @@ const Popup = () => {
                         label="Inject raw input"
                         tooltip={`The default method of dispatching input events to the tab may cause some sites to ignore it.
 Enable this option to use Chrome's debugger to inject raw inputs directly.`}
-                        enabled={use_debug_input}
+                        value={use_debug_input}
                         on_change={setUseDebugInput}
                     />
 
@@ -165,7 +166,7 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                             { label: "Left Hand", value: "left" },
                             { label: "Right Hand", value: "right" }
                         ]}
-                        selected={watch_hand}
+                        value={watch_hand}
                         on_change={setWatchHand}
                         label="Watch hand"
                         tooltip="Which hand to wear the wristwatch on."
@@ -179,7 +180,7 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                             { label: "Third Person", value: "third_person" },
                             { label: "Mixed Reality", value: "mixed_reality" }
                         ]}
-                        selected={spectator_view}
+                        value={spectator_view}
                         //@ts-expect-error
                         on_change={setSpectatorView}
                         label="Spectator view"
@@ -190,15 +191,19 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                         label="Third person FOV"
                         unit="°"
                         value={third_person_fov}
-                        onChange={setThirdPersonFov}
-                        sliderMin={30}
-                        sliderMax={90}
-                        rawMin={1}
-                        rawMax={120}
+                        on_change={setThirdPersonFov}
+                        slider_min={30}
+                        slider_max={90}
+                        min={1}
+                        max={120}
                         step={0.1}
-                        precision={2}
+                        precision_dp={2}
                         disabled={spectator_view === "first_person"}
                     />
+
+                    <a target="_blank" rel="noreferrer noopener" href="/settings.html" className="underline hover:text-white transition">
+                        All settings
+                    </a>
 
                     <span className="text-xs text-gray-400 absolute bottom-4">
                         v{version} •{" "}
