@@ -10,7 +10,7 @@ import { MixedRealityCameraController } from "../render/MixedRealityCameraContro
 import { camera_controller_configs, SpectatorCameraController } from "../render/SpectatorCameraController";
 import { useGLTF } from "@react-three/drei";
 
-const camera = new URL("../../../assets/misc/camera/camera.glb", import.meta.url).href;
+const camera = new URL("../../assets/misc/camera/camera.glb", import.meta.url).href;
 
 export const SpectatorCamera = () => {
     const [mode] = useSetting("spectator_view");

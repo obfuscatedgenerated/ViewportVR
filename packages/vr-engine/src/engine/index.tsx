@@ -10,7 +10,7 @@ import {
     type FallbackProps
 } from "react-error-boundary";
 import { WebGLRenderer } from "three";
-import { configureTextBuilder } from "@types/troika-three-text";
+import { configureTextBuilder } from "troika-three-text";
 
 import { CameraSetup } from "../render/CameraSetup";
 import { CanvasResizer } from "../render/CanvasResizer";
