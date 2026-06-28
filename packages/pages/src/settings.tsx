@@ -5,25 +5,27 @@ import { useMemo, useState } from "react";
 
 const bg = new URL("../node_modules/@viewportvr/assets/bg.webp", import.meta.url).href;
 
-const SettingSubtree = ({index, tree}: {index: string, tree: SettingsTree}) => {
+const SettingSubtree = ({index, tree, is_root = false}: {index: string, tree: SettingsTree, is_root?: boolean}) => {
     const subtree = useMemo(() => tree.subtrees[index], [index, tree]);
 
     return (
-        <div className="flex flex-col gap-2">
-            {subtree.settings.map(setting => (
-                <FlatSettingWidget key={setting.key} setting_key={setting.key as SettingKey} />
-            ))}
-
-            {subtree.subtrees && Object.keys(subtree.subtrees).length > 0 && (
-                <div className="flex flex-col gap-10">
-                    {Object.keys(subtree.subtrees).map(subtab => (
-                        <div key={subtab} className="flex flex-col gap-2">
-                            <h3 className="text-lg font-semibold text-white mb-2">{subtab}</h3>
-
-                            <SettingSubtree index={subtab} tree={subtree} />
-                        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start justify-start">
+            {subtree.settings && subtree.settings.length > 0 && (
+                <div className="flex flex-col gap-4">
+                    {subtree.settings.map(setting => (
+                        <FlatSettingWidget key={setting.key} setting_key={setting.key as SettingKey} />
                     ))}
                 </div>
+            )}
+
+            {subtree.subtrees && Object.keys(subtree.subtrees).length > 0 && (
+                Object.keys(subtree.subtrees).map(subtab => (
+                    <div key={subtab} className="flex flex-col gap-2">
+                        <h3 className="text-lg font-semibold text-white mb-2">{subtab}</h3>
+
+                        <SettingSubtree index={subtab} tree={subtree} />
+                    </div>
+                ))
             )}
         </div>
     )
@@ -42,7 +44,7 @@ const TabButton = ({label, active, on_click}: {label: string, active: boolean, o
 
 export const SettingsPage = () => {
     const tree = useSettingsTree("flat");
-    
+
     // rather than using nested breadcrumbs, its nicer UX to just tab the first level then add the rest as sections (imo)
     // if sections get expansive then will see. right now there are only 2 breadcrumb levels in use. i think 3 levels will be fine, just add subsections
     // but any more and it may be best to intelligently fall back to a nested view somehow, but thats a problem for future me
