@@ -4,3 +4,4 @@ export {LoadingSpinner, CenteredLoadingSpinner} from "./LoadingSpinner";
 export {LogoOverlay} from "../../vr-engine/src/LogoOverlay";
 export {ProfileButton} from "./ProfileButton";
 export {ToggleSwitch} from "./ToggleSwitch";
+export {SmartSlider} from "./SmartSlider";

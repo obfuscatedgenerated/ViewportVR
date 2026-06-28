@@ -15,6 +15,8 @@ const camera = new URL("../assets/camera/camera.glb", import.meta.url).href;
 export const SpectatorCamera = () => {
     const [mode] = useSetting("spectator_view");
 
+    const [horiz_fov] = useSetting("third_person_fov");
+
     const {scene: camera_scene} = useGLTF(camera);
 
     const camera_model_ref = useRef<Group>(null);
@@ -47,9 +49,9 @@ export const SpectatorCamera = () => {
             </LayerGroup>
 
             {mode !== "mixed_reality" ? (
-                <SpectatorCameraController config={config} />
+                <SpectatorCameraController config={config} horizontal_fov={mode !== "first_person" ? horiz_fov : undefined} />
             ) : (
-                <MixedRealityCameraController third_person_transform={config.frame_transform} />
+                <MixedRealityCameraController third_person_transform={config.frame_transform} third_person_horizontal_fov={horiz_fov} />
             )}
         </>
     );

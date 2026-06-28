@@ -2,8 +2,6 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, type RefObject } from "react";
 import { PerspectiveCamera, Vector3, type Object3D, type Quaternion, type WebGLRenderer, type WebXRArrayCamera } from "three";
 
-
-
 import { Layer } from "./layers";
 import { Eye } from "./types";
 
@@ -68,11 +66,11 @@ export const camera_controller_configs: Record<string, (...args: any[]) => Camer
     })
 } as const;
 
-export const SpectatorCameraController = ({config = camera_controller_configs.first_person()}: {config?: CameraControllerConfiguration}) => {
+export const SpectatorCameraController = ({config = camera_controller_configs.first_person(), horizontal_fov = 50}: {config?: CameraControllerConfiguration, horizontal_fov?: number}) => {
     const { size } = useThree();
 
     const spec_camera = useMemo(() => {
-        return new PerspectiveCamera(75, 16 / 9, 0.1, 1000);
+        return new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
     }, []);
 
     // update aspect when size changes (dont destroy camera on resize!)
@@ -80,6 +78,13 @@ export const SpectatorCameraController = ({config = camera_controller_configs.fi
         spec_camera.aspect = size.width / size.height;
         spec_camera.updateProjectionMatrix();
     }, [size.width, size.height, spec_camera]);
+
+    // update fov when horizontal_fov changes
+    useEffect(() => {
+        const vertical_fov = 2 * Math.atan(Math.tan((horizontal_fov * Math.PI / 180) / 2) * (size.height / size.width)) * (180 / Math.PI);
+        spec_camera.fov = vertical_fov;
+        spec_camera.updateProjectionMatrix();
+    }, [horizontal_fov, spec_camera]);
 
     // update visible layers on change in config.layers
     useEffect(() => {

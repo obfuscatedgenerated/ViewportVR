@@ -26,8 +26,12 @@ export const settings = build_settings({
         default_value: false,
         local_only: true
     },
+
     spectator_view: {
         default_value: "first_person" as "first_person" | "third_person" | "mixed_reality",
+    },
+    third_person_fov: {
+        default_value: 60
     },
 
     debug_ray_hits: {

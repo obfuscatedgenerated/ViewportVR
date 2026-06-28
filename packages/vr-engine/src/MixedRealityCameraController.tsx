@@ -10,6 +10,8 @@ import {Layer} from "./layers";
 export interface MixedRealityCameraControllerProps {
     first_person_transform?: CameraControllerTransform;
     third_person_transform?: CameraControllerTransform;
+    first_person_horizontal_fov?: number;
+    third_person_horizontal_fov?: number;
 }
 
 const fragment_depth_to_alpha = `uniform sampler2D tDepth;
@@ -36,17 +38,31 @@ export const MixedRealityCameraController = ({
     third_person_transform = frame_transforms.third_person({
         position_ref: { current: new Vector3(2, 0.75, 2) },
         quaternion_ref: { current: new Quaternion(0, 0, 0, 1) }
-    })
+    }),
+    first_person_horizontal_fov = 50,
+    third_person_horizontal_fov = 50
 }: MixedRealityCameraControllerProps) => {
     const { scene, size } = useThree();
 
     const first_person_camera = useMemo(() => {
-        return new PerspectiveCamera(75, 16 / 9, 0.1, 1000);
+        return new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
     }, []);
 
+    useEffect(() => {
+        const vertical_fov = 2 * Math.atan(Math.tan((first_person_horizontal_fov * Math.PI / 180) / 2) * (size.height / size.width)) * (180 / Math.PI);
+        first_person_camera.fov = vertical_fov;
+        first_person_camera.updateProjectionMatrix();
+    }, [first_person_horizontal_fov, first_person_camera]);
+
     const third_person_camera = useMemo(() => {
-        return new PerspectiveCamera(75, 16 / 9, 0.1, 1000);
+        return new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
     }, []);
+
+    useEffect(() => {
+        const vertical_fov = 2 * Math.atan(Math.tan((third_person_horizontal_fov * Math.PI / 180) / 2) * (size.height / size.width)) * (180 / Math.PI);
+        third_person_camera.fov = vertical_fov;
+        third_person_camera.updateProjectionMatrix();
+    }, [third_person_horizontal_fov, third_person_camera]);
 
     // update aspects when size changes (dont destroy cameras on resize!)
     useEffect(() => {

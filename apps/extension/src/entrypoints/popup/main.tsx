@@ -5,7 +5,7 @@ import {
     ExtensionStorage
 } from "@viewportvr/platform-extension";
 import { useSettingWithEngines } from "@viewportvr/react";
-import { Dropdown, ProfileButton, ToggleSwitch } from "@viewportvr/ui-dom";
+import { Dropdown, ProfileButton, SmartSlider, ToggleSwitch } from "@viewportvr/ui-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 
@@ -52,6 +52,10 @@ const Popup = () => {
     );
     const [spectator_view, setSpectatorView] = useSettingWithEngines(
         "spectator_view",
+        storage_engines
+    );
+    const [third_person_fov, setThirdPersonFov] = useSettingWithEngines(
+        "third_person_fov",
         storage_engines
     );
 
@@ -121,14 +125,15 @@ const Popup = () => {
     return (
         <DefaultContextProviders
             storage_engines={storage_engines}
-            messenger={messenger}>
-            <div className="bg-gray-900 text-white w-70 h-100">
+            messenger={messenger}
+        >
+            <div className="bg-gray-900 text-white w-75 h-125">
                 <img
                     src={bg}
                     className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-500 ease-in-out ${active && launch_allowed ? "opacity-100" : "opacity-0"}`}
                 />
 
-                <div className="p-4 w-full h-full flex flex-col items-center justify-center absolute top-0 left-0 gap-4">
+                <div className="py-4 px-6 w-full h-full flex flex-col items-center justify-center absolute top-0 left-0 gap-4">
                     <div className="mb-8 absolute top-4 flex items-center justify-center gap-6">
                         <h1 className="font-title text-2xl">ViewportVR</h1>
 
@@ -166,6 +171,8 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                         tooltip="Which hand to wear the wristwatch on."
                     />
 
+                    <hr className="w-full border-t border-gray-700 my-4" />
+
                     <Dropdown
                         options={[
                             { label: "First Person", value: "first_person" },
@@ -175,8 +182,22 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                         selected={spectator_view}
                         //@ts-expect-error
                         on_change={setSpectatorView}
-                        label="Spectator View"
+                        label="Spectator view"
                         tooltip="How the spectator view is displayed."
+                    />
+                    
+                    <SmartSlider
+                        label="Third person FOV"
+                        unit="°"
+                        value={third_person_fov}
+                        onChange={setThirdPersonFov}
+                        sliderMin={30}
+                        sliderMax={90}
+                        rawMin={1}
+                        rawMax={120}
+                        step={0.1}
+                        precision={2}
+                        disabled={spectator_view === "first_person"}
                     />
 
                     <span className="text-xs text-gray-400 absolute bottom-4">
@@ -203,6 +224,6 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
     );
 };
 
-// TODO: check if launch allowed in context (not protected page), dont mark active or interactable if not
+// TODO: dedicated options page for more settings
 
 ReactDOM.createRoot(document.getElementById("root")!).render(<Popup />);
