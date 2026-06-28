@@ -49,7 +49,7 @@ export const SpectatorCamera = () => {
             </LayerGroup>
 
             {mode !== "mixed_reality" ? (
-                <SpectatorCameraController config={config} horizontal_fov={mode !== "first_person" ? horiz_fov : undefined} />
+                <SpectatorCameraController config={config} horizontal_fov={mode !== "first_person" ? horiz_fov : 80} />
             ) : (
                 <MixedRealityCameraController third_person_transform={config.frame_transform} third_person_horizontal_fov={horiz_fov} />
             )}
