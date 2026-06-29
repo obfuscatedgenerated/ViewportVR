@@ -7,3 +7,5 @@ export const Avatar = () => (
         <AvatarTorso />
     </group>
 );
+
+// TODO: bounce torso and head on walk (only visually)
