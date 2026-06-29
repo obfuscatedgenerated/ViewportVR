@@ -1,5 +1,6 @@
 {
     "name": "viewportvr",
+    "license": "AGPL-3.0-only",
     "private": true,
     "packageManager": "pnpm@10.19.0",
     "scripts": {
