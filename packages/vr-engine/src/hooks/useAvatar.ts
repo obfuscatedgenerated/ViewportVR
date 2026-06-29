@@ -2,10 +2,6 @@ import { useStorage } from "@viewportvr/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { Mesh, MeshStandardMaterial, Object3D } from "three";
 
-
-
-
-
 export const skin_tones = {
     unset: { base: 0xaaaaaa },
 

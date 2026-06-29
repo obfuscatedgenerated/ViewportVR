@@ -1,29 +1,13 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
-import {
-    CapsuleGeometry,
-    Mesh,
-    MeshBasicMaterial,
-    OrthographicCamera,
-    PerspectiveCamera,
-    Plane,
-    PlaneGeometry,
-    Quaternion,
-    Scene,
-    ShaderChunk,
-    ShaderMaterial,
-    SRGBColorSpace,
-    Vector2,
-    Vector3,
-    WebGLRenderTarget
-} from "three";
+import { CapsuleGeometry, Mesh, MeshBasicMaterial, OrthographicCamera, PerspectiveCamera, Plane, PlaneGeometry, Quaternion, Scene, ShaderChunk, ShaderMaterial, SRGBColorSpace, Vector2, Vector3, WebGLRenderTarget } from "three";
 
+
+
+import { useXROrigin } from "../contexts";
 import { Layer } from "./layers";
-import {
-    CameraControllerTransform,
-    frame_transforms
-} from "./SpectatorCameraController";
-import {useXROrigin} from "../contexts";
+import { CameraControllerTransform, frame_transforms } from "./SpectatorCameraController";
+
 
 // three and uikit each inject a clipping block into the fragment shader, and
 // both declare `vec4 plane;` (+ distanceToPlane/distanceGradient/clipOpacity)
@@ -75,7 +59,10 @@ export const MixedRealityCameraController = ({
     const { scene, size } = useThree();
 
     const first_person_camera = useMemo(() => {
-        return new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
+        const cam = new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
+        cam.userData.is_spectator_camera = true;
+        scene.add(cam);
+        return cam;
     }, []);
 
     useEffect(() => {
@@ -91,7 +78,10 @@ export const MixedRealityCameraController = ({
     }, [first_person_horizontal_fov, first_person_camera]);
 
     const third_person_camera = useMemo(() => {
-        return new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
+        const cam = new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
+        cam.userData.is_spectator_camera = true;
+        scene.add(cam);
+        return cam;
     }, []);
 
     useEffect(() => {

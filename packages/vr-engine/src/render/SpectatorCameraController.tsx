@@ -85,11 +85,14 @@ export const camera_controller_configs: Record<string, (...args: any[]) => Camer
 } as const;
 
 export const SpectatorCameraController = ({config = camera_controller_configs.first_person(), horizontal_fov = 50}: {config?: CameraControllerConfiguration, horizontal_fov?: number}) => {
-    const { size } = useThree();
+    const { size, scene } = useThree();
     const xr_origin_ref = useXROrigin();
 
     const spec_camera = useMemo(() => {
-        return new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
+        const cam = new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
+        cam.userData.is_spectator_camera = true;
+        scene.add(cam);
+        return cam;
     }, []);
 
     // update aspect when size changes (dont destroy camera on resize!)

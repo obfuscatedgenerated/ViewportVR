@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
-import { PlaneGeometry, Vector3 } from "three";
+import { Camera, PlaneGeometry, Vector3 } from "three";
 import { Reflector } from "three/examples/jsm/objects/Reflector";
 
 
@@ -45,12 +45,23 @@ export const ReflectiveMirror = ({
         []
     );
 
-    useFrame(({ camera, gl }) => {
+    useFrame(({ camera, gl, scene }) => {
+        // set both xr cameras to have the right layers masked (i.e. show head even though they cant see it through the headset)
         const cameras = gl.xr.isPresenting
             ? gl.xr.getCamera().cameras
             : [camera];
         for (const cam of cameras) {
             reflector.getReflectionCamera(cam).layers.mask = layer_mask;
+        }
+
+        // iterate remaining scene cameras for spectator cameras and do the same (TODO: handle MR exclusions)
+        // TODO: how performant are these passes? should we only do this when the scene changes or when a new camera is added? (if so how?)
+        // TODO: also this totally contains the arraycamera already, so the logic before is a touch redundant
+        const scene_cameras = scene.getObjectsByProperty("isCamera", true);
+        for (const cam of scene_cameras) {
+            if (cam.userData.is_spectator_camera) {
+                reflector.getReflectionCamera(cam as Camera).layers.mask = layer_mask;
+            }
         }
     });
 

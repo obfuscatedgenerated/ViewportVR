@@ -4,6 +4,7 @@ import { Group } from "three";
 
 import { Avatar } from "./Avatar";
 import { WristWatch } from "./WristWatch";
+import { PlayerExpressionProvider } from "../contexts/PlayerExpressionContext";
 
 
 export const Player = ({ref = null}: {ref?: React.Ref<Group>}) => {
@@ -14,11 +15,13 @@ export const Player = ({ref = null}: {ref?: React.Ref<Group>}) => {
 
     return (
         <group name="Player">
-            <XROrigin ref={origin_ref}>
-                <WristWatch />
-            </XROrigin>
-
-            <Avatar />
+            <PlayerExpressionProvider>
+                <XROrigin ref={origin_ref}>
+                    <WristWatch />
+                </XROrigin>
+    
+                <Avatar />
+            </PlayerExpressionProvider>
         </group>
     );
 }
