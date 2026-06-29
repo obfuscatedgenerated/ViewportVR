@@ -70,3 +70,4 @@ export const AvatarExpression = () => {
         </LayerGroup>
     );
 }
+// TODO: 2-frame animation style
