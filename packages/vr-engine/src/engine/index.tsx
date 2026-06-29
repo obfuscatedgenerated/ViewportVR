@@ -1,11 +1,11 @@
 import { Text } from "@react-three/drei";
 import { Canvas, RootState } from "@react-three/fiber";
 import type { DefaultGLProps } from "@react-three/fiber/dist/declarations/src/core/renderer";
-import { createXRStore, PointerEvents, XR, XROrigin } from "@react-three/xr";
+import { createXRStore, PointerEvents, XR } from "@react-three/xr";
 import { TabSessionProvider } from "@viewportvr/react";
 import { memo, useCallback, useEffect, useRef } from "react";
 import { ErrorBoundary, getErrorMessage, type FallbackProps } from "react-error-boundary";
-import { WebGLRenderer } from "three";
+import { WebGLRenderer, Group } from "three";
 import { configureTextBuilder } from "troika-three-text";
 
 
@@ -18,6 +18,8 @@ import { CameraSetup } from "../render/CameraSetup";
 import { CanvasResizer } from "../render/CanvasResizer";
 import { ReflectiveMirror } from "../misc/ReflectiveMirror";
 import { Player } from "../player/Player";
+import {XROriginProvider} from "../contexts";
+import {SpectatorCamera} from "../misc";
 
 
 configureTextBuilder({
@@ -145,6 +147,8 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
         [on_xr_ready]
     );
 
+    const player_ref = useRef<Group>(null);
+
     return (
         <TabSessionProvider>
             <div
@@ -165,19 +169,23 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
                         >
                             <PointerEvents />
 
-                            <color attach="background" args={["#111111"]} />
-                            <ambientLight intensity={0.5} />
-                            <pointLight position={[10, 10, 10]} />
+                            <XROriginProvider value={player_ref}>
+                                <Player ref={player_ref} />
 
-                            <URLBar
-                                position={[0, 3.25, -4]}
-                                height={0.25}
-                                height_of_dom_mirror={3}
-                            />
-                            <DOMMirror position={[0, 1.5, -4]} height={3} />
-                            <ReflectiveMirror width={0.75} height={1.25} position={[2, 1, 0]} rotation={[0, -Math.PI/2, 0]} />
+                                <color attach="background" args={["#111111"]} />
+                                <ambientLight intensity={0.5} />
+                                <pointLight position={[10, 10, 10]} />
 
-                            <Player />
+                                <URLBar
+                                    position={[0, 3.25, -4]}
+                                    height={0.25}
+                                    height_of_dom_mirror={3}
+                                />
+                                <DOMMirror position={[0, 1.5, -4]} height={3} />
+                                <ReflectiveMirror width={0.75} height={1.25} position={[2, 1, 0]} rotation={[0, -Math.PI/2, 0]} />
+
+                                <SpectatorCamera />
+                            </XROriginProvider>
                         </ErrorBoundary>
                     </XR>
                 </Canvas>

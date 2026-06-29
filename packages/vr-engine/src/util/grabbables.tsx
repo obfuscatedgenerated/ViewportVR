@@ -1,8 +1,9 @@
 import { useFrame } from "@react-three/fiber";
-import {useXRInputSourceState} from "@react-three/xr";
+import { useXRInputSourceState } from "@react-three/xr";
 import { ComponentProps, RefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { BackSide, Group, Matrix4, Mesh, MeshBasicMaterial, Object3D, Vector3 } from "three";
 
+import { useXROrigin } from "../contexts";
 
 export const useOutlineEffect = (
     target_ref: RefObject<Object3D | null>,
@@ -90,6 +91,7 @@ export const useGrabbable = (
 ) => {
     const leftController = useXRInputSourceState('controller', 'left');
     const rightController = useXRInputSourceState('controller', 'right');
+    const xr_origin_ref = useXROrigin();
 
     const grabbingSource = useRef<XRInputSource | null>(null);
     const offsetMatrix = useRef(new Matrix4());
@@ -97,8 +99,9 @@ export const useGrabbable = (
     const nearbyInputs = useRef(new Set<XRInputSource>());
 
     useFrame((state, delta, frame) => {
-        if (!frame ||!target_ref.current) return;
+        if (!frame || !target_ref.current || !xr_origin_ref?.current) return;
         target_ref.current.updateMatrixWorld();
+        xr_origin_ref.current.updateMatrixWorld();
 
         const refSpace = state.gl.xr.getReferenceSpace();
         if (!refSpace) return;
@@ -106,7 +109,7 @@ export const useGrabbable = (
         const controllers = [leftController, rightController].filter(Boolean);
         const currentlyNear = new Set<XRInputSource>();
 
-        let activeGripPose: XRPose | null = null;
+        let activeHandMatrix: Matrix4 | null = null;
 
         for (const controller of controllers) {
             if (!controller) continue;
@@ -114,17 +117,21 @@ export const useGrabbable = (
             const gripSpace = controller.inputSource.gripSpace;
             if (!gripSpace) continue;
 
-            // 2. GET THE POSE FROM THE FRAME
             const pose = frame.getPose(gripSpace, refSpace);
             if (!pose) continue;
 
-            // 3. EXTRACT POSITION FROM DOMPointReadOnly
-            const pos = pose.transform.position;
-            const handPos = new Vector3(pos.x, pos.y, pos.z);
-            const objPos = new Vector3().setFromMatrixPosition(target_ref.current.matrixWorld);
-            const distance = handPos.distanceTo(objPos);
+            // raw pose is relative to the origin, not world — promote it before
+            // it touches anything that compares against target_ref.matrixWorld
+            const handMatrix = new Matrix4()
+                .fromArray(pose.transform.matrix)
+                .premultiply(xr_origin_ref.current.matrixWorld);
 
-            // 1. Proximity Callbacks
+            const handPos = new Vector3().setFromMatrixPosition(handMatrix);
+            const objPos = new Vector3().setFromMatrixPosition(
+                target_ref.current.matrixWorld
+            );
+            const distance = handPos.distanceTo(objPos); // both true world space now
+
             if (distance < nearby_trigger_distance) {
                 currentlyNear.add(controller.inputSource);
                 if (!nearbyInputs.current.has(controller.inputSource)) {
@@ -132,51 +139,60 @@ export const useGrabbable = (
                 }
             }
 
-            // 2. Grab Logic
-            const isSqueezing = controller.gamepad['xr-standard-squeeze']?.state === "pressed";
+            const isSqueezing =
+                controller.gamepad["xr-standard-squeeze"]?.state === "pressed";
 
-            if (isSqueezing && !grabbingSource.current && distance < grab_distance) {
-                // Lock Grab
-                const handMatrix = tempMatrix.current.fromArray(
-                    pose.transform.matrix
+            if (
+                isSqueezing &&
+                !grabbingSource.current &&
+                distance < grab_distance
+            ) {
+                const inverseHand = handMatrix.clone().invert();
+                offsetMatrix.current.multiplyMatrices(
+                    inverseHand,
+                    target_ref.current.matrixWorld
                 );
-                handMatrix.invert();
-                offsetMatrix.current.multiplyMatrices(handMatrix, target_ref.current.matrixWorld);
                 grabbingSource.current = controller.inputSource;
-            } else if (!isSqueezing && grabbingSource.current === controller.inputSource) {
-                // Release
+            } else if (
+                !isSqueezing &&
+                grabbingSource.current === controller.inputSource
+            ) {
                 grabbingSource.current = null;
             }
 
             if (grabbingSource.current === controller.inputSource) {
-                activeGripPose = pose;
+                activeHandMatrix = handMatrix;
             }
         }
 
-        // Cleanup nearby
         for (const input of nearbyInputs.current) {
             if (!currentlyNear.has(input)) on_nearby_end?.(input);
         }
         nearbyInputs.current = currentlyNear;
 
-        // 3. Movement
-        if (grabbingSource.current && activeGripPose) {
-            // Create the matrix from the pose transformation array
-            const handMatrix = tempMatrix.current.fromArray(
-                activeGripPose.transform.matrix
+        if (grabbingSource.current && activeHandMatrix) {
+            const newWorldMatrix = tempMatrix.current.multiplyMatrices(
+                activeHandMatrix,
+                offsetMatrix.current
             );
 
-            // Apply the offset (captured at the moment of 'squeezestart')
-            handMatrix.multiply(offsetMatrix.current);
+            // converts back to local space relative to whatever target_ref's parent is —
+            // a no-op right now since the tripod's parent is the scene root, but this
+            // keeps it correct if you ever nest a grabbable under something non-identity
+            if (target_ref.current.parent) {
+                target_ref.current.parent.updateMatrixWorld();
+                const parentInverse = new Matrix4()
+                    .copy(target_ref.current.parent.matrixWorld)
+                    .invert();
+                newWorldMatrix.premultiply(parentInverse);
+            }
 
-            // Decompose into position/quaternion/scale
-            handMatrix.decompose(
+            newWorldMatrix.decompose(
                 target_ref.current.position,
                 target_ref.current.quaternion,
                 target_ref.current.scale
             );
 
-            // IMPORTANT: Tell Three.js that the object has moved locally
             target_ref.current.matrixAutoUpdate = true;
         }
     });
@@ -189,7 +205,7 @@ export const Grabbable = (props: ComponentProps<"group">) => {
     const {ref, children, ...rest} = props;
 
     const group_ref = useRef<Group | null>(null);
-    useImperativeHandle(ref as RefObject<Group | null>, () => group_ref.current);
+    useImperativeHandle(ref as RefObject<Group | null>, () => group_ref.current!);
 
     const [is_nearby, setIsNearby] = useState(false);
     useGrabbable(group_ref, {

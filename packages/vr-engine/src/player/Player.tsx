@@ -1,21 +1,23 @@
-import { SpectatorCamera } from "../misc";
 import { useXRControllerLocomotion, XROrigin } from "@react-three/xr";
-import { Avatar } from "./Avatar";
-import { WristWatch } from "./WristWatch";
-import { useRef } from "react";
+import { useImperativeHandle, useRef } from "react";
 import { Group } from "three";
 
-export const Player = () => {
+import { Avatar } from "./Avatar";
+import { WristWatch } from "./WristWatch";
+
+
+export const Player = ({ref = null}: {ref?: React.Ref<Group>}) => {
     const origin_ref = useRef<Group>(null);
+    useImperativeHandle(ref, () => origin_ref.current!);
+    
     useXRControllerLocomotion(origin_ref);
 
     return (
         <group name="Player">
             <XROrigin ref={origin_ref}>
                 <WristWatch />
-
-                <SpectatorCamera />
             </XROrigin>
+
             <Avatar />
         </group>
     );

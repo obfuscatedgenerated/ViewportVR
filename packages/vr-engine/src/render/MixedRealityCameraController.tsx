@@ -23,6 +23,7 @@ import {
     CameraControllerTransform,
     frame_transforms
 } from "./SpectatorCameraController";
+import {useXROrigin} from "../contexts";
 
 // three and uikit each inject a clipping block into the fragment shader, and
 // both declare `vec4 plane;` (+ distanceToPlane/distanceGradient/clipOpacity)
@@ -206,6 +207,8 @@ export const MixedRealityCameraController = ({
 
     const render_size = useMemo(() => new Vector2(), []);
 
+    const xr_origin_ref = useXROrigin();
+
     useFrame(({ gl, scene, camera }) => {
         gl.render(scene, camera);
 
@@ -244,12 +247,14 @@ export const MixedRealityCameraController = ({
         first_person_transform({
             spec_camera: first_person_camera,
             headset_cameras: headset_camera,
-            gl
+            gl,
+            xr_origin_ref
         });
         third_person_transform({
             spec_camera: third_person_camera,
             headset_cameras: headset_camera,
-            gl
+            gl,
+            xr_origin_ref
         });
 
         const first_person_position = first_person_camera.position.clone();

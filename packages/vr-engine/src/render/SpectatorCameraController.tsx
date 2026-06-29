@@ -1,16 +1,28 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, type RefObject } from "react";
-import { PerspectiveCamera, Vector3, type Object3D, type Quaternion, type WebGLRenderer, type WebXRArrayCamera } from "three";
+import {
+    Matrix4,
+    PerspectiveCamera,
+    Vector3,
+    type Object3D,
+    type Quaternion,
+    type WebGLRenderer,
+    type WebXRArrayCamera
+} from "three";
 
-import { Layer } from "./layers";
+
+
+import { useXROrigin, XROriginContextType } from "../contexts";
 import { Eye } from "../types";
+import { Layer } from "./layers";
 
 
 // TODO: params kinda redundant (having current, as well as being able to mod in place) but will keep as is for consistency for now
 interface CameraControllerTransformParams {
-    spec_camera: PerspectiveCamera,
-    headset_cameras: WebXRArrayCamera,
-    gl: WebGLRenderer
+    spec_camera: PerspectiveCamera;
+    headset_cameras: WebXRArrayCamera;
+    gl: WebGLRenderer;
+    xr_origin_ref: XROriginContextType;
 }
 
 // mutate in place!
@@ -21,21 +33,27 @@ export interface CameraControllerConfiguration {
     layers: Layer[];
 }
 
+const SCRATCH_MATRIX = new Matrix4();
+const SCRATCH_SCALE = new Vector3(1, 1, 1);
+
 // TODO: this loses type safety as key is string!
 export const frame_transforms: Record<string, (...args: any[]) => CameraControllerTransform> = {
     first_person: (preferred_eye: Eye = Eye.Left) => ({headset_cameras, spec_camera}) => {
         const eye_camera = headset_cameras.cameras[preferred_eye] || headset_cameras;
-        spec_camera.position.copy(eye_camera.position);
-        spec_camera.quaternion.copy(eye_camera.quaternion);
+        spec_camera.position.setFromMatrixPosition(eye_camera.matrixWorld);
+        spec_camera.quaternion.setFromRotationMatrix(eye_camera.matrixWorld);
     },
 
-    third_person: ({position_ref, quaternion_ref}: {position_ref: RefObject<Vector3>, quaternion_ref: RefObject<Quaternion>}) => ({spec_camera}) => {
-        if (!position_ref.current || !quaternion_ref.current) {
-            return;
-        }
+    third_person: ({position_ref, quaternion_ref}: {position_ref: RefObject<Vector3>, quaternion_ref: RefObject<Quaternion>}) => ({spec_camera, xr_origin_ref}) => {
+        if (!position_ref.current || !quaternion_ref.current || !xr_origin_ref?.current) return;
 
-        spec_camera.position.copy(position_ref.current);
-        spec_camera.quaternion.copy(quaternion_ref.current);
+        xr_origin_ref.current.updateMatrixWorld();
+
+        SCRATCH_MATRIX
+            .compose(position_ref.current, quaternion_ref.current, SCRATCH_SCALE)
+            .premultiply(xr_origin_ref.current.matrixWorld);
+
+        SCRATCH_MATRIX.decompose(spec_camera.position, spec_camera.quaternion, SCRATCH_SCALE);
     },
 
     third_person_from_object: (object_ref: RefObject<Object3D>) => ({spec_camera}) => {
@@ -68,6 +86,7 @@ export const camera_controller_configs: Record<string, (...args: any[]) => Camer
 
 export const SpectatorCameraController = ({config = camera_controller_configs.first_person(), horizontal_fov = 50}: {config?: CameraControllerConfiguration, horizontal_fov?: number}) => {
     const { size } = useThree();
+    const xr_origin_ref = useXROrigin();
 
     const spec_camera = useMemo(() => {
         return new PerspectiveCamera(50, 16 / 9, 0.1, 1000);
@@ -103,7 +122,8 @@ export const SpectatorCameraController = ({config = camera_controller_configs.fi
         config.frame_transform({
             spec_camera,
             headset_cameras: headset_camera,
-            gl
+            gl,
+            xr_origin_ref
         });
 
         const xr_state = gl.xr.enabled;
