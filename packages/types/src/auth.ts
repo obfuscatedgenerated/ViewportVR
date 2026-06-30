@@ -5,6 +5,7 @@ export interface Identity {
 
 export interface PublicAuthInfo {
     identity: Identity;
+    public_key: JsonWebKey;
     avatar_url?: string;
 }
 

@@ -80,7 +80,7 @@ interface FormProps {
     resolved_identity?: IdentityResolutionData | null;
 }
 
-const LoginFormStatic = ({ username }: FormProps) => {
+const LoginFormStatic = ({ username, resolved_identity }: FormProps) => {
     const local_storage = useStorageEngine("local");
     const session_storage = useStorageEngine("session");
 
@@ -106,15 +106,26 @@ const LoginFormStatic = ({ username }: FormProps) => {
             return;
         }
 
+        if (!resolved_identity?.public_key) {
+            setShowPasswordInput(true);
+            return;
+        }
+
         check_stored_private_key(identity, {
             local: local_storage,
             session: session_storage
         }).then(async (success) => {
             if (success) {
+                if (!resolved_identity?.public_key) {
+                    setShowPasswordInput(true);
+                    return;
+                }
+
                 await store_auth_session(
                     {
                         identity,
                         method: "static",
+                        public_key: resolved_identity.public_key.key as JsonWebKey,
                         authed_at: Date.now()
                     },
                     session_storage
@@ -132,16 +143,34 @@ const LoginFormStatic = ({ username }: FormProps) => {
     }, [identity, local_storage, session_storage]);
 
     const submit = useCallback(() => {
+        console.log(resolved_identity)
+        if (!resolved_identity?.public_key) {
+            setSuccess(false);
+            setTimeout(() => {
+                window.close();
+            }, 3000);
+            return;
+        }
+
         check_stored_private_key(
             identity,
             { local: local_storage, session: session_storage },
             { password }
         ).then(async (success) => {
             if (success) {
+                if (!resolved_identity?.public_key) {
+                    setSuccess(false);
+                    setTimeout(() => {
+                        window.close();
+                    }, 3000);
+                    return;
+                }
+
                 await store_auth_session(
                     {
                         identity,
                         method: "static",
+                        public_key: resolved_identity.public_key.key as JsonWebKey,
                         authed_at: Date.now()
                     },
                     session_storage

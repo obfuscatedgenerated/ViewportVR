@@ -3,10 +3,12 @@ import type { Handler } from "./types";
 
 export const query: Handler<"HVRSDK_AUTH_QUERY"> = async ({ message }) => {
     // TODO: ask the vr host if the person is in the room and who they are, for now this is just a parrot as we dont have much public auth info anyway
+    // could use a public key store for users in lobby to make this lookup super fast. ideall we dont download it from the server under any circumstance (TODO: can we trust user provided pub key? prob not but then need to reach out to fed domain)
     return {
         for: "HVRSDK_AUTH_QUERY",
         info: {
             identity: message.identity,
+            public_key: "",
             avatar_url: undefined
         }
     };
@@ -25,6 +27,7 @@ export const whoami: Handler<"HVRSDK_AUTH_WHOAMI"> = async ({ storage }) => {
         for: "HVRSDK_AUTH_WHOAMI",
         info: {
             identity: auth_session.identity,
+            public_key: auth_session.public_key,
             avatar_url: auth_session.avatar_url,
             authed_at: auth_session.authed_at
         }

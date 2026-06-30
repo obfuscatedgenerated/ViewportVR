@@ -63,8 +63,9 @@ export type ActionableMethods = Partial<Record<LoginMethod, LoginAction[]>>;
 export interface IdentityResolutionData {
     allowed: ActionableMethods;
     auth_manifest?: AuthManifest;
-    stored_key?: StoredKey;
+    private_key?: StoredKey;
     static_record?: StaticIdentityRecord;
+    public_key?: StoredKey;
 }
 
 interface SuccessfulIdentityResolution extends IdentityResolutionData {
@@ -87,18 +88,25 @@ export const resolve_identity = async (
 ): Promise<IdentityResolution> => {
     // first, check if a local key already exists, which can be logged in immediately
     // TODO: move this logic to static.ts
-    const stored_key = await storage.get<StoredKey>(
+    const private_key = await storage.get<StoredKey>(
         `keystore:${identity.name}@${identity.host}`
     );
 
-    if (stored_key) {
-        return {
-            resolved: true,
-            allowed: {
-                [stored_key.method]: ["login"]
-            },
-            stored_key
-        };
+    if (private_key) {
+        const public_key = await storage.get<StoredKey>(
+            `keystore-pub:${identity.name}@${identity.host}`
+        );
+
+        if (public_key) {
+            return {
+                resolved: true,
+                allowed: {
+                    [private_key.method]: ["login"]
+                },
+                private_key,
+                public_key
+            };
+        }
     }
 
     // now reach out to the host to see what auth methods they support
@@ -149,7 +157,11 @@ export const resolve_identity = async (
                     allowed: {
                         static: ["login"]
                     },
-                    static_record: static_record.record
+                    static_record: static_record.record,
+                    public_key: {
+                        method: "static",
+                        key: static_record.record.auth.public_key
+                    }
                 };
             } else if (
                 static_record.success &&
@@ -192,7 +204,11 @@ export const resolve_identity = async (
                 allowed: {
                     static: ["login"]
                 },
-                static_record: static_record.record
+                static_record: static_record.record,
+                public_key: {
+                    method: "static",
+                    key: static_record.record.auth.public_key
+                }
             };
         } else if (
             static_record.success &&
@@ -227,6 +243,7 @@ export const resolve_identity = async (
 interface AuthSessionToStore {
     identity: Identity;
     method: LoginMethod;
+    public_key: JsonWebKey;
     authed_at?: number;
 }
 

@@ -1,12 +1,11 @@
 import { type StorageEngine } from "@hyperlinkvr/core";
 import { long } from "@wordlist/english-eff/long";
-import { short1 } from "@wordlist/english-eff/short1"
-import { short2 } from "@wordlist/english-eff/short2";
 import { RandomWords } from "@wordlist/random";
 
 
 
-import type { Identity, StoredKey } from "./core";
+import type { StoredKey } from "./core";
+import type { Identity } from "@hyperlinkvr/types";
 import { PasswordDerivAlgorithmName, StaticAuthRecordSchema, StaticIdentityRecordSchema, type StaticAuthRecord, type StaticIdentityRecord } from "./schema";
 
 
@@ -228,12 +227,25 @@ export const store_encrypted_private_key = async (identity: Identity, encrypted_
     });
 }
 
+export const store_public_key = async (identity: Identity, public_key: JsonWebKey, storage: StorageEngine<"local">) => {
+    const key_identifier = `keystore-pub:${identity.name}@${identity.host}`;
+
+    if (await storage.get(key_identifier)) {
+        throw new Error(`Public key for ${identity.name}@${identity.host} already exists in storage`);
+    }
+
+    await storage.set(key_identifier, {
+        method: "static",
+        key: public_key
+    });
+}
+
 export const generate_password = async (words: number = 4): Promise<string> => {
     const random_words = new RandomWords(long);
     return (await random_words.generate(4)).join("-");
 }
 
-export const signup_static = async (identity: Identity, local_storage: StorageEngine<"local">): Promise<{static_record: StaticIdentityRecord, password: string}> => {
+export const signup_static = async (identity: Identity, local_storage: StorageEngine<"local">): Promise<{static_record: StaticIdentityRecord, password: string, public_key: JsonWebKey}> => {
     const { public_key, private_key } = await generate_jwk_keys();
     const password = await generate_password();
 
@@ -243,9 +255,10 @@ export const signup_static = async (identity: Identity, local_storage: StorageEn
     const static_record = await generate_static_identity_record(identity, auth_record);
 
     await store_encrypted_private_key(identity, encrypted_private_key, local_storage);
+    await store_public_key(identity, public_key, local_storage);
 
     // TODO: should we sanity check the keys?
-    return {static_record, password};
+    return {static_record, password, public_key};
 }
 
 export const is_private_key_in_session = async (storage: StorageEngine<"session">): Promise<boolean> => {
