@@ -131,5 +131,9 @@ export default defineConfig({
         baseIconPath: "./assets/icon.png",
         sizes: [16, 32, 48, 96, 128],
         developmentIndicator: "overlay"
+    },
+
+    webExt: {
+        disabled: true
     }
 });
