@@ -1,5 +1,5 @@
 import { CircleUserRound } from "lucide-react";
-import { useAuthSession, useMessageEngine } from "@viewportvr/react";
+import { useAuthSession, useMessageEngine } from "@hyperlinkvr/react";
 import { Avatar } from "./Avatar";
 
 export const ProfileButton = () => {
@@ -17,7 +17,7 @@ export const ProfileButton = () => {
             title="Open login window"
             onClick={() => {
                 messenger.send({
-                    action: "VVR_CREATE_WINDOW",
+                    action: "HVR_CREATE_WINDOW",
                     intent: "LOGIN",
                     type: "popup",
                     width: 400,

@@ -1,5 +1,5 @@
 {
-    "name": "@viewportvr/ui-dom",
+    "name": "@hyperlinkvr/ui-dom",
     "version": "0.0.1",
     "private": true,
     "main": "src/index.tsx",
@@ -21,9 +21,9 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@viewportvr/auth": "workspace:*",
-        "@viewportvr/react": "workspace:*",
-        "@viewportvr/types": "workspace:*",
+        "@hyperlinkvr/auth": "workspace:*",
+        "@hyperlinkvr/react": "workspace:*",
+        "@hyperlinkvr/types": "workspace:*",
         "react": "catalog:",
         "lucide-react": "catalog:"
     },

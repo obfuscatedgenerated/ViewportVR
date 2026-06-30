@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import type { MessageEngine, MessageChannel } from "@viewportvr/core";
+import type { MessageEngine, MessageChannel } from "@hyperlinkvr/core";
 
 export class ExtensionMessageEngine implements MessageEngine {
     async send<Tx, Rx>(action: Tx): Promise<Rx> {

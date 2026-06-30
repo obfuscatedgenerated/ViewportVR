@@ -1,4 +1,4 @@
-import { DevToolsFormPage } from "@viewportvr/pages/devtools/form";
+import { DevToolsFormPage } from "@hyperlinkvr/pages/devtools/form";
 import ReactDOM from "react-dom/client";
 
 export const DevToolsFormUI = () => {

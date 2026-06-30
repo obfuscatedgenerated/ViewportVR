@@ -4,7 +4,7 @@
     "private": true,
     "dependencies": {
         "zod": "catalog:",
-        "@viewportvr/auth": "workspace:*"
+        "@hyperlinkvr/auth": "workspace:*"
     },
     "devDependencies": {
         "@types/node": "catalog:"

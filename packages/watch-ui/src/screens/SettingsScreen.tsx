@@ -1,7 +1,7 @@
 import { Container, Text } from "@react-three/uikit";
-import { useSettingsTree } from "@viewportvr/react";
+import { useSettingsTree } from "@hyperlinkvr/react";
 import { useMemo, useState } from "react";
-import type { SettingsTree, SettingKey } from "@viewportvr/types";
+import type { SettingsTree, SettingKey } from "@hyperlinkvr/types";
 import { WatchSettingWidget } from "../settings/WatchSettingWidget";
 import { ScreenProps } from "./index";
 import { Button } from "@react-three/uikit-default";

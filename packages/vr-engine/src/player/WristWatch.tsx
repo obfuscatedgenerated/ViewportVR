@@ -3,13 +3,13 @@ import { Container } from "@react-three/uikit";
 import { useMemo, useRef, useState } from "react";
 import {  Quaternion, Vector3, MathUtils, Group } from "three";
 
-import { useSetting } from "@viewportvr/react";
+import { useSetting } from "@hyperlinkvr/react";
 
 import {
     WatchUI,
     WATCH_UI_HEIGHT,
     WATCH_UI_WIDTH
-} from "@viewportvr/watch-ui";
+} from "@hyperlinkvr/watch-ui";
 
 const OPEN_THRESHOLD = 0.85; // Harder to open
 const CLOSE_THRESHOLD = 0.7; // Easier to keep open

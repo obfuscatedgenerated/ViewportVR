@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useMessageEngine } from "./engines";
 import { useWindowArguments } from "./windowing";
-import type { Message } from "@viewportvr/types";
+import type { Message } from "@hyperlinkvr/types";
 
 export interface TabSessionContextValue {
     id: number;
@@ -40,16 +40,16 @@ export const TabSessionProvider = ({
     useEffect(() => {
         const handle_message = async (msg: Message) => {
             // TODO: switch
-            if (msg.type === "VVR_TAB_CLOSED" && msg.tab === tab) {
+            if (msg.type === "HVR_TAB_CLOSED" && msg.tab === tab) {
                 // just close for now as tab hopping isnt yet implemented
                 window.close();
             }
 
-            if (msg.type === "VVR_URL_UPDATE") {
+            if (msg.type === "HVR_URL_UPDATE") {
                 setUrl(msg.url);
             }
 
-            if (msg.type === "VVR_DIMENSIONS_UPDATE") {
+            if (msg.type === "HVR_DIMENSIONS_UPDATE") {
                 setDimensions({
                     width: msg.width,
                     height: msg.height

@@ -12,7 +12,7 @@ interface BaseActionMessage extends BaseMessage {
 }
 
 interface BaseWebSDKActionMessage extends BaseActionMessage {
-    action: `VVRSDK_${string}`;
+    action: `HVRSDK_${string}`;
 }
 
 interface BaseEventMessage extends BaseMessage {
@@ -24,28 +24,28 @@ interface BaseReplyMessage extends BaseMessage {
 }
 
 interface BaseWebSDKReplyMessage extends BaseReplyMessage {
-    for: `VVRSDK_${string}`;
+    for: `HVRSDK_${string}`;
 }
 
 
 interface StartStreamAction extends BaseActionMessage {
-    action: "VVR_START_STREAM";
+    action: "HVR_START_STREAM";
     tab: number; // TODO: subscription based routing, what the hell is a tab (says a non-browser)!
 }
 
 interface LaunchAction extends BaseActionMessage {
-    action: "VVR_LAUNCH";
+    action: "HVR_LAUNCH";
     tab: number; // TODO sbr
 }
 
 interface ClickAction extends BaseActionMessage {
-    action: "VVR_CLICK";
+    action: "HVR_CLICK";
     pos: { x: number; y: number };
     button?: 0 | 1 | 2;
 }
 
 interface CreateWindowAction extends BaseActionMessage {
-    action: "VVR_CREATE_WINDOW";
+    action: "HVR_CREATE_WINDOW";
     intent: WindowIntent;
     args?: WindowArguments;
     type?: "popup" | "normal";
@@ -54,14 +54,14 @@ interface CreateWindowAction extends BaseActionMessage {
 }
 
 interface WebSDKAuthQueryAction extends BaseWebSDKActionMessage {
-    action: "VVRSDK_AUTH_QUERY";
+    action: "HVRSDK_AUTH_QUERY";
     identity: Identity;
 }
 
 // TODO: should zod be used or is it overkill for simple message data like this
 
 interface WebSDKAuthWhoAmIAction extends BaseWebSDKActionMessage {
-    action: "VVRSDK_AUTH_WHOAMI";
+    action: "HVRSDK_AUTH_WHOAMI";
 }
 
 export type WebSDKActionMessage =
@@ -77,26 +77,26 @@ export type ActionMessage =
 
 
 interface StreamEvent extends BaseEventMessage {
-    type: "VVR_STREAM";
+    type: "HVR_STREAM";
     stream: number;
     tab: number; // TODO sbr
 }
 
 interface DimensionsUpdateEvent extends BaseEventMessage {
-    type: "VVR_DIMENSIONS_UPDATE";
+    type: "HVR_DIMENSIONS_UPDATE";
     tab: number; // TODO sbr
     width: number;
     height: number;
 }
 
 interface URLUpdateEvent extends BaseEventMessage {
-    type: "VVR_URL_UPDATE";
+    type: "HVR_URL_UPDATE";
     tab: number; // TODO sbr
     url: string;
 }
 
 interface TabClosedEvent extends BaseEventMessage { // TODO: rename to sessionclosed
-    type: "VVR_TAB_CLOSED";
+    type: "HVR_TAB_CLOSED";
     tab: number; // TODO sbr
 }
 
@@ -107,12 +107,12 @@ export type EventMessage =
     TabClosedEvent;
 
 interface WebSDKAuthQueryReplyMessage extends BaseWebSDKReplyMessage {
-    for: "VVRSDK_AUTH_QUERY";
+    for: "HVRSDK_AUTH_QUERY";
     info: PublicAuthInfo | null;
 }
 
 interface WebSDKAuthWhoAmIReplyMessage extends BaseWebSDKReplyMessage {
-    for: "VVRSDK_AUTH_WHOAMI";
+    for: "HVRSDK_AUTH_WHOAMI";
     info: PrivateAuthInfo | null;
 }
 

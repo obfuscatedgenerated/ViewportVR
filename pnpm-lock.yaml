@@ -121,43 +121,43 @@ importers:
 
   apps/extension:
     dependencies:
-      '@viewportvr/assets':
+      '@hyperlinkvr/assets':
         specifier: workspace:*
         version: link:../../packages/assets
-      '@viewportvr/auth':
+      '@hyperlinkvr/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@viewportvr/core':
+      '@hyperlinkvr/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@viewportvr/pages':
+      '@hyperlinkvr/pages':
         specifier: workspace:*
         version: link:../../packages/pages
-      '@viewportvr/platform-browser':
+      '@hyperlinkvr/platform-browser':
         specifier: workspace:*
         version: link:../../packages/platform-browser
-      '@viewportvr/platform-extension':
+      '@hyperlinkvr/platform-extension':
         specifier: workspace:*
         version: link:../../packages/platform-extension
-      '@viewportvr/react':
+      '@hyperlinkvr/react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@viewportvr/ui-dom':
+      '@hyperlinkvr/ui-dom':
         specifier: workspace:*
         version: link:../../packages/ui-dom
-      '@viewportvr/vr-engine':
+      '@hyperlinkvr/vr-engine':
         specifier: workspace:*
         version: link:../../packages/vr-engine
-      '@viewportvr/watch-ui':
+      '@hyperlinkvr/watch-ui':
         specifier: workspace:*
         version: link:../../packages/watch-ui
-      '@viewportvr/web-sdk':
+      '@hyperlinkvr/web-sdk':
         specifier: workspace:*
         version: link:../../packages/web-sdk
-      '@viewportvr/web-sdk-handlers':
+      '@hyperlinkvr/web-sdk-handlers':
         specifier: workspace:*
         version: link:../../packages/web-sdk-handlers
       lucide-react:
@@ -207,10 +207,10 @@ importers:
 
   packages/auth:
     dependencies:
-      '@viewportvr/core':
+      '@hyperlinkvr/core':
         specifier: workspace:*
         version: link:../core
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../types
       '@wordlist/english-eff':
@@ -232,7 +232,7 @@ importers:
 
   packages/core:
     dependencies:
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../types
 
@@ -244,25 +244,25 @@ importers:
       '@react-three/uikit':
         specifier: 'catalog:'
         version: 1.0.74(@react-three/fiber@9.6.1(@types/react@19.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.0))(@types/react@19.2.3)(react@19.2.7)(three@0.185.0)(use-sync-external-store@1.6.0(react@19.2.7))
-      '@viewportvr/assets':
+      '@hyperlinkvr/assets':
         specifier: workspace:*
         version: link:../assets
-      '@viewportvr/auth':
+      '@hyperlinkvr/auth':
         specifier: workspace:*
         version: link:../auth
-      '@viewportvr/react':
+      '@hyperlinkvr/react':
         specifier: workspace:*
         version: link:../react
-      '@viewportvr/schema-form':
+      '@hyperlinkvr/schema-form':
         specifier: workspace:*
         version: link:../schema-form
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../types
-      '@viewportvr/ui-dom':
+      '@hyperlinkvr/ui-dom':
         specifier: workspace:*
         version: link:../ui-dom
-      '@viewportvr/watch-ui':
+      '@hyperlinkvr/watch-ui':
         specifier: workspace:*
         version: link:../watch-ui
       react:
@@ -275,16 +275,16 @@ importers:
 
   packages/platform-browser:
     dependencies:
-      '@viewportvr/core':
+      '@hyperlinkvr/core':
         specifier: workspace:*
         version: link:../core
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../types
 
   packages/platform-extension:
     dependencies:
-      '@viewportvr/core':
+      '@hyperlinkvr/core':
         specifier: workspace:*
         version: link:../core
       webextension-polyfill:
@@ -297,13 +297,13 @@ importers:
 
   packages/react:
     dependencies:
-      '@viewportvr/auth':
+      '@hyperlinkvr/auth':
         specifier: workspace:*
         version: link:../auth
-      '@viewportvr/core':
+      '@hyperlinkvr/core':
         specifier: workspace:*
         version: link:../core
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../types
       react:
@@ -352,13 +352,13 @@ importers:
 
   packages/ui-dom:
     dependencies:
-      '@viewportvr/auth':
+      '@hyperlinkvr/auth':
         specifier: workspace:*
         version: link:../auth
-      '@viewportvr/react':
+      '@hyperlinkvr/react':
         specifier: workspace:*
         version: link:../react
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../types
       lucide-react:
@@ -392,10 +392,10 @@ importers:
       '@react-three/xr':
         specifier: 'catalog:'
         version: 6.6.30(@react-three/fiber@9.6.1(@types/react@19.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.0))(@types/react@19.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.0)
-      '@viewportvr/react':
+      '@hyperlinkvr/react':
         specifier: workspace:*
         version: link:../react
-      '@viewportvr/watch-ui':
+      '@hyperlinkvr/watch-ui':
         specifier: workspace:*
         version: link:../watch-ui
       react:
@@ -444,10 +444,10 @@ importers:
       '@react-three/xr':
         specifier: 'catalog:'
         version: 6.6.30(@react-three/fiber@9.6.1(@types/react@19.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.0))(@types/react@19.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(three@0.185.0)
-      '@viewportvr/react':
+      '@hyperlinkvr/react':
         specifier: workspace:*
         version: link:../react
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../types
       react:
@@ -475,28 +475,28 @@ importers:
 
   packages/web-sdk:
     dependencies:
-      '@viewportvr/auth':
+      '@hyperlinkvr/auth':
         specifier: workspace:*
         version: link:../auth
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../types
 
   packages/web-sdk-handlers:
     dependencies:
-      '@viewportvr/auth':
+      '@hyperlinkvr/auth':
         specifier: workspace:*
         version: link:../auth
-      '@viewportvr/core':
+      '@hyperlinkvr/core':
         specifier: workspace:*
         version: link:../core
-      '@viewportvr/types':
+      '@hyperlinkvr/types':
         specifier: workspace:*
         version: link:../types
 
   scripts:
     dependencies:
-      '@viewportvr/auth':
+      '@hyperlinkvr/auth':
         specifier: workspace:*
         version: link:../packages/auth
       zod:

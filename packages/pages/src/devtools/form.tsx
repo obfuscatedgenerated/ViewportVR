@@ -1,11 +1,11 @@
-import { AuthManifestSchema } from "@viewportvr/auth";
+import { AuthManifestSchema } from "@hyperlinkvr/auth";
 import { lazy, Suspense } from "react";
-import { LoadingSpinner } from "@viewportvr/ui-dom";
+import { LoadingSpinner } from "@hyperlinkvr/ui-dom";
 
 // lazy load schema form to avoid loading css on wrong pages / bundle bloat
 // in regards to css it shouldn't be strictly necessary but may as well give vite an easier time, especially since this bundle will be big anyway with mantine
 // TODO: look into scoping the css to the schemaform
-const SchemaForm = lazy(() => import("@viewportvr/schema-form").then((module) => ({ default: module.SchemaForm })));
+const SchemaForm = lazy(() => import("@hyperlinkvr/schema-form").then((module) => ({ default: module.SchemaForm })));
 
 const SCHEMAS = {
     AuthManifest: {

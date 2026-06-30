@@ -1,4 +1,4 @@
-import type { StorageEngine, StorageKind } from "@viewportvr/core";
+import type { StorageEngine, StorageKind } from "@hyperlinkvr/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 

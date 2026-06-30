@@ -5,7 +5,7 @@
     "compilerOptions": {
         "paths": {
             "~*": ["src/*"],
-            "@viewportvr/asset-resolver": [
+            "@hyperlinkvr/asset-resolver": [
                 "../../packages/asset-resolver/asset-resolver.d.ts"
             ]
         },

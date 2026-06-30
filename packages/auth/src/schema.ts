@@ -52,8 +52,8 @@ export const StaticIdentityRecordSchema = z.object({
 }).meta({
     name: "StaticIdentityRecord",
     version: StaticIdentityRecordSchema_VERSION,
-    title: "ViewportVR - Static Identity Record",
-    description: "A static identity record for ViewportVR to authenticate users on a static site, under the .well-known/vvr/auth/* path."
+    title: "HyperlinkVR - Static Identity Record",
+    description: "A static identity record for HyperlinkVR to authenticate users on a static site, under the .well-known/hyperlinkvr/auth/* path."
 });
 export type StaticIdentityRecord = z.infer<typeof StaticIdentityRecordSchema>;
 
@@ -103,9 +103,9 @@ export const AuthManifestSchema = z
     .meta({
         name: "AuthManifest",
         version: AuthManifestSchema_VERSION,
-        title: "ViewportVR - Auth Manifest",
+        title: "HyperlinkVR - Auth Manifest",
         description:
-            "An auth manifest for ViewportVR to describe the authentication methods supported by a site, as well as friendly display properties, under the .well-known/vvr/auth-manifest.json path.",
+            "An auth manifest for HyperlinkVR to describe the authentication methods supported by a site, as well as friendly display properties, under the .well-known/hyperlinkvr/auth-manifest.json path.",
 
         // enforce that if static_submit_hint given then must be static method available
         json_schema_extra: {

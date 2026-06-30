@@ -1,12 +1,12 @@
 import {send} from "./messenger";
-import type { Identity } from "@viewportvr/types";
+import type { Identity } from "@hyperlinkvr/types";
 
 export const query = async (identity: Identity) => {
-    return send({action: "VVRSDK_AUTH_QUERY", identity});
+    return send({action: "HVRSDK_AUTH_QUERY", identity});
 }
 
 export const whoami = async () => {
-    return send({action: "VVRSDK_AUTH_WHOAMI"});
+    return send({action: "HVRSDK_AUTH_WHOAMI"});
 }
 
-export {parse_identity} from "@viewportvr/auth";
+export {parse_identity} from "@hyperlinkvr/auth";

@@ -1,4 +1,4 @@
-import { type StorageEngine } from "@viewportvr/core";
+import { type StorageEngine } from "@hyperlinkvr/core";
 import { long } from "@wordlist/english-eff/long";
 import { short1 } from "@wordlist/english-eff/short1"
 import { short2 } from "@wordlist/english-eff/short2";
@@ -28,7 +28,7 @@ export const resolve_static_record = async (
     identity: Identity
 ): Promise<StaticRecordResolution> => {
     const static_record_response = await fetch(
-        `https://${identity.host}/.well-known/vvr/auth/${identity.name}.json`
+        `https://${identity.host}/.well-known/hyperlinkvr/auth/${identity.name}.json`
     );
 
     if (!static_record_response.ok) {

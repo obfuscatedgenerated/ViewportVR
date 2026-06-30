@@ -1,5 +1,5 @@
 {
-    "name": "@viewportvr/vr-engine",
+    "name": "@hyperlinkvr/vr-engine",
     "version": "0.0.1",
     "private": true,
     "main": "src/index.ts",
@@ -27,8 +27,8 @@
         "@react-three/uikit-default": "^1.0.74",
         "@react-three/xr": "catalog:",
         "@react-three/handle": "catalog:",
-        "@viewportvr/react": "workspace:*",
-        "@viewportvr/watch-ui": "workspace:*",
+        "@hyperlinkvr/react": "workspace:*",
+        "@hyperlinkvr/watch-ui": "workspace:*",
         "react": "catalog:",
         "react-dom": "catalog:",
         "react-error-boundary": "^6.1.2",

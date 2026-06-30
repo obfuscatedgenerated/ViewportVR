@@ -1,6 +1,6 @@
-import { ExtensionStorage } from "@viewportvr/platform-extension";
-import type { WindowIntent } from "@viewportvr/types";
-import { handle_web_sdk } from "@viewportvr/web-sdk-handlers";
+import { ExtensionStorage } from "@hyperlinkvr/platform-extension";
+import type { WindowIntent } from "@hyperlinkvr/types";
+import { handle_web_sdk } from "@hyperlinkvr/web-sdk-handlers";
 import { defineBackground } from "#imports";
 
 
@@ -53,8 +53,8 @@ export default defineBackground(() => {
     chrome.contextMenus.removeAll(() => {
         chrome.contextMenus.create(
             {
-                id: "launch-viewportvr",
-                title: "Launch ViewportVR",
+                id: "launch-hyperlinkvr",
+                title: "Launch HyperlinkVR",
                 contexts: ["all"],
                 documentUrlPatterns: URL_PATTERNS
             },
@@ -66,9 +66,9 @@ export default defineBackground(() => {
     });
 
     chrome.contextMenus.onClicked.addListener((info, tab) => {
-        if (info.menuItemId === "launch-viewportvr") {
+        if (info.menuItemId === "launch-hyperlinkvr") {
             if (!check_url_allowed(tab?.url || "")) {
-                console.error("URL not allowed for ViewportVR:", tab?.url);
+                console.error("URL not allowed for HyperlinkVR:", tab?.url);
                 return;
             }
 
@@ -91,7 +91,7 @@ export default defineBackground(() => {
         console.table([msg, sender.url]);
 
         // handle web sdk messages (which expect direct replies for correlation)
-        if (msg.action && msg.action.startsWith("VVRSDK_")) {
+        if (msg.action && msg.action.startsWith("HVRSDK_")) {
             handle_web_sdk({
                 message: msg,
                 storage: storage_engines
@@ -115,27 +115,27 @@ export default defineBackground(() => {
 
         // handle messages meant directly for the background script
         // TODO: clean up and use switch
-        if (msg.action === "VVR_START_STREAM") {
+        if (msg.action === "HVR_START_STREAM") {
             chrome.tabCapture.getMediaStreamId(
                 { targetTabId: msg.tab },
                 (stream_id) => {
                     if (stream_id) {
                         chrome.tabs.get(msg.tab, (tab) => {
                             chrome.runtime.sendMessage({
-                                type: "VVR_STREAM",
+                                type: "HVR_STREAM",
                                 stream: stream_id,
                                 tab: tab.id
                             });
 
                             chrome.runtime.sendMessage({
-                                type: "VVR_DIMENSIONS_UPDATE",
+                                type: "HVR_DIMENSIONS_UPDATE",
                                 tab: tab.id,
                                 width: tab.width,
                                 height: tab.height
                             });
 
                             chrome.runtime.sendMessage({
-                                type: "VVR_URL_UPDATE",
+                                type: "HVR_URL_UPDATE",
                                 tab: tab.id,
                                 url: tab.url
                             });
@@ -150,15 +150,15 @@ export default defineBackground(() => {
             );
 
             dropped = false;
-        } else if (msg.action === "VVR_LAUNCH") {
+        } else if (msg.action === "HVR_LAUNCH") {
             if (!msg.tab) {
-                console.error("No tab specified for VVR_LAUNCH");
+                console.error("No tab specified for HVR_LAUNCH");
                 return;
             }
 
             chrome.tabs.get(msg.tab, (tab) => {
                 if (!check_url_allowed(tab.url || "")) {
-                    console.error("URL not allowed for ViewportVR:", tab.url);
+                    console.error("URL not allowed for HyperlinkVR:", tab.url);
                     return;
                 }
 
@@ -171,10 +171,10 @@ export default defineBackground(() => {
             });
 
             dropped = false;
-        } else if (msg.action === "VVR_CLICK") {
+        } else if (msg.action === "HVR_CLICK") {
             handle_click(msg);
             dropped = false;
-        } else if (msg.action === "VVR_CREATE_WINDOW") {
+        } else if (msg.action === "HVR_CREATE_WINDOW") {
             const window_url = get_window_url(msg.intent, msg.args);
             if (!window_url) {
                 console.error(
@@ -222,7 +222,7 @@ export default defineBackground(() => {
 
         if (tab && tab.id) {
             chrome.runtime.sendMessage({
-                type: "VVR_DIMENSIONS_UPDATE",
+                type: "HVR_DIMENSIONS_UPDATE",
                 tab: tab.id,
                 width: tab.width,
                 height: tab.height
@@ -234,7 +234,7 @@ export default defineBackground(() => {
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         if (changeInfo.url) {
             chrome.runtime.sendMessage({
-                type: "VVR_URL_UPDATE",
+                type: "HVR_URL_UPDATE",
                 tab: tabId,
                 url: changeInfo.url
             });
@@ -244,7 +244,7 @@ export default defineBackground(() => {
     // alert the vr host of the session closing
     chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
         chrome.runtime.sendMessage({
-            type: "VVR_TAB_CLOSED",
+            type: "HVR_TAB_CLOSED",
             tab: tabId
         });
     });

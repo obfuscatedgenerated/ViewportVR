@@ -1,5 +1,5 @@
 {
-    "name": "@viewportvr/core",
+    "name": "@hyperlinkvr/core",
     "version": "0.0.1",
     "private": true,
     "main": "src/index.ts",
@@ -9,6 +9,6 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@viewportvr/types": "workspace:*"
+        "@hyperlinkvr/types": "workspace:*"
     }
 }

@@ -1,5 +1,5 @@
 {
-    "name": "@viewportvr/pages",
+    "name": "@hyperlinkvr/pages",
     "version": "0.0.1",
     "private": true,
     "exports": {
@@ -15,13 +15,13 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@viewportvr/types": "workspace:*",
-        "@viewportvr/react": "workspace:*",
-        "@viewportvr/ui-dom": "workspace:*",
-        "@viewportvr/schema-form": "workspace:*",
-        "@viewportvr/watch-ui": "workspace:*",
-        "@viewportvr/auth": "workspace:*",
-        "@viewportvr/assets": "workspace:*",
+        "@hyperlinkvr/types": "workspace:*",
+        "@hyperlinkvr/react": "workspace:*",
+        "@hyperlinkvr/ui-dom": "workspace:*",
+        "@hyperlinkvr/schema-form": "workspace:*",
+        "@hyperlinkvr/watch-ui": "workspace:*",
+        "@hyperlinkvr/auth": "workspace:*",
+        "@hyperlinkvr/assets": "workspace:*",
         "react": "catalog:",
         "@react-three/fiber": "catalog:",
         "@react-three/uikit": "catalog:"

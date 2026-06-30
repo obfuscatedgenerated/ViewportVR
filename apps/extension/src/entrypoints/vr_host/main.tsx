@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 
 import "~/shared.css";
 
-import { LoadingSpinner } from "@viewportvr/ui-dom";
-import { VRHost, xr_store } from "@viewportvr/vr-engine";
+import { LoadingSpinner } from "@hyperlinkvr/ui-dom";
+import { VRHost, xr_store } from "@hyperlinkvr/vr-engine";
 
 import { DefaultContextProviders } from "~/contexts/DefaultContextProviders";
 
@@ -68,7 +68,7 @@ const SpectatorUI = () => {
     if (is_supported === null) {
         return (
             <div className="bg-black/80 backdrop-blur-md absolute inset-0 flex flex-col items-center justify-center z-50 text-white gap-8">
-                <h1 className="font-title text-3xl">ViewportVR</h1>
+                <h1 className="font-title text-3xl">HyperlinkVR</h1>
                 <p className="text-lg">
                     WebXR is not supported in this browser.
                 </p>
@@ -91,7 +91,7 @@ const SpectatorUI = () => {
             <main className="font-sans">
                 {phase !== "started" && (
                     <div className="bg-black/80 backdrop-blur-md absolute inset-0 flex flex-col items-center justify-center z-50 text-white gap-8">
-                        <h1 className="font-title text-3xl">ViewportVR</h1>
+                        <h1 className="font-title text-3xl">HyperlinkVR</h1>
 
                         {xr_ready ? (
                             <button

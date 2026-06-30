@@ -1,4 +1,4 @@
-import { WebSDKActionName } from "@viewportvr/types";
+import { WebSDKActionName } from "@hyperlinkvr/types";
 
 
 
@@ -9,8 +9,8 @@ import type { Handler, HandlerData, HandlerMap } from "./types";
 export * from "./auth";
 
 const handlers = {
-    VVRSDK_AUTH_QUERY: auth_handlers.query,
-    VVRSDK_AUTH_WHOAMI: auth_handlers.whoami
+    HVRSDK_AUTH_QUERY: auth_handlers.query,
+    HVRSDK_AUTH_WHOAMI: auth_handlers.whoami
 } satisfies HandlerMap;
 
 export const handle_web_sdk = <K extends WebSDKActionName>(data: HandlerData<K>) => {

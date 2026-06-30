@@ -1,6 +1,6 @@
 import "~/shared.css";
 
-import { SettingsPage } from "@viewportvr/pages/settings";
+import { SettingsPage } from "@hyperlinkvr/pages/settings";
 import ReactDOM from "react-dom/client";
 import { DefaultContextProviders } from "~/contexts/DefaultContextProviders";
 

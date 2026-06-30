@@ -1,5 +1,5 @@
 import type { ThreeEvent, Vector3 } from "@react-three/fiber";
-import { useMessageEngine, useTabSession } from "@viewportvr/react";
+import { useMessageEngine, useTabSession } from "@hyperlinkvr/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { VideoTexture } from "three";
 
@@ -87,7 +87,7 @@ export const DOMMirror = ({
 
     useEffect(() => {
         const handle_message = async (message: any) => {
-            if (message.type === "VVR_STREAM") {
+            if (message.type === "HVR_STREAM") {
                 stream_ref.current = await navigator.mediaDevices.getUserMedia({
                     video: {
                         // @ts-expect-error this is special to chrome extension apis, not standard web
@@ -121,7 +121,7 @@ export const DOMMirror = ({
         };
 
         const unlisten = messenger.listen(handle_message);
-        messenger.send({ action: "VVR_START_STREAM", tab: session.id });
+        messenger.send({ action: "HVR_START_STREAM", tab: session.id });
 // TODO: chrome independent stream handling (abstraction)
         return () => {
             if (stream_ref.current) {
@@ -151,7 +151,7 @@ export const DOMMirror = ({
             }
 
             messenger.send({
-                action: "VVR_CLICK",
+                action: "HVR_CLICK",
                 tab: session.id,
                 pos: {
                     x: click_x,

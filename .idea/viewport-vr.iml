@@ -29,6 +29,7 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/ui-dom/.turbo" />
       <excludeFolder url="file://$MODULE_DIR$/packages/vr-engine/.turbo" />
       <excludeFolder url="file://$MODULE_DIR$/packages/watch-ui/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/apps/extension/stats" />
       <excludePattern pattern="*.tsbuildinfo" />
     </content>
     <orderEntry type="inheritedJdk" />

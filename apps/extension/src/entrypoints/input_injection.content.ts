@@ -22,7 +22,7 @@ export default defineContentScript({
         });
 
         chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-            if (msg.action === "VVR_CLICK") {
+            if (msg.action === "HVR_CLICK") {
                 const { x, y } = msg.pos;
                 const button = msg.button || 0;
                 console.log(

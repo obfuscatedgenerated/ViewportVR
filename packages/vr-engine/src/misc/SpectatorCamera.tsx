@@ -1,5 +1,5 @@
 import { Grabbable } from "../util/grabbables";
-import { useSetting } from "@viewportvr/react";
+import { useSetting } from "@hyperlinkvr/react";
 import { useMemo, useRef } from "react";
 import type { Group } from "three";
 

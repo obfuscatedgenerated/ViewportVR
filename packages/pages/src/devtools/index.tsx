@@ -1,9 +1,9 @@
-import { useMessageEngine, useSetting } from "@viewportvr/react";
-import type { Message, SettingKeyReturning, WindowIntent } from "@viewportvr/types";
-import { ToggleSwitch } from "@viewportvr/ui-dom/settings";
-import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH } from "@viewportvr/watch-ui";
+import { useMessageEngine, useSetting } from "@hyperlinkvr/react";
+import type { Message, SettingKeyReturning, WindowIntent } from "@hyperlinkvr/types";
+import { ToggleSwitch } from "@hyperlinkvr/ui-dom/settings";
+import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH } from "@hyperlinkvr/watch-ui";
 
-const bg = new URL("../../node_modules/@viewportvr/assets/bg.webp", import.meta.url).href;
+const bg = new URL("../../node_modules/@hyperlinkvr/assets/bg.webp", import.meta.url).href;
 
 const ToolGroup = ({
     title,
@@ -73,7 +73,7 @@ const ToolWindowButton = ({
 
     const handle_click = () => {
         messenger.send({
-            action: "VVR_CREATE_WINDOW",
+            action: "HVR_CREATE_WINDOW",
             intent,
             args,
             type: "popup",
@@ -110,7 +110,7 @@ export const DevToolsPage = () => {
             style={{ backgroundImage: `url(${bg})` }}>
             <div className="w-full h-full p-6 bg-black/50 backdrop-blur-md">
                 <h1 className="text-4xl font-bold font-title">
-                    ViewportVR DevTools
+                    HyperlinkVR DevTools
                 </h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">

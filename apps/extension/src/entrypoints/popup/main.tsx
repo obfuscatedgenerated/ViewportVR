@@ -3,10 +3,10 @@ import "~/shared.css";
 import {
     ExtensionMessageEngine,
     ExtensionStorage
-} from "@viewportvr/platform-extension";
-import { useSettingWithEngines } from "@viewportvr/react";
-import {ProfileButton} from "@viewportvr/ui-dom";
-import { Dropdown, SmartSlider, ToggleSwitch } from "@viewportvr/ui-dom/settings";
+} from "@hyperlinkvr/platform-extension";
+import { useSettingWithEngines } from "@hyperlinkvr/react";
+import {ProfileButton} from "@hyperlinkvr/ui-dom";
+import { Dropdown, SmartSlider, ToggleSwitch } from "@hyperlinkvr/ui-dom/settings";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 
@@ -17,7 +17,7 @@ import { check_url_allowed } from "~/util/url_patterns";
 import { version } from "../../../package.json";
 
 const bg = new URL(
-    "../../../node_modules/@viewportvr/assets/bg.webp",
+    "../../../node_modules/@hyperlinkvr/assets/bg.webp",
     import.meta.url
 ).href;
 
@@ -117,7 +117,7 @@ const Popup = () => {
         }
 
         messenger.send({
-            action: "VVR_LAUNCH",
+            action: "HVR_LAUNCH",
             tab: active_tab.id
         });
         window.close();
@@ -136,7 +136,7 @@ const Popup = () => {
 
                 <div className="py-4 px-6 w-full h-full flex flex-col items-center justify-center absolute top-0 left-0 gap-4">
                     <div className="mb-8 absolute top-4 flex items-center justify-center gap-6">
-                        <h1 className="font-title text-2xl">ViewportVR</h1>
+                        <h1 className="font-title text-2xl">HyperlinkVR</h1>
 
                         <ProfileButton />
                     </div>
@@ -147,8 +147,8 @@ const Popup = () => {
                         disabled={!launch_allowed}
                         title={
                             launch_allowed
-                                ? "Launch ViewportVR in a new window"
-                                : "ViewportVR is not allowed on this page. Try navigating to a website."
+                                ? "Launch HyperlinkVR in a new window"
+                                : "HyperlinkVR is not allowed on this page. Try navigating to a website."
                         }>
                         {launch_allowed ? "Launch" : "Not allowed"}
                     </button>
@@ -210,7 +210,7 @@ Enable this option to use Chrome's debugger to inject raw inputs directly.`}
                         <a
                             target="_blank"
                             rel="noreferrer noopener"
-                            href="https://github.com/obfuscatedgenerated/ViewportVR"
+                            href="https://github.com/obfuscatedgenerated/HyperlinkVR"
                             className="underline hover:text-white transition">
                             GitHub
                         </a>{" "}

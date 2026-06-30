@@ -3,8 +3,8 @@ import {
     StorageEngine,
     update_setting,
     watch_setting
-} from "@viewportvr/core";
-import { SettingKey, settings_def } from "@viewportvr/types";
+} from "@hyperlinkvr/core";
+import { SettingKey, settings_def } from "@hyperlinkvr/types";
 import { useCallback, useEffect, useState } from "react";
 
 import { useStorageEngines } from "../contexts";

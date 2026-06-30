@@ -1,9 +1,9 @@
-import { useSettingsTree } from "@viewportvr/react";
-import { SettingKey, SettingsTree } from "@viewportvr/types";
-import { FlatSettingWidget } from "@viewportvr/ui-dom/settings";
+import { useSettingsTree } from "@hyperlinkvr/react";
+import { SettingKey, SettingsTree } from "@hyperlinkvr/types";
+import { FlatSettingWidget } from "@hyperlinkvr/ui-dom/settings";
 import { useMemo, useState } from "react";
 
-const bg = new URL("../node_modules/@viewportvr/assets/bg.webp", import.meta.url).href;
+const bg = new URL("../node_modules/@hyperlinkvr/assets/bg.webp", import.meta.url).href;
 
 const SettingSubtree = ({index, tree, is_root = false}: {index: string, tree: SettingsTree, is_root?: boolean}) => {
     const subtree = useMemo(() => tree.subtrees[index], [index, tree]);

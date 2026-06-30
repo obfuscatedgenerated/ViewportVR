@@ -1,5 +1,5 @@
 {
-    "name": "@viewportvr/platform-browser",
+    "name": "@hyperlinkvr/platform-browser",
     "version": "0.0.1",
     "private": true,
     "main": "src/index.ts",
@@ -9,7 +9,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@viewportvr/core": "workspace:*",
-        "@viewportvr/types": "workspace:*"
+        "@hyperlinkvr/core": "workspace:*",
+        "@hyperlinkvr/types": "workspace:*"
     }
 }

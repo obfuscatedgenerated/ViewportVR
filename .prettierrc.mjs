@@ -18,7 +18,7 @@ export default {
         "^~(.*)$",
         "",
         "^[./]",
-        "@viewportvr/assets/*",
-        "@viewportvr/*/assets/*"
+        "@hyperlinkvr/assets/*",
+        "@hyperlinkvr/*/assets/*"
     ]
 };

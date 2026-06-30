@@ -1,5 +1,5 @@
-import type { StorageEngine } from "@viewportvr/core";
-import type { Identity } from "@viewportvr/types";
+import type { StorageEngine } from "@hyperlinkvr/core";
+import type { Identity } from "@hyperlinkvr/types";
 
 import {
     AUTH_METHODS,
@@ -104,7 +104,7 @@ export const resolve_identity = async (
     // now reach out to the host to see what auth methods they support
     // TODO: handle host more safely
     const manifest_response = await fetch(
-        `https://${identity.host}/.well-known/vvr/auth-manifest.json`
+        `https://${identity.host}/.well-known/hyperlinkvr/auth-manifest.json`
     );
     if (!manifest_response.ok) {
         return {

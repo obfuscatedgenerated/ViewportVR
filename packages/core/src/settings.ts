@@ -1,4 +1,4 @@
-import { SeparateUIDefinition, Setting, SettingKey, settings_def, SettingsTree, UISubdefinition } from "@viewportvr/types";
+import { SeparateUIDefinition, Setting, SettingKey, settings_def, SettingsTree, UISubdefinition } from "@hyperlinkvr/types";
 
 
 

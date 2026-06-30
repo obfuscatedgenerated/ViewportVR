@@ -1,10 +1,10 @@
-import { useSetting, useSettingUIDefinition } from "@viewportvr/react";
+import { useSetting, useSettingUIDefinition } from "@hyperlinkvr/react";
 import {
     SettingValueType,
     WidgetArguments,
     WidgetType,
     type SettingKey
-} from "@viewportvr/types";
+} from "@hyperlinkvr/types";
 import { useMemo } from "react";
 
 import { Dropdown } from "./Dropdown";

@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Container, Fullscreen } from "@react-three/uikit";
-import { MockTabSessionProvider } from "@viewportvr/react";
-import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH, WatchUI } from "@viewportvr/watch-ui";
+import { MockTabSessionProvider } from "@hyperlinkvr/react";
+import { WATCH_UI_HEIGHT, WATCH_UI_WIDTH, WatchUI } from "@hyperlinkvr/watch-ui";
 
 export const DevToolsWatchPage = () => {
     return (

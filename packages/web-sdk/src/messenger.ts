@@ -2,7 +2,7 @@ import type {
     WebSDKActionMessage,
     WebSDKReplyMessage,
     WithCorrelation,
-} from "@viewportvr/types";
+} from "@hyperlinkvr/types";
 
 export const send = async (message: WebSDKActionMessage): Promise<WebSDKReplyMessage> => {
     const correlation_id = crypto.randomUUID();
@@ -14,7 +14,7 @@ export const send = async (message: WebSDKActionMessage): Promise<WebSDKReplyMes
     return new Promise((resolve, reject) => {
         const handle_message = (event: MessageEvent) => {
             const data = event.data as any;
-            // TODO: should this check for VVRSDK prefix?
+            // TODO: should this check for HVRSDK prefix?
             if ("for" in data && data.for === message.action && "correlation_id" in data && data.correlation_id === correlation_id) {
                 window.removeEventListener("message", handle_message);
 

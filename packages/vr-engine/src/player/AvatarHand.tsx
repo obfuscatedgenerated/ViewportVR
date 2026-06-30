@@ -1,7 +1,7 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { PointerCursorModel, PointerRayModel, useRayPointer, useTouchPointer, useXRInputSourceStateContext, XRSpace } from "@react-three/xr";
-import { useSetting } from "@viewportvr/react";
+import { useSetting } from "@hyperlinkvr/react";
 import { useEffect, useMemo, useRef } from "react";
 import { ArrowHelper, Group, Mesh, MeshBasicMaterial, Object3D, Quaternion, Raycaster, SphereGeometry, Vector3 } from "three";
 

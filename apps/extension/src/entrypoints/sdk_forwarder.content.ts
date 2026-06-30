@@ -2,7 +2,7 @@ import { defineContentScript } from "#imports";
 
 import { URL_PATTERNS } from "~/util/url_patterns";
 
-import type {WebSDKActionMessage, WebSDKReplyMessage, MaybeWithCorrelation, WithCorrelation} from "@viewportvr/types";
+import type {WebSDKActionMessage, WebSDKReplyMessage, MaybeWithCorrelation, WithCorrelation} from "@hyperlinkvr/types";
 
 export default defineContentScript({
     matches: URL_PATTERNS,
@@ -15,7 +15,7 @@ export default defineContentScript({
             const sdk_message = {...event.data} as MaybeWithCorrelation<WebSDKActionMessage>;
 
             // only forward sdk messages
-            if (sdk_message && sdk_message.action && sdk_message.action.startsWith("VVRSDK_")) {
+            if (sdk_message && sdk_message.action && sdk_message.action.startsWith("HVRSDK_")) {
                 let correlation_id: string | undefined = undefined;
                 if ("correlation_id" in sdk_message) {
                     correlation_id = sdk_message.correlation_id;

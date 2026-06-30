@@ -1,8 +1,10 @@
 {
-    "name": "viewportvr",
+    "name": "hyperlinkvr",
+    "description": "The hyperspace navigator.",
     "license": "AGPL-3.0-only",
     "private": true,
     "packageManager": "pnpm@10.19.0",
+    "homepage": "https://hyperlink.surf",
     "scripts": {
         "dev": "turbo run dev",
         "build": "turbo run build",

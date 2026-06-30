@@ -28,17 +28,17 @@ if (!INCLUDE_IWER) {
 }
 
 const force_prebundle = [
-    "@viewportvr/vr-engine > @react-three/xr",
-    "@viewportvr/vr-engine > @react-three/xr > @pmndrs/xr",
-    "@viewportvr/vr-engine > @react-three/xr > @pmndrs/xr > @pmndrs/msdfonts",
-    "@viewportvr/vr-engine > @react-three/fiber",
-    "@viewportvr/vr-engine > @react-three/drei",
-    "@viewportvr/vr-engine > @react-three/uikit",
-    "@viewportvr/vr-engine > @react-three/uikit-default",
-    "@viewportvr/watch-ui > @react-three/uikit",
-    "@viewportvr/watch-ui > @react-three/uikit-default",
-    "@viewportvr/vr-engine > troika-three-text",
-    "@viewportvr/vr-engine > three"
+    "@hyperlinkvr/vr-engine > @react-three/xr",
+    "@hyperlinkvr/vr-engine > @react-three/xr > @pmndrs/xr",
+    "@hyperlinkvr/vr-engine > @react-three/xr > @pmndrs/xr > @pmndrs/msdfonts",
+    "@hyperlinkvr/vr-engine > @react-three/fiber",
+    "@hyperlinkvr/vr-engine > @react-three/drei",
+    "@hyperlinkvr/vr-engine > @react-three/uikit",
+    "@hyperlinkvr/vr-engine > @react-three/uikit-default",
+    "@hyperlinkvr/watch-ui > @react-three/uikit",
+    "@hyperlinkvr/watch-ui > @react-three/uikit-default",
+    "@hyperlinkvr/vr-engine > troika-three-text",
+    "@hyperlinkvr/vr-engine > three"
 ];
 
 const LOG_COMPILATION = process.env.LOG_COMPILATION === "true" || process.env.LOG_COMPILATION === "1";
@@ -102,9 +102,11 @@ export default defineConfig({
     },
 
     manifest: {
-        name: "ViewportVR",
+        name: `HyperlinkVR - ${pkg.description}`,
+        short_name: "HyperlinkVR",
         version: pkg.version,
         description: pkg.description,
+        homepage_url: pkg.homepage,
         host_permissions: ["https://*/*"],
         permissions: [
             "contextMenus",
@@ -116,7 +118,7 @@ export default defineConfig({
         ],
         content_security_policy: {
             extension_pages:
-                "script-src 'self' http://localhost:8097 'wasm-unsafe-eval'; object-src 'self';"
+                `script-src 'self'${ENVIRONMENT === "production" ? "" : " http://localhost:8097"} 'wasm-unsafe-eval'; object-src 'self';`
         }
     },
 

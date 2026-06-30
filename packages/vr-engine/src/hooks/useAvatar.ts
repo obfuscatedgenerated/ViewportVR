@@ -1,4 +1,4 @@
-import { useStorage } from "@viewportvr/react";
+import { useStorage } from "@hyperlinkvr/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { Mesh, MeshStandardMaterial, Object3D } from "three";
 

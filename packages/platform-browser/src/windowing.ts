@@ -1,5 +1,5 @@
-import type { WindowArguments } from "@viewportvr/types";
-import type { WindowArgumentsStrategy } from "@viewportvr/core";
+import type { WindowArguments } from "@hyperlinkvr/types";
+import type { WindowArgumentsStrategy } from "@hyperlinkvr/core";
 
 export class URLParamsWindowArgumentsStrategy implements WindowArgumentsStrategy<string> {
     retrieve(): string {

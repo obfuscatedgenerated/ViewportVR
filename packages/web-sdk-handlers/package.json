@@ -1,5 +1,5 @@
 {
-    "name": "@viewportvr/web-sdk-handlers",
+    "name": "@hyperlinkvr/web-sdk-handlers",
     "version": "0.0.1",
     "private": true,
     "main": "src/index.ts",
@@ -9,9 +9,9 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@viewportvr/core": "workspace:*",
-        "@viewportvr/auth": "workspace:*",
-        "@viewportvr/types": "workspace:*"
+        "@hyperlinkvr/core": "workspace:*",
+        "@hyperlinkvr/auth": "workspace:*",
+        "@hyperlinkvr/types": "workspace:*"
     },
     "devDependencies": {}
 }

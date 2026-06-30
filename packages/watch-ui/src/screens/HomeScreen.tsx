@@ -1,6 +1,6 @@
 import { Container, Text } from "@react-three/uikit";
 import { Button, Label, Switch } from "@react-three/uikit-default";
-import { useTabSession } from "@viewportvr/react";
+import { useTabSession } from "@hyperlinkvr/react";
 import { useState } from "react";
 
 import type { ScreenProps } from "./index";

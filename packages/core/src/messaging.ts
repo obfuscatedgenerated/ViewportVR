@@ -1,4 +1,4 @@
-import type { ActionMessage, EventMessage, ReplyMessage } from "@viewportvr/types";
+import type { ActionMessage, EventMessage, ReplyMessage } from "@hyperlinkvr/types";
 
 export interface MessageChannel<Tx = ActionMessage, Rx = EventMessage> {
     send(payload: Tx): Promise<void>;

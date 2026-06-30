@@ -1,6 +1,6 @@
 import "~/shared.css";
 
-import { DevToolsPage } from "@viewportvr/pages/devtools";
+import { DevToolsPage } from "@hyperlinkvr/pages/devtools";
 import ReactDOM from "react-dom/client";
 import { DefaultContextProviders } from "~/contexts/DefaultContextProviders";
 

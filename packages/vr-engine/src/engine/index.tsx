@@ -2,7 +2,7 @@ import { Text } from "@react-three/drei";
 import { Canvas, RootState } from "@react-three/fiber";
 import type { DefaultGLProps } from "@react-three/fiber/dist/declarations/src/core/renderer";
 import { createXRStore, PointerEvents, XR } from "@react-three/xr";
-import { TabSessionProvider } from "@viewportvr/react";
+import { TabSessionProvider } from "@hyperlinkvr/react";
 import { memo, useCallback, useEffect, useRef } from "react";
 import { ErrorBoundary, getErrorMessage, type FallbackProps } from "react-error-boundary";
 import { WebGLRenderer, Group } from "three";

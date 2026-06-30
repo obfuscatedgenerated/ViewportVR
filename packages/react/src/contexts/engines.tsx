@@ -2,7 +2,7 @@ import type {
     MessageEngine,
     StorageEngine,
     StorageKind
-} from "@viewportvr/core";
+} from "@hyperlinkvr/core";
 import { createContext, useContext } from "react";
 
 export type StorageEnginesContextType<K extends StorageKind = StorageKind> = {

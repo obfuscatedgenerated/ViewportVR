@@ -1,4 +1,4 @@
-import type { WindowArgumentsStrategy } from "@viewportvr/core";
+import type { WindowArgumentsStrategy } from "@hyperlinkvr/core";
 import { useMemo, createContext, useContext } from "react";
 
 export type WindowArgumentsStrategyContextType = WindowArgumentsStrategy<unknown> | null;

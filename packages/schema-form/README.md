@@ -1,4 +1,4 @@
-# @viewportvr/schema-form
+# @hyperlinkvr/schema-form
 
 This package uses AutoForm to generate forms from Zod schema.
 

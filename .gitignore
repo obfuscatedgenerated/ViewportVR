@@ -39,6 +39,7 @@ dist/
 *.iml
 .idea/*
 !.idea/viewport-vr.iml
+!.idea/hyperlinkvr.iml
 
 .turbo
 

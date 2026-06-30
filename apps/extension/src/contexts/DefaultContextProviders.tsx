@@ -1,16 +1,16 @@
-import { MessageEngine, WindowArgumentsStrategy } from "@viewportvr/core";
-import { URLParamsWindowArgumentsStrategy } from "@viewportvr/platform-browser";
+import { MessageEngine, WindowArgumentsStrategy } from "@hyperlinkvr/core";
+import { URLParamsWindowArgumentsStrategy } from "@hyperlinkvr/platform-browser";
 import {
     ExtensionMessageEngine,
     ExtensionStorage
-} from "@viewportvr/platform-extension";
+} from "@hyperlinkvr/platform-extension";
 import {
     AuthSessionProvider,
     MessageEngineProvider,
     StorageEnginesContextType,
     StorageEnginesProvider,
     WindowArgumentsStrategyProvider
-} from "@viewportvr/react";
+} from "@hyperlinkvr/react";
 
 let _default_messenger: MessageEngine | undefined;
 let _default_storage_engines: StorageEnginesContextType | undefined;

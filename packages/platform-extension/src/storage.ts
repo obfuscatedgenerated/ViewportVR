@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import type { StorageEngine, StorageKind } from "@viewportvr/core";
+import type { StorageEngine, StorageKind } from "@hyperlinkvr/core";
 
 
 export class ExtensionStorage<T extends StorageKind> implements StorageEngine {

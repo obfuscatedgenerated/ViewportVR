@@ -1,6 +1,6 @@
-import { check_stored_private_key, is_private_key_in_session, parse_identity, resolve_identity, signup_static, store_auth_session, type ActionableMethods, type Identity, type IdentityResolutionData, type LoginAction, type LoginMethod } from "@viewportvr/auth";
-import { useDebounce, useStorageEngine } from "@viewportvr/react";
-import { CenteredLoadingSpinner } from "@viewportvr/ui-dom";
+import { check_stored_private_key, is_private_key_in_session, parse_identity, resolve_identity, signup_static, store_auth_session, type ActionableMethods, type Identity, type IdentityResolutionData, type LoginAction, type LoginMethod } from "@hyperlinkvr/auth";
+import { useDebounce, useStorageEngine } from "@hyperlinkvr/react";
+import { CenteredLoadingSpinner } from "@hyperlinkvr/ui-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 

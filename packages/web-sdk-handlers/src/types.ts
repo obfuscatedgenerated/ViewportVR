@@ -1,11 +1,11 @@
-import type { StorageEngine } from "@viewportvr/core";
+import type { StorageEngine } from "@hyperlinkvr/core";
 import type {
     NamedAction,
     NamedReply,
     WebSDKActionMessage,
     WebSDKActionName,
     WebSDKReplyMessage
-} from "@viewportvr/types";
+} from "@hyperlinkvr/types";
 
 export interface HandlerData<K extends WebSDKActionName> {
     message: NamedAction<K, WebSDKActionMessage>;
