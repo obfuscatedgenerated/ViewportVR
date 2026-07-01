@@ -25,7 +25,10 @@ export type CapsuleCollider = z.infer<typeof CapsuleColliderSchema>;
 
 export const CustomMeshColliderSchema = z.object({
     type: z.literal("custom-mesh"),
-    mesh: z.string()
+    mesh: z.url({
+        protocol: /^https?$/,
+        hostname: z.regexes.domain
+    })
 });
 export type CustomMeshCollider = z.infer<typeof CustomMeshColliderSchema>;
 
@@ -221,7 +224,12 @@ export type InteractionInput = z.input<typeof InteractionSchema>;
 
 export const CustomObjectSchema = z.object({
     type: z.literal("custom"),
-    mesh: z.string().optional(),
+    mesh: z
+        .url({
+            protocol: /^https?$/,
+            hostname: z.regexes.domain
+        })
+        .optional(),
     // material_override: MaterialSchema.optional(),
     physics: PhysicsSystemSchema.optional(),
     interactions: z.array(InteractionSchema).optional()
