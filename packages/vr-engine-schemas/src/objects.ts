@@ -257,10 +257,75 @@ export const EngineObjectSchema = z.union([CustomObjectSchema, PrefabSchema]);
 export type EngineObject = z.infer<typeof EngineObjectSchema>;
 export type EngineObjectInput = z.input<typeof EngineObjectSchema>;
 
+const BaseMonitorSchema = z.object({
+    type: z.string(),
+    name: z.string()
+});
+
+export const AxisRangeSchema = z.union([
+    z.object({
+        min: z.number(),
+        max: z.number()
+    }),
+    z.object({
+        min: z.number(),
+    }),
+    z.object({
+        max: z.number(),
+    }),
+    z.object({
+        equals: z.number()
+    })
+]);
+export type AxisRange = z.infer<typeof AxisRangeSchema>;
+
+export const AxesBasedMonitorSchema = BaseMonitorSchema.extend({
+    when: z.enum(["any", "all", "xor"]).default("all"),
+    x: AxisRangeSchema.optional(),
+    y: AxisRangeSchema.optional(),
+    z: AxisRangeSchema.optional()
+});
+export type AxesBasedMonitor = z.infer<typeof AxesBasedMonitorSchema>;
+export type AxesBasedMonitorInput = z.input<typeof AxesBasedMonitorSchema>;
+
+export const PositionMonitorSchema = AxesBasedMonitorSchema.extend({
+    type: z.literal("position"),
+});
+export type PositionMonitor = z.infer<typeof PositionMonitorSchema>;
+export type PositionMonitorInput = z.input<typeof PositionMonitorSchema>;
+
+export const RotationMonitorSchema = AxesBasedMonitorSchema.extend({
+    type: z.literal("rotation"),
+});
+export type RotationMonitor = z.infer<typeof RotationMonitorSchema>;
+export type RotationMonitorInput = z.input<typeof RotationMonitorSchema>;
+
+export const LinearVelocityMonitorSchema = AxesBasedMonitorSchema.extend({
+    type: z.literal("linear-velocity"),
+});
+export type LinearVelocityMonitor = z.infer<typeof LinearVelocityMonitorSchema>;
+export type LinearVelocityMonitorInput = z.input<typeof LinearVelocityMonitorSchema>;
+
+export const AngularVelocityMonitorSchema = AxesBasedMonitorSchema.extend({
+    type: z.literal("angular-velocity"),
+});
+export type AngularVelocityMonitor = z.infer<typeof AngularVelocityMonitorSchema>;
+export type AngularVelocityMonitorInput = z.input<typeof AngularVelocityMonitorSchema>;
+
+export const MonitorSchema = z.discriminatedUnion("type", [
+    PositionMonitorSchema,
+    RotationMonitorSchema,
+    LinearVelocityMonitorSchema,
+    AngularVelocityMonitorSchema
+]);
+export type Monitor = z.infer<typeof MonitorSchema>;
+export type MonitorInput = z.input<typeof MonitorSchema>;
+
 export const EngineObjectDispatchSchema = z.object({
     object: EngineObjectSchema,
     transform: TransformSchema.optional(),
-    user_data: z.record(z.string(), z.any()).optional()
+    user_data: z.record(z.string(), z.any()).optional(),
+    monitors: z.array(MonitorSchema).optional()
 });
 export type EngineObjectDispatch = z.infer<typeof EngineObjectDispatchSchema>;
 export type EngineObjectDispatchInput = z.input<typeof EngineObjectDispatchSchema>;
@@ -274,3 +339,4 @@ export type CreatedEngineObject = z.infer<typeof CreatedEngineObjectSchema>;
 export type CreatedEngineObjectInput = z.input<typeof CreatedEngineObjectSchema>;
 
 // TODO: dispatch object modifications
+// TODO: dispatch object destruction

@@ -1,5 +1,7 @@
 import type { NamedReply } from "@hyperlinkvr/types";
 import {
+    AxesBasedMonitorInput,
+    AxisRange,
     ButtonPrefab,
     ButtonPrefabInput,
     ButtonPrefabSchema,
@@ -24,6 +26,8 @@ import {
     HexNumericalColor,
     HexNumericalColorSchema,
     Interaction,
+    Monitor,
+    MonitorSchema,
     PhysicsSystem,
     PhysicsSystemInput,
     PhysicsSystemSchema,
@@ -295,6 +299,63 @@ export class ButtonPrefabBuilder {
     }
 }
 
+class AxesBasedMonitorBuilder {
+    #monitor = {} as AxesBasedMonitorInput;
+
+    constructor(type: "position" | "rotation" | "linear-velocity" | "angular-velocity", name: string) {
+        this.#monitor.name = name;
+        this.#monitor.type = type;
+    }
+
+    when(cond: "any" | "all" | "xor") {
+        this.#monitor.when = cond;
+        return this;
+    }
+
+    x(range: AxisRange) {
+        this.#monitor.x = range;
+        return this;
+    }
+
+    y(range: AxisRange) {
+        this.#monitor.y = range;
+        return this;
+    }
+
+    z(range: AxisRange) {
+        this.#monitor.z = range;
+        return this;
+    }
+
+    build(): Monitor {
+        return MonitorSchema.parse(this.#monitor);
+    }
+}
+
+export class PositionMonitorBuilder extends AxesBasedMonitorBuilder {
+    constructor(name: string) {
+        super("position", name);
+    }
+}
+
+export class RotationMonitorBuilder extends AxesBasedMonitorBuilder {
+    constructor(name: string) {
+        super("rotation", name);
+    }
+}
+
+export class LinearVelocityMonitorBuilder extends AxesBasedMonitorBuilder {
+    constructor(name: string) {
+        super("linear-velocity", name);
+    }
+}
+
+export class AngularVelocityMonitorBuilder extends AxesBasedMonitorBuilder {
+    constructor(name: string) {
+        super("angular-velocity", name);
+    }
+}
+
 export class EngineObjectDispatchBuilder {
     #dispatch = {} as EngineObjectDispatchInput;
 
@@ -353,6 +414,27 @@ export class EngineObjectDispatchBuilder {
         return this;
     }
 
+    add_monitor(monitor: Monitor) {
+        if (!this.#dispatch.monitors) {
+            this.#dispatch.monitors = [];
+        }
+        this.#dispatch.monitors.push(monitor);
+        return this;
+    }
+
+    add_monitors(monitors: Monitor[]) {
+        if (!this.#dispatch.monitors) {
+            this.#dispatch.monitors = [];
+        }
+        this.#dispatch.monitors.push(...monitors);
+        return this;
+    }
+
+    set_monitors(monitors: Monitor[]) {
+        this.#dispatch.monitors = monitors;
+        return this;
+    }
+
     build(): EngineObjectDispatch {
         return EngineObjectDispatchSchema.parse(this.#dispatch);
     }
@@ -391,6 +473,15 @@ const sword = new CustomObjectBuilder()
 const created_sword = await new EngineObjectDispatchBuilder()
     .set_object(sword)
     .set_position(0, 1, -2)
+    .add_monitor(
+        // we also recieve an event when being swung faster than 5 rads/s in any direction
+        new AngularVelocityMonitorBuilder("sword_swung")
+            .when("any")
+            .x({ min: 5 })
+            .y({ min: 5 })
+            .z({ min: 5 })
+            .build()
+    )
     .create();
 
 console.log("Created sword object with ID:", created_sword.id);
