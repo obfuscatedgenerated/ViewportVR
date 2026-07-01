@@ -8,12 +8,12 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 
 
 interface WebSDKMessagingContextType {
-    on_action: <M extends WebSDKActionName>(action_filter?: M) => Promise<{
+    wait_for_action: <M extends WebSDKActionName>(action_filter: M) => Promise<{
         message: NamedAction<M>;
         reply: (message: NamedReply<M>) => void;
-        unlisten: () => void;
     }>;
 
+    on_action: <M extends WebSDKActionName>(action_filter: M, callback: (message: NamedAction<M>, reply: (message: NamedReply<M>) => void) => void) => () => void;
     emit_event: (message: WebSDKEventMessage) => void;
 
     connected: boolean;
@@ -149,33 +149,39 @@ export const WebSDKMessagingProvider = ({children}: {children: React.ReactNode})
     }, []);
 
     const on_action = useCallback(
-        async <M extends WebSDKActionName>(action_filter?: M) => {
+        <M extends WebSDKActionName>(action_filter: M, callback: (message: NamedAction<M>, reply: (message: NamedReply<M>) => void) => void) => {
+            const handler = <K extends WebSDKActionName>(message: NamedAction<K>, reply: (message: NamedReply<K>) => void) => {
+                if (!action_filter || message.action === action_filter) {
+                    callback(message as NamedAction<M>, reply as (message: NamedReply<M>) => void);
+                }
+            };
+
+            const handlers = action_map_ref.current.get(action_filter) || new Set();
+            handlers.add(handler);
+            action_map_ref.current.set(action_filter, handlers);
+
+            return () => {
+                const handlers = action_map_ref.current.get(action_filter);
+                if (handlers) {
+                    handlers.delete(handler);
+                }
+            };
+        }
+    , []);
+
+    const wait_for_action = useCallback(
+        <M extends WebSDKActionName>(action_filter: M) => {
             return new Promise<{
                 message: NamedAction<M>;
                 reply: (message: NamedReply<M>) => void;
-                unlisten: () => void;
             }>((resolve) => {
-                const handler = <K extends WebSDKActionName>(message: NamedAction<K>, reply: (message: NamedReply<K>) => void) => {
-                    if (!action_filter || message.action === action_filter) {
-                        resolve({
-                            message,
-                            reply,
-                            unlisten: () => {
-                                const handlers = action_map_ref.current.get(message.action);
-                                if (handlers) {
-                                    handlers.delete(handler);
-                                }
-                            }
-                        });
-                    }
-                };
-
-                const handlers = action_map_ref.current.get(action_filter || "HVRSDK_AUTH_QUERY") || new Set();
-                handlers.add(handler);
-                action_map_ref.current.set(action_filter || "HVRSDK_AUTH_QUERY", handlers);
+                const unsubscribe = on_action(action_filter, (message, reply) => {
+                    resolve({ message, reply });
+                    unsubscribe();
+                });
             });
         }
-    , []);
+    , [on_action]);
 
     const emit_event = useCallback((message: WebSDKEventMessage) => {
         if (!peer_connection_ref.current || !data_channel_ref.current || data_channel_ref.current.readyState !== "open") {
@@ -213,7 +219,7 @@ export const WebSDKMessagingProvider = ({children}: {children: React.ReactNode})
     }, [connected]);
 
     return (
-        <WebSDKMessagingContext.Provider value={{ on_action, emit_event, connected }}>
+        <WebSDKMessagingContext.Provider value={{ wait_for_action, on_action, emit_event, connected }}>
             {children}
         </WebSDKMessagingContext.Provider>
     );
@@ -226,3 +232,5 @@ export const useWebSDKMessaging = () => {
     }
     return context;
 }
+
+// TODO: should it be a zustand store instead?

@@ -323,7 +323,11 @@ export type MonitorInput = z.input<typeof MonitorSchema>;
 
 export const EngineObjectDispatchSchema = z.object({
     object: EngineObjectSchema,
-    transform: TransformSchema.optional(),
+    transform: TransformSchema.default({
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1]
+    }),
     user_data: z.record(z.string(), z.any()).optional(),
     monitors: z.array(MonitorSchema).optional()
 });

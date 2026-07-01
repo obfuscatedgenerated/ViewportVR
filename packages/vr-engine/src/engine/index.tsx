@@ -22,6 +22,7 @@ import {XROriginProvider} from "../contexts";
 import {SpectatorCamera} from "../misc";
 import { SkinPalette } from "../misc/SkinPalette";
 import { WebSDKMessagingProvider } from "../contexts/WebSDKMessagingContext";
+import { EngineObjectSync } from "./EngineObjectSync";
 
 
 configureTextBuilder({
@@ -106,7 +107,7 @@ const VRErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => (
 
 const FlatErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center z-50 text-white gap-8">
-        <h1 className="text-3xl font-bold">Game Error</h1>
+        <h1 className="text-3xl font-bold">Fatal Error</h1>
         <p className="text-lg text-red-400">
             {getErrorMessage(error) || "An unexpected error occurred."}
         </p>
@@ -154,14 +155,18 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
     return (
         <TabSessionProvider>
             <WebSDKMessagingProvider>
+                <EngineObjectSync />
+
                 <div
                     className="w-full h-full max-w-[calc(100vh*16/9)] max-h-[calc(100vw*9/16)] relative"
-                    ref={canvas_container_ref}>
+                    ref={canvas_container_ref}
+                >
                     <LogoOverlay />
 
                     <Canvas
                         gl={make_xr_compatible_renderer}
-                        onCreated={handle_created}>
+                        onCreated={handle_created}
+                    >
                         <CameraSetup />
                         <CanvasResizer containerRef={canvas_container_ref} />
 

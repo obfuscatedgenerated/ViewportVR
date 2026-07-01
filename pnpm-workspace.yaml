@@ -30,6 +30,7 @@ catalog:
   troika-three-text: ^0.52.4
   wxt: ^0.20.27
   zod: ^4.4.3
+  zustand: ^5.0.14
 
 onlyBuiltDependencies:
   - '@parcel/watcher'

@@ -31,11 +31,13 @@
         "@hyperlinkvr/react": "workspace:*",
         "@hyperlinkvr/watch-ui": "workspace:*",
         "@hyperlinkvr/web-sdk-handlers": "workspace:*",
+        "@hyperlinkvr/vr-engine-schemas": "workspace:*",
         "react": "catalog:",
         "react-dom": "catalog:",
         "react-error-boundary": "^6.1.2",
         "three": "catalog:",
-        "troika-three-text": "catalog:"
+        "troika-three-text": "catalog:",
+        "zustand": "catalog:"
     },
     "devDependencies": {
         "@types/react": "catalog:",

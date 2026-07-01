@@ -1,6 +1,7 @@
 export {version} from "../package.json";
 
 export * as auth from "./auth";
+export * as builders from "./builders";
 
 import {facilitate_rtc} from "./messenger";
 
