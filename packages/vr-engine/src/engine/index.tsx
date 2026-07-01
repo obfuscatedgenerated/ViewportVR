@@ -23,6 +23,7 @@ import {SpectatorCamera} from "../misc";
 import { SkinPalette } from "../misc/SkinPalette";
 import { WebSDKMessagingProvider } from "../contexts/WebSDKMessagingContext";
 import { EngineObjectSync } from "./EngineObjectSync";
+import { EngineObjectSpawner } from "./EngineObjectSpawner";
 
 
 configureTextBuilder({
@@ -193,6 +194,8 @@ const VRHostInternal = memo(({ on_xr_ready }: { on_xr_ready: () => void }) => {
 
                                     <SkinPalette box_size={0.05} position={[2, 1.75, 0]} rotation={[0, -Math.PI/2, 0]} />
                                     <ReflectiveMirror width={0.75} height={1.25} position={[2, 1, 0]} rotation={[0, -Math.PI/2, 0]} />
+
+                                    <EngineObjectSpawner />
 
                                     <SpectatorCamera />
                                 </XROriginProvider>

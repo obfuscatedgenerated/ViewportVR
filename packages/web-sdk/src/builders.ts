@@ -349,7 +349,7 @@ export class CustomObjectBuilder extends BaseBuilder<CustomObjectInput> {
 
 export class ButtonPrefabBuilder extends BaseBuilder<ButtonPrefabInput> {
     constructor() {
-        super({ name: "button" } as ButtonPrefabInput);
+        super({ type: "prefab", name: "button" } as ButtonPrefabInput);
     }
 
     set_label(label: string) {

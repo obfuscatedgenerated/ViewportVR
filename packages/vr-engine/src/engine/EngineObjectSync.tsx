@@ -33,7 +33,7 @@ export const EngineObjectSync = () => {
         return () => {
             unlisten();
         };
-    }, []);
+    }, [rtc, add_object, remove_object]);
 
     return null;
 }
