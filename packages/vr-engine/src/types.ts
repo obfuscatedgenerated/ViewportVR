@@ -1,5 +1,12 @@
+import type { CreatedEngineObject } from "@hyperlinkvr/vr-engine-schemas";
+import type { Group } from "three";
+
+
 export enum Eye {
     Left = 0,
     Right = 1
 }
 
+export type RendererComponentProps<T extends CreatedEngineObject["object"]> = Omit<T, "type"> & {
+    root_ref: React.RefObject<Group | null>;
+}
